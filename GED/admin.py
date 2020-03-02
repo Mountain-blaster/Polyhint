@@ -1,10 +1,14 @@
 from django.contrib import admin
 from django.apps import apps
+from GED.models import *
 # Register your models here.
 
-mode = apps.get_models()
-for mod in mode:
-    try:
-        admin.site.register(mod)
-    except admin.sites.AlreadyRegistered:
-        pass
+
+
+class ModelEleve(admin.ModelAdmin):
+    list_display = ('user', 'filiere', 'niveau', 'joindate', 'avertissement')
+    list_filter = ('user', 'niveau', 'filiere')
+    date_hierarchy = 'joindate'
+
+
+admin.site.register(Eleve, ModelEleve)

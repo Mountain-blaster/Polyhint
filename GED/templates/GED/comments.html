@@ -195,6 +195,7 @@
         &nbsp; <span class="badge badge-light">{{ nbre_comments }}</span> </button>
           <hr>
           <br>
+      {% if nbre_comments != 0 %}
           {% for use, comment in comments %}
         <div class="media"> <img width="45" height="45" class="mr-3 rounded-circle" src="{{ use.profile.url }}" alt="Generic placeholder image">
           <div class="media-body">
@@ -208,6 +209,9 @@
         </div>
 		  <hr>
           {% endfor %}
+      {% else %}
+          <div class="warning warning-border">{{ nocomment }}</div>
+      {% endif %}
 		  <hr>
       <form action="{% url 'GED:newComment' doc.titre_fichier user.user.id  %}" method="POST">
           {% csrf_token %}

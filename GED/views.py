@@ -91,31 +91,39 @@ def commentaire(request, titre_fichier, id):
 
 
 def newComments(request, titre_fichier, id):
-    newComment = Commentaire()
-    newComment.user_id = Eleve.objects.get(user=User.objects.get(pk=id))
     titre = str(titre_fichier)
     doc = Document.objects.get(titre_fichier=titre)
-    newComment.id_doc = doc
-    newComment.contents = request.POST['contents']
-    newComment.save()
     user = Eleve.objects.get(user=User.objects.get(pk=id))
-    com = Commentaire.objects.filter(id_doc=doc)
-    nbre_comments = len(com)
     uploader = Eleve.objects.get(user=User.objects.get(user=doc.eleve_id))
-    if nbre_comments == 0:
-        nocomment = "soyez le premier a commenter"
+    if doc.comments == True:
+        newComment = Commentaire()
+        newComment.user_id = Eleve.objects.get(user=User.objects.get(pk=id))
+        newComment.id_doc = doc
+        newComment.contents = request.POST['contents']
+        newComment.save()
+        com = Commentaire.objects.filter(id_doc=doc)
+        nbre_comments = len(com)
+        if nbre_comments == 0:
+            nocomment = "soyez le premier a commenter"
+            return render(request, 'GED/comments.html', {'user': user,
+                                                         'doc': doc,
+                                                         'nocomment': nocomment,
+                                                         'nbre_comments': nbre_comments,
+                                                         'uploader': uploader})
+        else:
+            listuser = [i.user_id for i in com]
+            comments = list(zip(listuser, com))
+            return render(request, 'GED/comments.html', {'user': user,
+                                                         'doc': doc,
+                                                         'comments': comments,
+                                                         'nbre_comments': nbre_comments,
+                                                         'uploader': uploader})
+    else:
+        nocomment = "commentaire non autorisé pour ce document!"
         return render(request, 'GED/comments.html', {'user': user,
                                                      'doc': doc,
                                                      'nocomment': nocomment,
-                                                     'nbre_comments': nbre_comments,
-                                                     'uploader': uploader})
-    else:
-        listuser = [i.user_id for i in com]
-        comments = list(zip(listuser, com))
-        return render(request, 'GED/comments.html', {'user': user,
-                                                     'doc': doc,
-                                                     'comments': comments,
-                                                     'nbre_comments': nbre_comments,
+                                                     'nbre_comments': 0,
                                                      'uploader': uploader})
 
 
@@ -296,8 +304,8 @@ def documentsEleve(request, id):
     e = Eleve.objects.get(user=newuser)
     mats = Document.LIST_MATIERE
     fils = Document.LIST_FILIERE
-    doc = Document.objects.all()
-    tops = list(Document.objects.order_by('updload_date'))[-8:]
+    doc = Document.objects.filter(prof_id=None)
+    tops = list(Document.objects.filter(prof_id=None).order_by('updload_date'))[-8:]
     listuser = [i.eleve_id for i in tops]
     top = list(zip(listuser, tops))
     top.reverse()
@@ -320,13 +328,13 @@ def Traitement(request, id):
     newuser = User.objects.get(pk=id)
     e = Eleve.objects.get(user=newuser)
     files = request.FILES.getlist('fichier')
-    i=0
+    i = 0
     for f in files:
         newDoc = Document()
         newDoc.eleve_id = e
         newDoc.fichier = f
         newDoc.titre_fichier = request.POST['titre_fichier']+"_"+str(i)
-        i+=1
+        i += 1
         newDoc.matiere = request.POST['matiere']
         newDoc.filiere = request.POST['filiere']
         newDoc.description = request.POST['description']
@@ -335,13 +343,14 @@ def Traitement(request, id):
         else:
             newDoc.comments = False
         newDoc.save()
-    return render(request, 'GED/PubEleve.html', {'user': e})
+        success = 'cest fait!! <a href ="{% url "GED:documents" user.user.id %}">Retourner</a> à la page précedente'
+    return render(request, 'GED/PubEleve.html', {'user': e, 'success': success})
 
 
 
 def search(request, id):
     e = Eleve.objects.get(user=User.objects.get(pk=id))
-    doc = list(Document.objects.all())
+    doc = list(Document.objects.filter(prof_id=None))
     mats = Document.LIST_MATIERE
     fils = Document.LIST_FILIERE
     tops = list(Document.objects.order_by('updload_date'))[-8:]

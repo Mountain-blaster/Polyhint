@@ -119,3 +119,8 @@ class Tache(models.Model):
     tache_time = models.TimeField(null=True)
     state = models.BooleanField(default=False)
     eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE)
+
+class Notifications(models.Model):
+    notifs = models.CharField(max_length=45)
+    eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE)
+    prof_id = models.ForeignKey(Professeur, on_delete=models.CASCADE)
