@@ -1,0 +1,1111 @@
+mysql> USE fergame;
+Database changed
+mysql> select * from joueur;
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| pseudo_joueur | password  | email                | pays      | points_j | date_inscription    | niveau_j      | fonds        |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| abdou         | Lebron1@  | abdou@ept.sn         | USA       |    10450 | 2011-12-24 11:05:54 | Professionnel |  15000000.00 |
+| adja          | ada907    | ada7@yahoo.com       | Senegal   |      988 | 2017-01-04 06:02:34 | Debutant      |    350000.00 |
+| allan         | alpo99$   | allie5@hotmail.es    | Espagne   |    50000 | 2015-07-14 23:55:46 | Professionnel | 100000000.00 |
+| alvin         | alvi56_@  | alvin155@yahoo.fr    | France    |     2500 | 2019-01-24 13:35:08 | Moyen         |  15000000.00 |
+| baidy         | cr71885   | bdsy7@gmail.com      | Senegal   |    54840 | 2017-04-04 18:25:48 | Professionnel |  25000000.00 |
+| cristiano     | cr700but  | thegoat@gmail.com    | Portugal  | 10000000 | 2019-05-14 14:07:01 | Legende       | 550000000.00 |
+| edgar         | eddie777  | edgar77@hotmail.com  | USA       |  2000000 | 2019-10-30 07:56:22 | Legende       | 275000000.00 |
+| fermat        | $45_@xyz  | fermat@gmail.com     | Senegal   |      975 | 2011-11-24 15:35:56 | Debutant      |    250000.00 |
+| fode          | 21fode    | fofo12@gmail.com     | Senegal   |    80040 | 2013-09-14 12:45:08 | Professionnel |  80000000.00 |
+| junior        | jun1298   | Hisself@hotmail.com  | Canada    |     7040 | 2013-11-24 05:35:08 | Moyen         |   7000000.00 |
+| messi         | leo101988 | leomessi@hotmail.com | Argentine |  9950000 | 2019-02-13 09:35:45 | Legende       | 600000000.00 |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+11 rows in set (0.00 sec)
+
+==================================================================PARTIE A======================================================================
+
+================================>REQUETE 1
+				#Mis à jour des achats de personnage: On procède à un update multiple sur les lignes en selectionnant la colonne
+				#fond de joueur et prix_perso de personnage pour pouvoir faire les soustractions par associations
+ 
+
+mysql> UPDATE joueur T1 INNER JOIN personnage T2 on T1.pseudo_joueur=T2.pseudo_joueur
+    -> SET T1.fonds=T1.fonds-(CASE T2.prix_perso
+    -> WHEN '10000' THEN 10000
+    -> WHEN '100000' THEN 100000
+    -> WHEN '10000000' THEN 10000000
+    -> WHEN '50000000' THEN 50000000
+    -> WHEN '75000000' THEN 75000000
+    -> ELSE 0
+    -> END)
+    -> WHERE T2.prix_perso IN('10000','100000','10000000','50000000','75000000');
+Query OK, 11 rows affected (0.01 sec)
+Rows matched: 11  Changed: 11  Warnings: 0
+
+mysql> SELECT * FROM joueur;
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| pseudo_joueur | password  | email                | pays      | points_j | date_inscription    | niveau_j      | fonds        |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| abdou         | Lebron1@  | abdou@ept.sn         | USA       |    10450 | 2011-12-24 11:05:54 | Professionnel |   5000000.00 |
+| adja          | ada907    | ada7@yahoo.com       | Senegal   |      988 | 2017-01-04 06:02:34 | Debutant      |    250000.00 |
+| allan         | alpo99$   | allie5@hotmail.es    | Espagne   |    50000 | 2015-07-14 23:55:46 | Professionnel |  50000000.00 |
+| alvin         | alvi56_@  | alvin155@yahoo.fr    | France    |     2500 | 2019-01-24 13:35:08 | Moyen         |  14900000.00 |
+| baidy         | cr71885   | bdsy7@gmail.com      | Senegal   |    54840 | 2017-04-04 18:25:48 | Professionnel |  15000000.00 |
+| cristiano     | cr700but  | thegoat@gmail.com    | Portugal  | 10000000 | 2019-05-14 14:07:01 | Legende       | 475000000.00 |
+| edgar         | eddie777  | edgar77@hotmail.com  | USA       |  2000000 | 2019-10-30 07:56:22 | Legende       | 200000000.00 |
+| fermat        | $45_@xyz  | fermat@gmail.com     | Senegal   |      975 | 2011-11-24 15:35:56 | Debutant      |    240000.00 |
+| fode          | 21fode    | fofo12@gmail.com     | Senegal   |    80040 | 2013-09-14 12:45:08 | Professionnel |  30000000.00 |
+| junior        | jun1298   | Hisself@hotmail.com  | Canada    |     7040 | 2013-11-24 05:35:08 | Moyen         |   6900000.00 |
+| messi         | leo101988 | leomessi@hotmail.com | Argentine |  9950000 | 2019-02-13 09:35:45 | Legende       | 525000000.00 |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+11 rows in set (0.00 sec)
+
+mysql> SELECT * FROM arme;
++-----------+-----------------+----------+------------+-----------------+
+| code_arme | type            | xps_coup | prix_A     | nom_A           |
++-----------+-----------------+----------+------------+-----------------+
+|       404 | epee            |       70 |    8000.00 | Excalibur       |
+|       405 | epee            |       70 |   10000.00 | Blue Rose Sword |
+|       501 | mitrailleuse    |      100 |    9500.00 | PKM             |
+|       502 | mitrailleuse    |      105 |    9700.00 | M240            |
+|       604 | pistolet        |      100 |    7000.00 | Beretta 92      |
+|       605 | pistolet        |      105 |    7400.00 | Colt_45         |
+|       606 | pistolet        |      110 |    7800.00 | Colt M1911      |
+|       607 | pistolet        |     1000 |  100000.00 | Desert EAGLE    |
+|       701 | lance-roquette  |     1000 |  100000.00 | AT-4            |
+|       805 | fusil           |       50 |    7500.00 | AK-47           |
+|       806 | fusil           |       90 |    8500.00 | M 16            |
+|       807 | fusil           |      100 |   10000.00 | KALACHNIKOV RPK |
+|       901 | fusil-precision |     1000 |  100000.00 | SIG 550 SNIPER  |
+|       902 | fusil-precision |     1050 |  105000.00 | M24 SWS         |
+|       903 | fusil-precision |     1000 |  100000.00 | VKS             |
+|      1024 | missile         |     2000 | 1000000.00 | SS-9 SCARP      |
+|      1025 | missile         |     2500 | 1500000.00 | SS-18 SATAN     |
++-----------+-----------------+----------+------------+-----------------+
+17 rows in set (0.00 sec)
+
+mysql> SELECT * FROM possede_arme;
++-----------+----------+
+| code_arme | id_perso |
++-----------+----------+
+|       404 |        1 |
+|       604 |        1 |
+|       606 |        2 |
+|       405 |        2 |
+|       501 |        2 |
+|       605 |        2 |
+|       807 |        3 |
+|      1024 |        3 |
+|       902 |        3 |
+|      1024 |        4 |
+|       901 |        4 |
+|       805 |        4 |
+|       701 |        4 |
+|       805 |        5 |
+|       404 |        5 |
+|      1025 |        6 |
+|       903 |        6 |
+|       701 |        6 |
+|       605 |        7 |
+|       806 |        7 |
+|       604 |        8 |
+|       805 |        9 |
+|       501 |        9 |
+|       404 |       10 |
+|       607 |       10 |
+|       903 |       11 |
+|       701 |       11 |
+|       806 |       11 |
++-----------+----------+
+28 rows in set (0.00 sec)
+
+
+
+mysql> select pseudo_joueur, sum(prix_A) from joueur inner join personnage using(pseudo_joueur) inner join possede_arme using(id_perso) inner join arme using(code_arme) where joueur.pseudo_joueur='alvin' OR joueur.pseudo_joueur='junior' OR joueur.pseudo_joueur='edgar';
++---------------+-------------+
+| pseudo_joueur | sum(prix_A) |
++---------------+-------------+
+| alvin         |  1145500.00 |
++---------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select pseudo_joueur, prix_A from joueur inner join personnage using(pseudo_joueur) inner join possede_arme using(id_perso) inner join arme using(code_arme) where joueur.pseudo_joueur='alvin' OR joueur.pseudo_joueur='junior' OR joueur.pseudo_joueur='edgar';
++---------------+------------+
+| pseudo_joueur | prix_A     |
++---------------+------------+
+| alvin         |    7500.00 |
+| alvin         |    8000.00 |
+| edgar         |   10000.00 |
+| edgar         | 1000000.00 |
+| edgar         |  105000.00 |
+| junior        |    8000.00 |
+| junior        |    7000.00 |
++---------------+------------+
+7 rows in set (0.00 sec)
+		
+================================>REQUETE 2
+
+				##Pour traiter cette question nous effectuons un update multiple sur plusieurs ligne avec les CASE 
+				## Ainsi on recupere pour 'alvin' par exemple la somme des prix des armes que son personnage possède pour
+				## ensuite la retirer de son fonds personnel
+
+mysql> UPDATE joueur T1 INNER JOIN personnage T2 USING (pseudo_joueur) INNER JOIN possede_arme USING (id_perso) INNER JOIN arme T3 USING (code_arme)
+    -> SET T1.fonds=T1.fonds-(CASE T2.pseudo_joueur
+    -> WHEN 'alvin' THEN (SELECT sum(prix_A) FROM personnage INNER JOIN possede_arme USING(id_perso) INNER JOIN arme USING(code_arme) WHERE personnage.pseudo_joueur='alvin')
+    -> WHEN 'edgar' THEN (SELECT sum(prix_A) FROM personnage INNER JOIN possede_arme USING(id_perso) INNER JOIN arme USING(code_arme) WHERE personnage.pseudo_joueur='edgar')
+    -> WHEN 'junior' THEN (SELECT sum(prix_A) FROM personnage INNER JOIN possede_arme USING(id_perso) INNER JOIN arme USING(code_arme) WHERE personnage.pseudo_joueur='junior')
+    -> ELSE 0
+    -> END)
+    -> WHERE T2.pseudo_joueur IN('alvin','edgar','junior');
+Query OK, 3 rows affected (0.01 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> SELECT * FROM joueur;
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| pseudo_joueur | password  | email                | pays      | points_j | date_inscription    | niveau_j      | fonds        |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| abdou         | Lebron1@  | abdou@ept.sn         | USA       |    10450 | 2011-12-24 11:05:54 | Professionnel |   5000000.00 |
+| adja          | ada907    | ada7@yahoo.com       | Senegal   |      988 | 2017-01-04 06:02:34 | Debutant      |    250000.00 |
+| allan         | alpo99$   | allie5@hotmail.es    | Espagne   |    50000 | 2015-07-14 23:55:46 | Professionnel |  50000000.00 |
+| alvin         | alvi56_@  | alvin155@yahoo.fr    | France    |     2500 | 2019-01-24 13:35:08 | Moyen         |  14884500.00 |
+| baidy         | cr71885   | bdsy7@gmail.com      | Senegal   |    54840 | 2017-04-04 18:25:48 | Professionnel |  15000000.00 |
+| cristiano     | cr700but  | thegoat@gmail.com    | Portugal  | 10000000 | 2019-05-14 14:07:01 | Legende       | 475000000.00 |
+| edgar         | eddie777  | edgar77@hotmail.com  | USA       |  2000000 | 2019-10-30 07:56:22 | Legende       | 198885000.00 |
+| fermat        | $45_@xyz  | fermat@gmail.com     | Senegal   |      975 | 2011-11-24 15:35:56 | Debutant      |    240000.00 |
+| fode          | 21fode    | fofo12@gmail.com     | Senegal   |    80040 | 2013-09-14 12:45:08 | Professionnel |  30000000.00 |
+| junior        | jun1298   | Hisself@hotmail.com  | Canada    |     7040 | 2013-11-24 05:35:08 | Moyen         |   6885000.00 |
+| messi         | leo101988 | leomessi@hotmail.com | Argentine |  9950000 | 2019-02-13 09:35:45 | Legende       | 525000000.00 |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+11 rows in set (0.00 sec)
+				
+
+================================>REQUETE 3
+
+				##VAINQUEUR DU TOURNOI + PAIEMENT
+
+mysql> SELECT pseudo_joueur vainqueur, points_t, prix_vainqueur 
+FROM tournoi_cree 
+INNER JOIN tournoi t 
+USING(id_tournoi) 
+WHERE t.etat_t='termine' 
+AND points_t=(SELECT MAX(points_t) 
+FROM tournoi_cree 
+INNER JOIN tournoi 
+USING (id_tournoi) 
+WHERE etat_t='termine') 
+ORDER BY points_t DESC;
++---------------+----------+----------------+
+| vainqueur | points_t | prix_vainqueur |
++---------------+----------+----------------+
+| allan         |     7800 |    10000000.00 | =========================================> ALLAN est donc le vainqueur du tournoi DOA : Dead Or Alive CONGRATULATIONS!!!!!!
++---------------+----------+----------------+
+1 row in set (0.00 sec)
+
+mysql> UPDATE joueur T1 INNER JOIN tournoi_cree T2 USING(pseudo_joueur) INNER JOIN tournoi T3 USING(id_tournoi)
+    -> SET T1.fonds=T1.fonds+(CASE T2.pseudo_joueur
+    -> WHEN (SELECT pseudo_joueur FROM tournoi_cree INNER JOIN tournoi USING(id_tournoi) WHERE etat_t='termine'  AND points_t=(SELECT MAX(points_t) FROM tournoi_cree INNER JOIN tournoi T USING (id_tournoi) WHERE T.etat_t='termine' ORDER BY points_t DESC) ORDER BY points_t DESC) THEN (SELECT MAX(prix_vainqueur) FROM tournoi T WHERE T.etat_t='termine')
+    -> ELSE 0
+    -> END)
+    -> WHERE T2.pseudo_joueur=(SELECT pseudo_joueur FROM tournoi_cree INNER JOIN tournoi USING(id_tournoi) WHERE etat_t='termine'  AND points_t=(SELECT max(points_t) FROM tournoi_cree INNER JOIN tournoi T USING (id_tournoi) WHERE T.etat_t='termine' ORDER BY points_t DESC) ORDER BY points_t DESC);
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM joueur;
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| pseudo_joueur | password  | email                | pays      | points_j | date_inscription    | niveau_j      | fonds        |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| abdou         | Lebron1@  | abdou@ept.sn         | USA       |    10450 | 2011-12-24 11:05:54 | Professionnel |   5000000.00 |
+| adja          | ada907    | ada7@yahoo.com       | Senegal   |      988 | 2017-01-04 06:02:34 | Debutant      |    250000.00 |
+| allan         | alpo99$   | allie5@hotmail.es    | Espagne   |    50000 | 2015-07-14 23:55:46 | Professionnel |  60000000.00 |
+| alvin         | alvi56_@  | alvin155@yahoo.fr    | France    |     2500 | 2019-01-24 13:35:08 | Moyen         |  14884500.00 |
+| baidy         | cr71885   | bdsy7@gmail.com      | Senegal   |    54840 | 2017-04-04 18:25:48 | Professionnel |  15000000.00 |
+| cristiano     | cr700but  | thegoat@gmail.com    | Portugal  | 10000000 | 2019-05-14 14:07:01 | Legende       | 475000000.00 |
+| edgar         | eddie777  | edgar77@hotmail.com  | USA       |  2000000 | 2019-10-30 07:56:22 | Legende       | 198885000.00 |
+| fermat        | $45_@xyz  | fermat@gmail.com     | Senegal   |      975 | 2011-11-24 15:35:56 | Debutant      |    240000.00 |
+| fode          | 21fode    | fofo12@gmail.com     | Senegal   |    80040 | 2013-09-14 12:45:08 | Professionnel |  30000000.00 |
+| junior        | jun1298   | Hisself@hotmail.com  | Canada    |     7040 | 2013-11-24 05:35:08 | Moyen         |   6885000.00 |
+| messi         | leo101988 | leomessi@hotmail.com | Argentine |  9950000 | 2019-02-13 09:35:45 | Legende       | 525000000.00 |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+11 rows in set (0.00 sec)
+
+================================>REQUETE 4
+			        
+				## PAIEMENT A LA BOUTIQUE D'EQUIPEMENT
+
+mysql> SELECT J.pseudo_joueur, E.outils, E.prix, A_E.nom_elite 
+	FROM equipement E 
+	INNER JOIN dispose_equipement 
+	USING (id_equipement) 
+	INNER JOIN appartient_elite A_E 
+	USING (id_perso) 
+	INNER JOIN personnage P 
+	USING(id_perso) 
+	INNER JOIN joueur J 
+	ON P.pseudo_joueur=J.pseudo_joueur 
+	WHERE A_E.nom_elite='La SECTE'; 
++---------------+-------------------------------+------------+-----------+
+| pseudo_joueur | outils                        | prix       | nom_elite |
++---------------+-------------------------------+------------+-----------+
+| baidy         | simple combine                |       0.00 | La SECTE  |
+| adja          | simple combine                |       0.00 | La SECTE  |
+| fode          | Combinaison US-AIR FORCE MaxQ |  100000.00 | La SECTE  |
+| fode          | gilet pare balle              |   20000.00 | La SECTE  |
+| fode          | Bunker                        | 1000000.00 | La SECTE  |
+| fode          | simple combine                |       0.00 | La SECTE  |
+| fermat        | simple combine                |       0.00 | La SECTE  |
++---------------+-------------------------------+------------+-----------+
+
+7 rows in set (0.01 sec)
+
+========>ON VOIT BIEN QU'IL N'Y A QU'UN SEUL JOUEUR QUI POSSEDE DES EQUIPEMENTS PAYANTS DONC AU LIEU DE FAIRE UN UPDATE MULTIPLE ON PEUT SIMPLEMENT FAIRE UN UPDATE SUR LE JOUEUR EN QUESTION<===========
+
+mysql> SELECT * FROM JOUEUR WHERE pseudo_joueur='fode';
++---------------+----------+------------------+---------+----------+---------------------+---------------+-------------+
+| pseudo_joueur | password | email            | pays    | points_j | date_inscription    | niveau_j      | fonds       |
++---------------+----------+------------------+---------+----------+---------------------+---------------+-------------+
+| fode          | 21fode   | fofo12@gmail.com | Senegal |    80040 | 2013-09-14 12:45:08 | Professionnel | 30000000.00 |
++---------------+----------+------------------+---------+----------+---------------------+---------------+-------------+
+1 row in set (0.01 sec)
+
+
+mysql> UPDATE joueur J
+    -> SET J.fonds=J.fonds-(SELECT SUM(prix) FROM equipement INNER JOIN dispose_equipement USING (id_equipement) INNER JOIN personnage P USING(id_perso) WHERE P.pseudo_joueur='fode' )
+    -> WHERE pseudo_joueur='fode';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM JOUEUR WHERE pseudo_joueur='fode';
++---------------+----------+------------------+---------+----------+---------------------+---------------+-------------+
+| pseudo_joueur | password | email            | pays    | points_j | date_inscription    | niveau_j      | fonds       |
++---------------+----------+------------------+---------+----------+---------------------+---------------+-------------+
+| fode          | 21fode   | fofo12@gmail.com | Senegal |    80040 | 2013-09-14 12:45:08 | Professionnel | 28880000.00 |
++---------------+----------+------------------+---------+----------+---------------------+---------------+-------------+
+1 row in set (0.00 sec)
+
+
+==================================================================PARTIE B======================================================================
+
+
+======================>REQUETE 1
+		      ##MAJ DES POINTS ENGRANGÉS LORS DU TOURNOI TERMINÉ ET AFFICHAGE DU CLASSEMENT GENERAL
+
+
+==========>AVANT LA MAJ<============================
+
+
+mysql> SELECT pseudo_joueur participants,points_j points_avant_MAJ, T.points_t points_gagnes, T1.nom_tournoi, T1.etat_t etat FROM joueur INNER JOIN tournoi_cree T USING(pseudo_joueur) INNER JOIN tournoi T1 USING(id_tournoi) WHERE T1.etat_t='termine' ORDER BY T.points_t DESC;
++--------------+------------------+---------------+-------------+---------+
+| participants | points_avant_MAJ | points_gagnes | nom_tournoi | etat    |
++--------------+------------------+---------------+-------------+---------+
+| allan        |            50000 |          7800 | DOA         | termine |
+| abdou        |            10450 |          6000 | DOA         | termine |
+| fode         |            80040 |          5400 | DOA         | termine |
++--------------+------------------+---------------+-------------+---------+
+3 rows in set (0.00 sec)
+
+
+========>EFFECTUONS LA MAJ<==========================
+
+
+mysql> UPDATE joueur T1 INNER JOIN tournoi_cree T2 USING(pseudo_joueur) INNER JOIN tournoi T3 USING(id_tournoi)
+    -> SET T1.points_j=T1.points_j+(CASE T2.pseudo_joueur
+    ->  WHEN 'allan' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='termine' AND T2.pseudo_joueur='allan' )
+    ->  WHEN 'fode' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='termine' AND T2.pseudo_joueur='fode' )
+    -> WHEN 'abdou' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='termine' AND T2.pseudo_joueur='abdou' )
+    -> ELSE 0
+    -> END)
+    -> WHERE T2.pseudo_joueur IN ('abdou','fode','allan');
+Query OK, 3 rows affected (0.02 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+==========>APRES LA MAJ<============================
+
+mysql> SELECT pseudo_joueur participants,points_j points_apres_MAJ, T.points_t points_gagnes, T1.nom_tournoi, T1.etat_t etat FROM joueur INNER JOIN tournoi_cree T USING(pseudo_joueur) INNER JOIN tournoi T1 USING(id_tournoi) WHERE T1.etat_t='termine' ORDER BY T.points_t DESC;
++--------------+------------------+---------------+-------------+---------+
+| participants | points_apres_MAJ | points_gagnes | nom_tournoi | etat    |
++--------------+------------------+---------------+-------------+---------+
+| allan        |            50000 |          7800 | DOA         | termine |
+| abdou        |            10450 |          6000 | DOA         | termine |
+| fode         |            80040 |          5400 | DOA         | termine |
++--------------+------------------+---------------+-------------+---------+
+3 rows in set (0.01 sec)
+
+
+======================>REQUETE 2
+		      ##MAJ DES POINTS ENGRANGÉS LORS DES TOURNOIS ENCORE EN COURS ET AFFICHAGE DU CLASSEMENT LIVE
+
+==========>AVANT LA MAJ<============================
+
+mysql> SELECT pseudo_joueur participants,points_j points_avant_MAJ, T.points_t points_gagnes, T1.nom_tournoi, T1.etat_t etat FROM joueur INNER JOIN tournoi_cree T USING(pseudo_joueur) INNER JOIN tournoi T1 USING(id_tournoi) WHERE T1.etat_t='en cours' ORDER BY T.points_t DESC;
++--------------+------------------+---------------+-------------+----------+
+| participants | points_avant_MAJ | points_gagnes | nom_tournoi | etat     |
++--------------+------------------+---------------+-------------+----------+
+| cristiano    |         10000000 |         90000 | THE_GOAT    | en cours |
+| messi        |          9950000 |         85000 | THE_GOAT    | en cours |
+| edgar        |          2000000 |         75000 | THE_GOAT    | en cours |
+| edgar        |          2000000 |         45000 | KILL_OR_DIE | en cours |
+| adja         |              988 |         19000 | KILL_OR_DIE | en cours |
+| junior       |             7040 |         17845 | KILL_OR_DIE | en cours |
+| abdou        |            16450 |         16805 | KILL_OR_DIE | en cours |
+| baidy        |            54840 |          7500 | KILL_OR_DIE | en cours |
++--------------+------------------+---------------+-------------+----------+
+8 rows in set (0.00 sec)
+
+========>EFFECTUONS LA MAJ<==========================
+
+mysql> UPDATE joueur T1 INNER JOIN tournoi_cree T2 USING(pseudo_joueur) INNER JOIN tournoi T3 USING(id_tournoi)
+    -> SET T1.points_j=T1.points_j+(CASE T2.pseudo_joueur
+    -> WHEN 'abdou' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='en cours' AND T2.pseudo_joueur='abdou' )
+    -> WHEN 'cristiano' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='en cours' AND T2.pseudo_joueur='cristiano' )
+    -> WHEN 'messi' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='en cours' AND T2.pseudo_joueur='messi' )
+    -> WHEN 'edgar' THEN (SELECT SUM(T2.points_t) FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='en cours' AND T2.pseudo_joueur='edgar' )
+    -> WHEN 'adja' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='en cours' AND T2.pseudo_joueur='adja' )
+    -> WHEN 'junior' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='en cours' AND T2.pseudo_joueur='junior' )
+    -> WHEN 'baidy' THEN (SELECT T2.points_t FROM tournoi_cree T2 INNER JOIN tournoi T3 USING(id_tournoi) WHERE T3.etat_t='en cours' AND T2.pseudo_joueur='baidy' )
+    -> ELSE 0
+    -> END)
+    -> WHERE T2.pseudo_joueur IN ('abdou','cristiano','baidy','messi','edgar','junior','adja');
+Query OK, 7 rows affected (0.01 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+
+
+==========>APRES LA MAJ<============================
+
+mysql> SELECT pseudo_joueur participants,points_j points_apres_MAJ, T.points_t points_gagnes, T1.nom_tournoi, T1.etat_t etat FROM joueur INNER JOIN tournoi_cree T USING(pseudo_joueur) INNER JOIN tournoi T1 USING(id_tournoi) WHERE T1.etat_t='en cours' ORDER BY T.points_t DESC;
++--------------+------------------+---------------+-------------+----------+
+| participants | points_apres_MAJ | points_gagnes | nom_tournoi | etat     |
++--------------+------------------+---------------+-------------+----------+
+| cristiano    |         10090000 |         90000 | THE_GOAT    | en cours |
+| messi        |         10035000 |         85000 | THE_GOAT    | en cours |
+| edgar        |          2120000 |         75000 | THE_GOAT    | en cours |
+| edgar        |          2120000 |         45000 | KILL_OR_DIE | en cours |
+| adja         |            19988 |         19000 | KILL_OR_DIE | en cours |
+| junior       |            24885 |         17845 | KILL_OR_DIE | en cours |
+| abdou        |            33255 |         16805 | KILL_OR_DIE | en cours |
+| baidy        |            62340 |          7500 | KILL_OR_DIE | en cours |
++--------------+------------------+---------------+-------------+----------+
+8 rows in set (0.00 sec)
+
+==========>CLASSEMENT LIVE THE_GOAT<==================
+
+
+mysql> SELECT pseudo_joueur participants,points_j points_apres_MAJ, T.points_t points_gagnes, T1.nom_tournoi, T1.etat_t etat FROM joueur INNER JOIN tournoi_cree T USING(pseudo_joueur) INNER JOIN tournoi T1 USING(id_tournoi) WHERE T1.etat_t='en cours'AND T1.nom_tournoi='THE_GOAT' ORDER BY T.points_t DESC;
++--------------+------------------+---------------+-------------+----------+
+| participants | points_apres_MAJ | points_gagnes | nom_tournoi | etat     |
++--------------+------------------+---------------+-------------+----------+
+| cristiano    |         10090000 |         90000 | THE_GOAT    | en cours |
+| messi        |         10035000 |         85000 | THE_GOAT    | en cours |
+| edgar        |          2120000 |         75000 | THE_GOAT    | en cours |
++--------------+------------------+---------------+-------------+----------+
+3 rows in set (0.00 sec)
+
+
+
+==========>CLASSEMENT LIVE KILL_OR_DIE<==================
+
+
+
+mysql> SELECT pseudo_joueur participants,points_j points_apres_MAJ, T.points_t points_gagnes, T1.nom_tournoi, T1.etat_t etat FROM joueur INNER JOIN tournoi_cree T USING(pseudo_joueur) INNER JOIN tournoi T1 USING(id_tournoi) WHERE T1.etat_t='en cours'AND T1.nom_tournoi='KILL_OR_DIE' ORDER BY T.points_t DESC;
++--------------+------------------+---------------+-------------+----------+
+| participants | points_apres_MAJ | points_gagnes | nom_tournoi | etat     |
++--------------+------------------+---------------+-------------+----------+
+| edgar        |          2120000 |         45000 | KILL_OR_DIE | en cours |
+| adja         |            19988 |         19000 | KILL_OR_DIE | en cours |
+| junior       |            24885 |         17845 | KILL_OR_DIE | en cours |
+| abdou        |            33255 |         16805 | KILL_OR_DIE | en cours |
+| baidy        |            62340 |          7500 | KILL_OR_DIE | en cours |
++--------------+------------------+---------------+-------------+----------+
+5 rows in set (0.00 sec)
+
+
+
+==================================================================PARTIE C======================================================================
+
+
+
+======================>REQUETE 1
+		      ##Afficher le classement local pour le Sénégal après update
+
+
+mysql> SELECT pseudo_joueur pseudo,pays, points_j points 
+FROM joueur J 
+WHERE J.pays='Senegal' 
+ORDER BY points_j DESC;
++--------+---------+--------+
+| pseudo | pays    | points |
++--------+---------+--------+
+| fode   | Senegal |  85440 |
+| baidy  | Senegal |  62340 |
+| adja   | Senegal |  19988 |
+| fermat | Senegal |    975 |
++--------+---------+--------+
+4 rows in set (0.00 sec)
+
+
+======================>REQUETE 2
+		      ##Afficher le classement general après update
+
+
+mysql> SELECT pseudo_joueur pseudo,pays, points_j points
+FROM joueur J  
+ORDER BY points_j DESC;
++-----------+-----------+----------+
+| pseudo    | pays      | points   |
++-----------+-----------+----------+
+| cristiano | Portugal  | 10090000 |
+| messi     | Argentine | 10035000 |
+| edgar     | USA       |  2120000 |
+| fode      | Senegal   |    85440 |
+| baidy     | Senegal   |    62340 |
+| allan     | Espagne   |    57800 |
+| abdou     | USA       |    33255 |
+| junior    | Canada    |    24885 |
+| adja      | Senegal   |    19988 |
+| alvin     | France    |     2500 |
+| fermat    | Senegal   |      975 |
++-----------+-----------+----------+
+11 rows in set (0.00 sec)
+
+======================>REQUETE 3
+		      ## Afficher les joueurs ayant déjà gagné un tournoi			
+
+
+mysql> SELECT J.pseudo_joueur pseudo,J.pays pays, J.points_j points 
+FROM joueur J  
+INNER JOIN tournoi_cree T_C 
+USING (pseudo_joueur) 
+INNER JOIN tournoi 
+USING (id_tournoi) 
+WHERE T_C.points_t=(SELECT MAX(points_t) 
+FROM tournoi_cree INNER JOIN tournoi USING (id_tournoi) WHERE etat_t='termine') ;
++--------+---------+--------+
+| pseudo | pays    | points |
++--------+---------+--------+
+| allan  | Espagne |  57800 |
++--------+---------+--------+
+1 row in set (0.00 sec)
+
+
+======================>REQUETE 4
+		      ## Afficher les joueurs qui possèdent un missile
+
+
+mysql> SELECT J.pseudo_joueur, A.type, A.nom_A 
+FROM joueur J INNER JOIN personnage 
+USING (pseudo_joueur) INNER JOIN possede_arme 
+USING (id_perso) INNER JOIN arme A 
+USING(code_arme) WHERE A.type='missile';
++---------------+---------+-------------+
+| pseudo_joueur | type    | nom_A       |
++---------------+---------+-------------+
+| edgar         | missile | SS-9 SCARP  |
+| cristiano     | missile | SS-9 SCARP  |
+| messi         | missile | SS-18 SATAN |
++---------------+---------+-------------+
+3 rows in set (0.01 sec)
+
+======================>REQUETE 5
+
+		       ## Afficher tous les personnages de niveau supérieur à 3 qui sont déjà incarnés par des joueurs
+
+
+mysql> SELECT nom_perso personnage_incarnés 
+FROM joueur J 
+CROSS JOIN personnage P 
+ON J.pseudo_joueur=P.pseudo_joueur;
+
+
++---------------------+
+| personnage_incarnés |
++---------------------+
+| Asbald              |
+| Armagedon           |
+| Dracula             |
+| Skywalker           |
+| JCVD                |
+| Chuck Norris        |
+| JACK RYAN           |
+| DROGON              |
+| Merlin              |
+| Travolta            |
+| Arnold Swarzi       |
++---------------------+
+11 rows in set (0.00 sec)
+
+
+======================>REQUETE 6
+
+		       ## Afficher l’ensemble des personnages non encore incarnés
+
+
+mysql> SELECT nom_perso Non_incarnés 
+FROM personnage P 
+WHERE pseudo_joueur IS NULL;
+
++--------------+
+| Non_incarnés |
++--------------+
+| Thor         |
+| Achille      |
+| SKULL        |
+| IronSide     |
+| GHOST SNIPER |
+| DARK KILLER  |
++--------------+
+6 rows in set (0.00 sec)
+
+
+======================>REQUETE 7
+
+		       ##  Faire un classement des armes en fonction de leur portée ou dégâts (xps_coup)
+
+
+mysql> SELECT A.nom_A, A.type, A.xps_coup 
+FROM arme A 
+ORDER BY xps_coup DESC;
+
++-----------------+-----------------+----------+
+| nom_A           | type            | xps_coup |
++-----------------+-----------------+----------+
+| SS-18 SATAN     | missile         |     2500 |
+| SS-9 SCARP      | missile         |     2000 |
+| M24 SWS         | fusil-precision |     1050 |
+| Desert EAGLE    | pistolet        |     1000 |
+| AT-4            | lance-roquette  |     1000 |
+| SIG 550 SNIPER  | fusil-precision |     1000 |
+| VKS             | fusil-precision |     1000 |
+| Colt M1911      | pistolet        |      110 |
+| M240            | mitrailleuse    |      105 |
+| Colt_45         | pistolet        |      105 |
+| PKM             | mitrailleuse    |      100 |
+| Beretta 92      | pistolet        |      100 |
+| KALACHNIKOV RPK | fusil           |      100 |
+| M 16            | fusil           |       90 |
+| Excalibur       | epee            |       70 |
+| Blue Rose Sword | epee            |       70 |
+| AK-47           | fusil           |       50 |
++-----------------+-----------------+----------+
+17 rows in set (0.00 sec)
+
+
+======================>REQUETE 8
+			## Afficher les personnages équipés d’un bunker
+
+
+mysql> SELECT P.nom_perso, E.outils 
+FROM personnage P 
+INNER JOIN dispose_equipement 
+USING (id_perso) 
+INNER JOIN equipement E 
+USING (id_equipement) 
+WHERE E.outils='Bunker';
+
++--------------+--------+
+| nom_perso    | outils |
++--------------+--------+
+| Chuck Norris | Bunker |
+| Travolta     | Bunker |
+| Asbald       | Bunker |
+| DROGON       | Bunker |
++--------------+--------+
+4 rows in set (0.00 sec)
+
+
+======================>REQUETE 9
+			## Afficher le joueur ayant dépensé le plus en armement puis en équipement.
+
+
+======>en armes!
+
+=========>ENSEMBLE DES DEPENSES EN ARMEMENTS:	
+
+mysql> SELECT J.pseudo_joueur joueur ,SUM(A.prix_A) somme 
+FROM joueur J 
+INNER JOIN personnage 
+USING(pseudo_joueur) 
+INNER JOIN possede_arme 
+USING (id_perso) 
+INNER JOIN arme A 
+USING (code_arme) 
+GROUP BY J.pseudo_joueur;
+
++-----------+------------+
+| joueur    | somme      |
++-----------+------------+
+| junior    |   15000.00 |
+| allan     |   34700.00 |
+| edgar     | 1115000.00 |
+| cristiano | 1207500.00 |
+| alvin     |   15500.00 |
+| messi     | 1700000.00 |
+| baidy     |   15900.00 |
+| fermat    |    7000.00 |
+| adja      |   17000.00 |
+| abdou     |  108000.00 |
+| fode      |  208500.00 |
++-----------+------------+
+11 rows in set (0.00 sec)
+
+=======================>ON VOIT BIEN QUE MESSI EST CELUI QUI A LE PLUS DEPENSE<===================
+
+mysql> SELECT NT.joueur ,NT.somme 
+FROM (SELECT J.pseudo_joueur joueur ,SUM(A.prix_A) somme 
+	FROM joueur J 
+	INNER JOIN personnage 
+	USING(pseudo_joueur) 
+	INNER JOIN possede_arme 
+	USING (id_perso) 
+	INNER JOIN arme A 
+	USING (code_arme) 
+	GROUP BY J.pseudo_joueur) NT 
+WHERE NT.somme=(SELECT MAX(K.somme) 
+	FROM (SELECT J.pseudo_joueur joueur ,SUM(A.prix_A) somme 
+		FROM joueur J 
+		INNER JOIN personnage 
+		USING(pseudo_joueur) 
+		INNER JOIN possede_arme 
+		USING (id_perso) 
+		INNER JOIN arme A 
+		USING (code_arme) 
+		GROUP BY J.pseudo_joueur) K) ;
++--------+------------+
+| joueur | somme      |
++--------+------------+
+| messi  | 1700000.00 |
++--------+------------+
+1 row in set (0.00 sec)  ========>ICI ON SE SERT DE LA TABLE CONTENANT L'ENSEMBLE DES ACHATS D'ARMES PAR JOUEURS POUR EN EXTIRPER LE MAXIMUM<=========
+
+
+======>en equipements:
+
+ =======>PAR LE MEME PROCEDE<=======
+
+mysql> SELECT NT.joueur ,NT.somme somme_depensée 
+FROM (SELECT J.pseudo_joueur joueur ,SUM(E.prix) somme 
+	FROM joueur J 
+	INNER JOIN personnage 
+	USING(pseudo_joueur) 
+	INNER JOIN dispose_equipement 
+	USING (id_perso) 
+	INNER JOIN equipement E 
+	USING (id_equipement) 
+	GROUP BY J.pseudo_joueur) NT 
+WHERE NT.somme=(SELECT MAX(K.somme) 
+	FROM (SELECT J.pseudo_joueur joueur ,SUM(E.prix) somme 
+		FROM joueur J 
+		INNER JOIN personnage 
+		USING(pseudo_joueur) 
+		INNER JOIN dispose_equipement 
+		USING (id_perso) 
+		INNER JOIN equipement E USING (id_equipement) 
+		GROUP BY J.pseudo_joueur) K);
++--------+----------------+
+| joueur | somme_depensée |
++--------+----------------+
+| edgar  |     1150000.00 |
++--------+----------------+
+1 row in set (0.00 sec)	
+
+
+======================>REQUETE 10
+			##Classer les joueurs en fonction de leurs achats en armes + équipement
+
+
+mysql> SELECT T1.joueur,T1.sommeA depenses_equipement, T2.somme depenses_armes, SUM(T1.sommeA+T2.somme) depenses_TOTAL 
+FROM (SELECT J.pseudo_joueur joueur ,SUM(E.prix) sommeA 
+	FROM joueur J 
+	INNER JOIN personnage 
+	USING(pseudo_joueur) 
+	INNER JOIN dispose_equipement 
+	USING (id_perso) 
+	INNER JOIN equipement E 
+	USING (id_equipement) 
+	GROUP BY J.pseudo_joueur) T1 
+CROSS JOIN (SELECT J.pseudo_joueur joueur ,SUM(A.prix_A) somme 
+	FROM joueur J 
+	INNER JOIN personnage 
+	USING(pseudo_joueur) 
+	INNER JOIN possede_arme 
+	USING (id_perso) 
+	INNER JOIN arme A 
+	USING (code_arme) 
+	GROUP BY J.pseudo_joueur) T2 
+	ON T1.joueur=T2.joueur 
+	GROUP BY T1.joueur 
+	ORDER BY T1.sommeA+T2.somme DESC;
++-----------+---------------------+----------------+----------------+
+| joueur    | depenses_equipement | depenses_armes | depenses_TOTAL |
++-----------+---------------------+----------------+----------------+
+| messi     |          1070000.00 |     1700000.00 |     2770000.00 |
+| edgar     |          1150000.00 |     1115000.00 |     2265000.00 |
+| cristiano |           170000.00 |     1207500.00 |     1377500.00 |
+| fode      |          1120000.00 |      208500.00 |     1328500.00 |
+| abdou     |          1100000.00 |      108000.00 |     1208000.00 |
+| allan     |           120000.00 |       34700.00 |      154700.00 |
+| adja      |                0.00 |       17000.00 |       17000.00 |
+| baidy     |                0.00 |       15900.00 |       15900.00 |
+| alvin     |                0.00 |       15500.00 |       15500.00 |
+| junior    |                0.00 |       15000.00 |       15000.00 |
+| fermat    |                0.00 |        7000.00 |        7000.00 |
++-----------+---------------------+----------------+----------------+
+11 rows in set (0.00 sec)
+
+======================>REQUETE 11
+			##Afficher les joueurs qui ont un personnage appartenant à une élite.
+
+
+
+mysql> SELECT pseudo_joueur 
+    -> FROM joueur
+    -> INNER JOIN personnage 
+    -> USING (pseudo_joueur)
+    -> INNER JOIN appartient_elite 
+    -> USING(id_perso);
++---------------+
+| pseudo_joueur |
++---------------+
+| junior        |
+| allan         |
+| edgar         |
+| cristiano     |
+| messi         |
+| baidy         |
+| fermat        |
+| adja          |
+| abdou         |
+| fode          |
++---------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM personnage;
++----------+---------------+---------------+----------+-------------------+------------+
+| id_perso | nom_perso     | pseudo_joueur | niveau_p | point_vie_restant | prix_perso |
++----------+---------------+---------------+----------+-------------------+------------+
+|        1 | Merlin        | junior        | 2        |              1450 | 100000     |
+|        2 | Dracula       | allan         | 4        |              5000 | 50000000   |
+|        3 | Chuck Norris  | edgar         | 5        |              7500 | 75000000   |
+|        4 | Arnold Swarzi | cristiano     | 5        |              8500 | 75000000   |
+|        5 | Skywalker     | alvin         | 2        |               505 | 100000     |
+|        6 | Travolta      | messi         | 5        |              7800 | 75000000   |
+|        7 | JCVD          | baidy         | 3        |              4500 | 10000000   |
+|        8 | JACK RYAN     | fermat        | 1        |                 0 | 10000      |
+|        9 | Armagedon     | adja          | 2        |              2500 | 100000     |
+|       10 | Asbald        | abdou         | 3        |              3405 | 10000000   |
+|       11 | DROGON        | fode          | 4        |              4850 | 50000000   |
+|       12 | Thor          | NULL          | 5        |               100 | 75000000   |
+|       13 | Achille       | NULL          | 3        |               100 | 10000000   |
+|       14 | SKULL         | NULL          | 4        |               100 | 50000000   |
+|       15 | IronSide      | NULL          | 1        |               100 | 10000      |
+|       16 | GHOST SNIPER  | NULL          | 2        |               100 | 100000     |
+|       17 | DARK KILLER   | NULL          | 5        |               100 | 75000000   |
++----------+---------------+---------------+----------+-------------------+------------+
+17 rows in set (0.00 sec)
+
+
+======================>REQUETE 12
+			## Afficher les personnages de niveau supérieur ou égal à 4 appartenant à une élite.
+
+
+mysql> SELECT nom_perso personnage, niveau_p niveau 
+    -> FROM personnage P
+    -> INNER JOIN appartient_elite 
+    -> USING(id_perso)
+    -> WHERE P.niveau_p>='4';
++---------------+--------+
+| personnage    | niveau |
++---------------+--------+
+| Dracula       | 4      |
+| Chuck Norris  | 5      |
+| Arnold Swarzi | 5      |
+| Travolta      | 5      |
+| DROGON        | 4      |
++---------------+--------+
+5 rows in set (0.00 sec)
+
+======================>REQUETE 13
+		      ## Faire la somme totale des dépenses en armement.
+
+
+mysql> SELECT SUM(prix_A) somme_totale_depenses
+    -> FROM arme 
+    -> INNER JOIN possede_arme
+    -> USING(code_arme);
++-----------------------+
+| somme_totale_depenses |
++-----------------------+
+|            4444100.00 |
++-----------------------+
+1 row in set (0.00 sec)
+
+======================>REQUETE 14
+			##Renvoyer le prix moyen d’une arme
+
+mysql> SELECT AVG(prix_A) prix_moyen_arme
+    -> FROM arme;
++-----------------+
+| prix_moyen_arme |
++-----------------+
+|   181788.235294 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM arme;
++-----------+-----------------+----------+------------+-----------------+
+| code_arme | type            | xps_coup | prix_A     | nom_A           |
++-----------+-----------------+----------+------------+-----------------+
+|       404 | epee            |       70 |    8000.00 | Excalibur       |
+|       405 | epee            |       70 |   10000.00 | Blue Rose Sword |
+|       501 | mitrailleuse    |      100 |    9500.00 | PKM             |
+|       502 | mitrailleuse    |      105 |    9700.00 | M240            |
+|       604 | pistolet        |      100 |    7000.00 | Beretta 92      |
+|       605 | pistolet        |      105 |    7400.00 | Colt_45         |
+|       606 | pistolet        |      110 |    7800.00 | Colt M1911      |
+|       607 | pistolet        |     1000 |  100000.00 | Desert EAGLE    |
+|       701 | lance-roquette  |     1000 |  100000.00 | AT-4            |
+|       805 | fusil           |       50 |    7500.00 | AK-47           |
+|       806 | fusil           |       90 |    8500.00 | M 16            |
+|       807 | fusil           |      100 |   10000.00 | KALACHNIKOV RPK |
+|       901 | fusil-precision |     1000 |  100000.00 | SIG 550 SNIPER  |
+|       902 | fusil-precision |     1050 |  105000.00 | M24 SWS         |
+|       903 | fusil-precision |     1000 |  100000.00 | VKS             |
+|      1024 | missile         |     2000 | 1000000.00 | SS-9 SCARP      |
+|      1025 | missile         |     2500 | 1500000.00 | SS-18 SATAN     |
++-----------+-----------------+----------+------------+-----------------+
+17 rows in set (0.00 sec)
+
+
+======================>REQUETE 15
+
+			##Classer les armes par prix et par type dans un ordre décroissant.
+
+mysql> SELECT A.type, A.nom_A nom_arme, A.prix_A prix_arme 
+    -> FROM arme A 
+    -> GROUP BY A.type , A.prix_A
+    -> ORDER BY A.prix_A DESC;
++-----------------+-----------------+------------+
+| type            | nom_arme        | prix_arme  |
++-----------------+-----------------+------------+
+| missile         | SS-18 SATAN     | 1500000.00 |
+| missile         | SS-9 SCARP      | 1000000.00 |
+| fusil-precision | M24 SWS         |  105000.00 |
+| pistolet        | Desert EAGLE    |  100000.00 |
+| lance-roquette  | AT-4            |  100000.00 |
+| fusil-precision | SIG 550 SNIPER  |  100000.00 |
+| epee            | Blue Rose Sword |   10000.00 |
+| fusil           | KALACHNIKOV RPK |   10000.00 |
+| mitrailleuse    | M240            |    9700.00 |
+| mitrailleuse    | PKM             |    9500.00 |
+| fusil           | M 16            |    8500.00 |
+| epee            | Excalibur       |    8000.00 |
+| pistolet        | Colt M1911      |    7800.00 |
+| fusil           | AK-47           |    7500.00 |
+| pistolet        | Colt_45         |    7400.00 |
+| pistolet        | Beretta 92      |    7000.00 |
++-----------------+-----------------+------------+
+16 rows in set (0.00 sec)
+
+======================>REQUETE 16
+
+			## Afficher dans l’ordre décroissant le classement des « Légende » de Fergame.
+
+
+
+mysql> SELECT pseudo_joueur nom_legende, points_j points
+    -> FROM joueur
+    -> WHERE niveau_j='Legende'
+    -> ORDER BY points_j DESC;
++-------------+----------+
+| nom_legende | points   |
++-------------+----------+
+| cristiano   | 10090000 |
+| messi       | 10035000 |
+| edgar       |  2120000 |
++-------------+----------+
+3 rows in set (0.00 sec)
+
+======================>REQUETE 17
+
+		       ## Afficher les noms des personnages avec le nombre d’armes et d’équipement qu’ils possèdent.
+
+
+mysql> SELECT nom_perso nom, COUNT(id_perso) nombre_arme
+    -> FROM personnage
+    -> INNER JOIN possede_arme
+    -> USING (id_perso)
+    -> GROUP BY id_perso;
++---------------+-------------+
+| nom           | nombre_arme |
++---------------+-------------+
+| Merlin        |           2 |
+| Dracula       |           4 |
+| Chuck Norris  |           3 |
+| Arnold Swarzi |           4 |
+| Skywalker     |           2 |
+| Travolta      |           3 |
+| JCVD          |           2 |
+| JACK RYAN     |           1 |
+| Armagedon     |           2 |
+| Asbald        |           2 |
+| DROGON        |           3 |
++---------------+-------------+
+11 rows in set (0.00 sec)
+
+
+
+======================>REQUETE 18
+
+		       ## Afficher le joueur qui à le plus de points (après m-à-j).
+
+
+
+mysql> SELECT pseudo_joueur , points_j
+    -> FROM joueur
+    -> WHERE points_j=(SELECT MAX(K.points_j)
+    -> FROM joueur K);
++---------------+----------+
+| pseudo_joueur | points_j |
++---------------+----------+
+| cristiano     | 10090000 |
++---------------+----------+
+1 row in set (0.00 sec)	
+
+
+
+======================>REQUETE 19
+
+		       ## Afficher les joueurs qui se sont inscrits à Fergame entre les dates « 2019-01-01 00:00 » et « 2019-10-30 00:00 »
+
+
+
+mysql> SELECT pseudo_joueur joueur, date_inscription
+    -> FROM joueur
+    -> WHERE date_inscription > '2019-01-01 00:00'
+    -> AND date_inscription < '2019-10-30 00:00';
++-----------+---------------------+
+| joueur    | date_inscription    |
++-----------+---------------------+
+| alvin     | 2019-01-24 13:35:08 |
+| cristiano | 2019-05-14 14:07:01 |
+| messi     | 2019-02-13 09:35:45 |
++-----------+---------------------+
+3 rows in set (0.01 sec)
+
+
+======================>REQUETE 20
+
+		      ## Afficher les joueurs qui ont des personnages possédant un pistolet.
+
+
+mysql> SELECT J.pseudo_joueur joueur, A.type ,A.nom_A nom_arme
+    -> FROM joueur J
+    -> INNER JOIN personnage
+    -> USING (pseudo_joueur)
+    -> INNER JOIN possede_arme
+    -> USING(id_perso)
+    -> INNER JOIN arme A
+    -> USING(code_arme)
+    -> WHERE A.type='pistolet';
++--------+----------+--------------+
+| joueur | type     | nom_arme     |
++--------+----------+--------------+
+| junior | pistolet | Beretta 92   |
+| fermat | pistolet | Beretta 92   |
+| allan  | pistolet | Colt_45      |
+| baidy  | pistolet | Colt_45      |
+| allan  | pistolet | Colt M1911   |
+| abdou  | pistolet | Desert EAGLE |
++--------+----------+--------------+
+6 rows in set (0.00 sec)
+
+
+======================>REQUETE 21
+
+		      ## Afficher le joueur mort dans une partie.
+
+****NB : est considéré mort dans une partie de Fergame le joueur dont les points vie restants sont nuls****
+
+
+
+mysql> SELECT P.pseudo_joueur joueur , P.point_vie_restant
+    -> FROM personnage P
+    -> WHERE P.point_vie_restant=0;
++--------+-------------------+
+| joueur | point_vie_restant |
++--------+-------------------+
+| fermat |                 0 |
++--------+-------------------+
+1 row in set (0.00 sec)
+
+
+======================>REQUETE 22
+
+		      ##  Afficher les joueurs ayant participé à au moins deux tournoi.
+
+
+
+mysql> SELECT T.pseudo_joueur, COUNT(T.pseudo_joueur) nombre_de_tournoi
+    -> FROM tournoi_cree T
+    -> GROUP BY T.pseudo_joueur;
++---------------+-------------------+
+| pseudo_joueur | nombre_de_tournoi |
++---------------+-------------------+
+| abdou         |                 2 |
+| adja          |                 1 |
+| allan         |                 1 |
+| baidy         |                 1 |
+| cristiano     |                 1 |
+| edgar         |                 2 |
+| fode          |                 1 |
+| junior        |                 1 |
+| messi         |                 1 |
++---------------+-------------------+
+9 rows in set (0.01 sec)
+
+mysql> SELECT NT.pseudo_joueur ,NT.nombre_de_tournoi  
+    ->FROM (SELECT T.pseudo_joueur, COUNT(T.pseudo_joueur) nombre_de_tournoi
+    ->FROM tournoi_cree T GROUP BY T.pseudo_joueur) NT 
+    ->WHERE NT.nombre_de_tournoi >1;
++---------------+-------------------+
+| pseudo_joueur | nombre_de_tournoi |
++---------------+-------------------+
+| abdou         |                 2 |
+| edgar         |                 2 |
++---------------+-------------------+
+2 rows in set (0.00 sec)
+
+
+======================>REQUETE 23
+
+		      ##  Afficher l’equipement que tous les joueurs ont en commun.
+
+ 	
+mysql> SELECT NT.outils, NT.nbre
+    -> FROM (SELECT outils, COUNT(outils) nbre FROM equipement INNER JOIN dispose_equipement
+    -> USING(id_equipement) GROUP BY outils) NT
+    -> WHERE NT.nbre=11;
++----------------+------+
+| outils         | nbre |
++----------------+------+
+| simple combine |   11 |
++----------------+------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+mysql> SELECT * FROM joueur;
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| pseudo_joueur | password  | email                | pays      | points_j | date_inscription    | niveau_j      | fonds        |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| abdou         | Lebron1@  | abdou@ept.sn         | USA       |    33255 | 2011-12-24 11:05:54 | Professionnel |   5000000.00 |
+| adja          | ada907    | ada7@yahoo.com       | Senegal   |    19988 | 2017-01-04 06:02:34 | Debutant      |    250000.00 |
+| allan         | alpo99$   | allie5@hotmail.es    | Espagne   |    57800 | 2015-07-14 23:55:46 | Professionnel |  60000000.00 |
+| alvin         | alvi56_@  | alvin155@yahoo.fr    | France    |     2500 | 2019-01-24 13:35:08 | Moyen         |  14884500.00 |
+| baidy         | cr71885   | bdsy7@gmail.com      | Senegal   |    62340 | 2017-04-04 18:25:48 | Professionnel |  15000000.00 |
+| cristiano     | cr700but  | thegoat@gmail.com    | Portugal  | 10090000 | 2019-05-14 14:07:01 | Legende       | 475000000.00 |
+| edgar         | eddie777  | edgar77@hotmail.com  | USA       |  2120000 | 2019-10-30 07:56:22 | Legende       | 198885000.00 |
+| fermat        | $45_@xyz  | fermat@gmail.com     | Senegal   |      975 | 2011-11-24 15:35:56 | Debutant      |    240000.00 |
+| fode          | 21fode    | fofo12@gmail.com     | Senegal   |    85440 | 2013-09-14 12:45:08 | Professionnel |  28880000.00 |
+| junior        | jun1298   | Hisself@hotmail.com  | Canada    |    24885 | 2013-11-24 05:35:08 | Moyen         |   6885000.00 |
+| messi         | leo101988 | leomessi@hotmail.com | Argentine | 10035000 | 2019-02-13 09:35:45 | Legende       | 525000000.00 |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+11 rows in set (0.00 sec)
+

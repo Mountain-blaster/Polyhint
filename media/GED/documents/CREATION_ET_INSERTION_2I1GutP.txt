@@ -1,0 +1,847 @@
+mysql> CREATE DATABASE Fergame;
+Query OK, 1 row affected (0.01 sec)
+
+
+mysql> use fergame;
+Database changed
+
+==========================================================================>CREATION DE TABLES<===================================================================================
+
+mysql> CREATE TABLE joueur (
+    -> pseudo_joueur varchar(30) PRIMARY KEY,
+    -> password varchar(60) NOT NULL, 
+    -> email varchar(200) UNIQUE NOT NULL,
+    -> pays varchar(45) NOT NULL,
+    -> points_j INT DEFAULT 1000,
+    -> date_inscription DATETIME NOT NULL,
+    -> niveau_j set('Debutant','Moyen','Professionnel','Legende') DEFAULT 'Debutant',
+    -> fonds DECIMAL(9,2) UNSIGNED NOT NULL DEFAULT 150000.00
+    -> );
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_fergame |
++-------------------+
+| joueur            |
++-------------------+
+1 row in set (0.02 sec)
+
+mysql> CREATE TABLE personnage (
+    -> id_perso TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    -> nom_perso varchar(50) NOT NULL,
+    -> pseudo_joueur varchar(30),
+    -> niveau_p set('1','2','3','4','5') NOT NULL,
+    -> point_vie_restant INT UNSIGNED NOT NULL DEFAULT 100,
+    -> prix_perso  set('10000','100000','10000000','50000000','75000000'),
+    -> FOREIGN KEY (pseudo_joueur) REFERENCES joueur(pseudo_joueur));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE groupe(
+    -> id_groupe TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    -> nom_groupe VARCHAR(30) NOT NULL,
+    -> nbre_max TINYINT NOT NULL DEFAULT 4);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE groupe_cree(
+    -> id_groupe TINYINT UNSIGNED,
+    -> pseudo_joueur varchar(30) NOT NULL,
+    -> FOREIGN KEY (id_groupe) REFERENCES groupe(id_groupe),
+    -> FOREIGN KEY (pseudo_joueur) REFERENCES joueur(pseudo_joueur));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> SHOW TABLES;
++-------------------+
+| Tables_in_fergame |
++-------------------+
+| groupe            |
+| groupe_cree       |
+| joueur            |
+| personnage        |
++-------------------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE tournoi(
+    -> id_tournoi TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    -> nom_tournoi VARCHAR(30) NOT NULL,
+    -> niveau_requis set('Debutant','Moyen','Professionnelle','Legende') NOT NULL,
+    -> nbre_max TINYINT NOT NULL DEFAULT 4,
+    -> etat_t set('en cours','termine') NOT NULL DEFAULT 'en cours',
+    -> date_creation DATETIME NOT NULL DEFAULT NOW(),
+    -> date_fin DATETIME NOT NULL ,
+    -> prix_vainqueur DECIMAL(9,2) );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE tournoi_cree(
+    -> id_tournoi TINYINT UNSIGNED,
+    -> pseudo_joueur VARCHAR(30) NOT NULL,
+    -> points_t INT UNSIGNED NOT NULL DEFAULT 500,
+    -> FOREIGN KEY (id_tournoi) REFERENCES tournoi(id_tournoi),
+    -> FOREIGN KEY (pseudo_joueur) REFERENCES joueur(pseudo_joueur));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE arme(
+    -> code_arme INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    -> type set('fusil','epee','mitrailleuse','pistolet','lance-roquette','fusil-precision','missile') NOT NULL,
+    -> xps_coup INT UNSIGNED NOT NULL,
+    -> prix_A DECIMAL(9,2) NOT NULL,
+    -> nom_A VARCHAR(50) NOT NULL);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE possede_arme(
+    -> code_arme INT UNSIGNED NOT NULL,
+    -> id_perso TINYINT UNSIGNED NOT NULL,
+    -> FOREIGN KEY (id_perso) REFERENCES personnage(id_perso),
+    -> FOREIGN KEY (code_arme) REFERENCES arme(code_arme));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE equipement(
+    -> id_equipement INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    -> outils varchar(255) NOT NULL,
+    -> poids set('leger','moyen','lourd','mega-lourd','titanesque') NOT NULL,
+    -> prix DECIMAL(9,2) UNSIGNED NOT NULL,
+    -> resistance SMALLINT UNSIGNED NOT NULL);
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+
+mysql> show create table equipement;
++------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table      | Create Table                                                                                                                                                                                                                                                                                                                                                                                   |
++------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| equipement | CREATE TABLE `equipement` (
+  `id_equipement` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `outils` varchar(255) NOT NULL,
+  `poids` set('leger','moyen','lourd','mega-lourd','titanesque') NOT NULL,
+  `prix` decimal(9,2) unsigned NOT NULL,
+  `resistance` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`id_equipement`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE TABLE dispose_equipement (
+    -> id_equipement INT UNSIGNED NOT NULL,
+    -> id_perso TINYINT UNSIGNED NOT NULL,
+    -> FOREIGN KEY (id_equipement) REFERENCES equipement(id_equipement),
+    -> FOREIGN KEY (id_perso) REFERENCES personnage(id_perso));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE elite(
+    -> nom_elite VARCHAR(75) PRIMARY KEY,
+    -> specialite set('arme','epee','arme+epee','art martial','arme+art martial','art martial+epee','arme+epee+art martial') NOT NULL,
+    -> nbre_perso TINYINT NOT NULL DEFAULT 4
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE appartient_elite(
+    -> id_perso TINYINT UNSIGNED NOT NULL,
+    -> nom_elite VARCHAR(75) NOT NULL,
+    -> FOREIGN KEY (id_perso) REFERENCES personnage(id_perso),
+    -> FOREIGN KEY (nom_elite) REFERENCES elite(nom_elite));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE zone(
+    -> id_zone INT UNSIGNED PRIMARY KEY,
+    -> pays VARCHAR(30) NOT NULL,
+    -> continent set ('Afrique','Asie','Europe','Oceanie','Amerique'),
+    -> nom_elite VARCHAR(75) NOT NULL,
+    -> FOREIGN KEY (nom_elite) REFERENCES elite(nom_elite));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_fergame  |
++--------------------+
+| appartient_elite   |
+| arme               |
+| dispose_equipement |
+| elite              |
+| equipement         |
+| groupe             |
+| groupe_cree        |
+| joueur             |
+| personnage         |
+| possede_arme       |
+| tournoi            |
+| tournoi_cree       |
+| zone               |
++--------------------+
+13 rows in set (0.00 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_fergame  |
++--------------------+
+| appartient_elite   |
+| arme               |
+| dispose_equipement |
+| elite              |
+| equipement         |
+| groupe             |
+| groupe_cree        |
+| joueur             |
+| personnage         |
+| possede_arme       |
+| tournoi            |
+| tournoi_cree       |
+| zone               |
++--------------------+
+13 rows in set (0.02 sec)
+
+mysql> desc joueur;
++------------------+---------------------------------------------------+------+-----+-----------+-------+
+| Field            | Type                                              | Null | Key | Default   | Extra |
++------------------+---------------------------------------------------+------+-----+-----------+-------+
+| pseudo_joueur    | varchar(30)                                       | NO   | PRI | NULL      |       |
+| password         | varchar(60)                                       | NO   |     | NULL      |       |
+| email            | varchar(200)                                      | NO   | UNI | NULL      |       |
+| pays             | varchar(45)                                       | NO   |     | NULL      |       |
+| points_j         | int(11)                                           | YES  |     | 1000      |       |
+| date_inscription | datetime                                          | NO   |     | NULL      |       |
+| niveau_j         | set('Debutant','Moyen','Professionnel','Legende') | YES  |     | Debutant  |       |
+| fonds            | decimal(9,2) unsigned                             | NO   |     | 150000.00 |       |
++------------------+---------------------------------------------------+------+-----+-----------+-------+
+8 rows in set (0.02 sec)
+					
+====================================================>FIN CREATION DE TABLES<===========================================================================
+
+====================================================>INSERTION DE DONNÉES<=============================================================================
+
+mysql> INSERT INTO joueur
+    -> (pseudo_joueur,password,email,pays,points_j,niveau_j,fonds,date_inscription)
+    -> VALUES
+    -> ('fermat', '$45_@xyz','fermat@gmail.com','Senegal',975,'Debutant',250000,'2011-11-24 15:35:56');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> SHOW CREATE TABLE joueur;
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table  | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| joueur | CREATE TABLE `joueur` (
+  `pseudo_joueur` varchar(30) NOT NULL,
+  `password` varchar(60) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `pays` varchar(45) NOT NULL,
+  `points_j` int(11) DEFAULT '1000',
+  `date_inscription` datetime NOT NULL,
+  `niveau_j` set('Debutant','Moyen','Professionnel','Legende') DEFAULT 'Debutant',
+  `fonds` decimal(9,2) unsigned NOT NULL DEFAULT '150000.00',
+  PRIMARY KEY (`pseudo_joueur`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.01 sec)
+
+	
+
+mysql> INSERT INTO joueur
+    -> (pseudo_joueur,password,email,pays,points_j,niveau_j,fonds,date_inscription)
+    -> VALUES
+    -> ('abdou','Lebron1@','abdou@ept.sn','USA',10450,'Professionnel',15000000,'2011-12-24 11:05:54'),
+    -> ('junior','jun1298','Hisself@hotmail.com','Canada',7040,'Moyen',7000000,'2013-11-24 05:35:08'),
+    -> ('fode','21fode','fofo12@gmail.com','Senegal',80040,'Professionnel',80000000,'2013-09-14 12:45:08'),
+    -> ('baidy','cr71885','bdsy7@gmail.com','Senegal',54840,'Professionnel',25000000,'2017-04-04 18:25:48'),
+    -> ('adja','ada907','ada7@yahoo.com','Senegal',988,'Debutant',350000,'2017-01-04 06:02:34'),
+    -> ('edgar','eddie777','edgar77@hotmail.com','USA',2000000,'Legende',275000000,'2019-10-30 07:56:22'),
+    -> ('allan','alpo99$','allie5@hotmail.es','Espagne',50000,'Professionnel',100000000,'2015-07-14 23:55:46'),
+    -> ('alvin','alvi56_@','alvin155@yahoo.fr','France',2500,'Moyen',15000000,'2019-01-24 13:35:08'),
+    -> ('cristiano','cr700but','thegoat@gmail.com','Portugal',10000000,'Legende',550000000,'2019-05-14 14:07:01'),
+    -> ('messi','leo101988','leomessi@hotmail.com','Argentine',9950000,'Legende',600000000,'2019-02-13 09:35:45');
+ERROR 1264 (22003): Out of range value for column 'fonds' at row 1
+
+
+mysql> ALTER TABLE joueur
+    -> DROP COLUMN fonds;
+Query OK, 0 rows affected (0.24 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE joueur 
+    -> ADD COLUMN fonds DECIMAL(12,2);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from joueur;
++---------------+----------+------------------+---------+----------+---------------------+----------+-------+
+| pseudo_joueur | password | email            | pays    | points_j | date_inscription    | niveau_j | fonds |
++---------------+----------+------------------+---------+----------+---------------------+----------+-------+
+| fermat        | $45_@xyz | fermat@gmail.com | Senegal |      975 | 2011-11-24 15:35:56 | Debutant |  NULL |
++---------------+----------+------------------+---------+----------+---------------------+----------+-------+
+1 row in set (0.00 sec)
+
+===================================>UPDATE SUR UNE COLONNE 
+
+mysql> UPDATE joueur
+    -> SET fonds=250000.00 where pseudo_joueur='fermat';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from joueur;
++---------------+----------+------------------+---------+----------+---------------------+----------+-----------+
+| pseudo_joueur | password | email            | pays    | points_j | date_inscription    | niveau_j | fonds     |
++---------------+----------+------------------+---------+----------+---------------------+----------+-----------+
+| fermat        | $45_@xyz | fermat@gmail.com | Senegal |      975 | 2011-11-24 15:35:56 | Debutant | 250000.00 |
++---------------+----------+------------------+---------+----------+---------------------+----------+-----------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO joueur 
+    -> (pseudo_joueur,password,email,pays,points_j,niveau_j,fonds,date_inscription)
+    -> VALUES
+    -> ('abdou','Lebron1@','abdou@ept.sn','USA',10450,'Professionnel',15000000.00,'2011-12-24 11:05:54'),
+    -> ('junior','jun1298','Hisself@hotmail.com','Canada',7040,'Moyen',7000000.00,'2013-11-24 05:35:08'),
+    -> ('fode','21fode','fofo12@gmail.com','Senegal',80040,'Professionnel',80000000.00,'2013-09-14 12:45:08'),
+    -> ('baidy','cr71885','bdsy7@gmail.com','Senegal',54840,'Professionnel',25000000.00,'2017-04-04 18:25:48'),
+    -> ('adja','ada907','ada7@yahoo.com','Senegal',988,'Debutant',350000,'2017-01-04 06:02:34'),
+    -> ('edgar','eddie777','edgar77@hotmail.com','USA',2000000,'Legende',275000000.00,'2019-10-30 07:56:22'),
+    -> ('allan','alpo99$','allie5@hotmail.es','Espagne',50000,'Professionnel',100000000.00,'2015-07-14 23:55:46'),
+    -> ('alvin','alvi56_@','alvin155@yahoo.fr','France',2500,'Moyen',15000000.00,'2019-01-24 13:35:08'),
+    -> ('cristiano','cr700but','thegoat@gmail.com','Portugal',10000000,'Legende',550000000.00,'2019-05-14 14:07:01'),
+    -> ('messi','leo101988','leomessi@hotmail.com','Argentine',9950000,'Legende',600000000.00,'2019-02-13 09:35:45');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM joueur;
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| pseudo_joueur | password  | email                | pays      | points_j | date_inscription    | niveau_j      | fonds        |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+| abdou         | Lebron1@  | abdou@ept.sn         | USA       |    10450 | 2011-12-24 11:05:54 | Professionnel |  15000000.00 |
+| adja          | ada907    | ada7@yahoo.com       | Senegal   |      988 | 2017-01-04 06:02:34 | Debutant      |    350000.00 |
+| allan         | alpo99$   | allie5@hotmail.es    | Espagne   |    50000 | 2015-07-14 23:55:46 | Professionnel | 100000000.00 |
+| alvin         | alvi56_@  | alvin155@yahoo.fr    | France    |     2500 | 2019-01-24 13:35:08 | Moyen         |  15000000.00 |
+| baidy         | cr71885   | bdsy7@gmail.com      | Senegal   |    54840 | 2017-04-04 18:25:48 | Professionnel |  25000000.00 |
+| cristiano     | cr700but  | thegoat@gmail.com    | Portugal  | 10000000 | 2019-05-14 14:07:01 | Legende       | 550000000.00 |
+| edgar         | eddie777  | edgar77@hotmail.com  | USA       |  2000000 | 2019-10-30 07:56:22 | Legende       | 275000000.00 |
+| fermat        | $45_@xyz  | fermat@gmail.com     | Senegal   |      975 | 2011-11-24 15:35:56 | Debutant      |    250000.00 |
+| fode          | 21fode    | fofo12@gmail.com     | Senegal   |    80040 | 2013-09-14 12:45:08 | Professionnel |  80000000.00 |
+| junior        | jun1298   | Hisself@hotmail.com  | Canada    |     7040 | 2013-11-24 05:35:08 | Moyen         |   7000000.00 |
+| messi         | leo101988 | leomessi@hotmail.com | Argentine |  9950000 | 2019-02-13 09:35:45 | Legende       | 600000000.00 |
++---------------+-----------+----------------------+-----------+----------+---------------------+---------------+--------------+
+11 rows in set (0.00 sec)
+
+mysql> desc tournoi;
++----------------+-----------------------------------------------------+------+-----+-------------------+-------------------+
+| Field          | Type                                                | Null | Key | Default           | Extra             |
++----------------+-----------------------------------------------------+------+-----+-------------------+-------------------+
+| id_tournoi     | tinyint(3) unsigned                                 | NO   | PRI | NULL              | auto_increment    |
+| nom_tournoi    | varchar(30)                                         | NO   |     | NULL              |                   |
+| niveau_requis  | set('Debutant','Moyen','Professionnelle','Legende') | NO   |     | NULL              |                   |
+| nbre_max       | tinyint(4)                                          | NO   |     | 4                 |                   |
+| etat_t         | set('en cours','termine')                           | NO   |     | en cours          |                   |
+| date_creation  | datetime                                            | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+| date_fin       | datetime                                            | NO   |     | NULL              |                   |
+| prix_vainqueur | decimal(9,2)                                        | YES  |     | NULL              |                   |
++----------------+-----------------------------------------------------+------+-----+-------------------+-------------------+
+8 rows in set (0.00 sec)
+
+mysql> alter table tournoi
+    -> drop column prix_vainqueur;     
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table tournoi
+    -> add column prix_vainqueur decimal(12,2);       ##RECTIFICATION DU PLAGE DE VALEUR DE DECIMAL
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO tournoi
+    -> (nom_tournoi,niveau_requis,nbre_max,etat_t,date_creation,date_fin,prix_vainqueur)
+    -> VALUES
+    -> ('DOA','Professionnelle',3,'termine','2019-10-21 15:00:00','2019-10-24 15:00:00',10000000),
+    -> ('KILL_OR_DIE','Debutant',7,'en cours','2019-11-30 15:00:00','2019-12-30 15:00:00',1500000),
+    -> ('THE_GOAT','Legende',3,'en cours','2019-12-05 15:00:00','2019-12-30 15:00:00',100000000);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from tournoi;
++------------+-------------+-----------------+----------+----------+---------------------+---------------------+----------------+
+| id_tournoi | nom_tournoi | niveau_requis   | nbre_max | etat_t   | date_creation       | date_fin            | prix_vainqueur |
++------------+-------------+-----------------+----------+----------+---------------------+---------------------+----------------+
+|          1 | DOA         | Professionnelle |        3 | termine  | 2019-10-21 15:00:00 | 2019-10-24 15:00:00 |    10000000.00 |
+|          2 | KILL_OR_DIE | Debutant        |        7 | en cours | 2019-11-30 15:00:00 | 2019-12-30 15:00:00 |     1500000.00 |
+|          3 | THE_GOAT    | Legende         |        3 | en cours | 2019-12-05 15:00:00 | 2019-12-30 15:00:00 |   100000000.00 |
++------------+-------------+-----------------+----------+----------+---------------------+---------------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> desc tournoi_cree;
++---------------+---------------------+------+-----+---------+-------+
+| Field         | Type                | Null | Key | Default | Extra |
++---------------+---------------------+------+-----+---------+-------+
+| id_tournoi    | tinyint(3) unsigned | YES  | MUL | NULL    |       |
+| pseudo_joueur | varchar(30)         | NO   | MUL | NULL    |       |
+| points_t      | int(10) unsigned    | NO   |     | 500     |       |
++---------------+---------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO tournoi_cree
+    -> (id_tournoi,pseudo_joueur,points_t)
+    -> VALUES
+    -> (1,'abdou',6000),
+    -> (1,'fode',5400),
+    -> (1,'allan',7800),
+    -> (2,'abdou',16805),
+    -> (2,'junior',17845),
+    -> (2,'edgar',45000),
+    -> (2,'adja',19000),
+    -> (2,'baidy',7500),
+    -> (3,'cristiano',90000),
+    -> (3,'messi',85000),
+    -> (3,'edgar',75000);
+Query OK, 11 rows affected (0.01 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> select * from tournoi_cree;
++------------+---------------+----------+
+| id_tournoi | pseudo_joueur | points_t |
++------------+---------------+----------+
+|          1 | abdou         |     6000 |
+|          1 | fode          |     5400 |
+|          1 | allan         |     7800 |
+|          2 | abdou         |    16805 |
+|          2 | junior        |    17845 |
+|          2 | edgar         |    45000 |
+|          2 | adja          |    19000 |
+|          2 | baidy         |     7500 |
+|          3 | cristiano     |    90000 |
+|          3 | messi         |    85000 |
+|          3 | edgar         |    75000 |
++------------+---------------+----------+
+11 rows in set (0.00 sec)
+
+mysql> desc groupe;
++------------+---------------------+------+-----+---------+----------------+
+| Field      | Type                | Null | Key | Default | Extra          |
++------------+---------------------+------+-----+---------+----------------+
+| id_groupe  | tinyint(3) unsigned | NO   | PRI | NULL    | auto_increment |
+| nom_groupe | varchar(30)         | NO   |     | NULL    |                |
+| nbre_max   | tinyint(4)          | NO   |     | 4       |                |
++------------+---------------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO groupe
+    -> (nom_groupe,nbre_max)
+    -> VALUES
+    -> ('SEAL TEAM',6),
+    -> ('CONDOR',4),
+    -> ('ZERO SOUL',3);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc groupe_cree;
++---------------+---------------------+------+-----+---------+-------+
+| Field         | Type                | Null | Key | Default | Extra |
++---------------+---------------------+------+-----+---------+-------+
+| id_groupe     | tinyint(3) unsigned | YES  | MUL | NULL    |       |
+| pseudo_joueur | varchar(30)         | NO   | MUL | NULL    |       |
++---------------+---------------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO groupe_cree
+    -> (id_groupe,pseudo_joueur)
+    -> VALUES
+    -> (3,'fermat'),
+    -> (3,'fode'),
+    -> (3,'alvin'),
+    -> (1,'junior'),
+    -> (1,'abdou'),
+    -> (1,'baidy'),
+    -> (1,'edgar'),
+    -> (1,'adja'),
+    -> (2,'allan'),
+    -> (2,'cristiano'),
+    -> (2,'messi');
+Query OK, 11 rows affected (0.01 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> desc personnage;
++-------------------+--------------------------------------------------------+------+-----+---------+----------------+
+| Field             | Type                                                   | Null | Key | Default | Extra          |
++-------------------+--------------------------------------------------------+------+-----+---------+----------------+
+| id_perso          | tinyint(3) unsigned                                    | NO   | PRI | NULL    | auto_increment |
+| nom_perso         | varchar(50)                                            | NO   |     | NULL    |                |
+| pseudo_joueur     | varchar(30)                                            | YES  | MUL | NULL    |                |
+| niveau_p          | set('1','2','3','4','5')                               | NO   |     | NULL    |                |
+| point_vie_restant | int(10) unsigned                                       | NO   |     | 100     |                |
+| prix_perso        | set('10000','100000','10000000','50000000','75000000') | YES  |     | NULL    |                |
++-------------------+--------------------------------------------------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO personnage
+    -> (nom_perso,niveau_p,point_vie_restant,prix_perso,pseudo_joueur)
+    -> VALUES
+    -> ('Merlin','2',1450,'100000','junior'),
+    -> ('Dracula','4',5000,'50000000','allan'),
+    -> ('Chuck Norris','5',7500,'75000000','edgar'),
+    -> ('Arnold Swarzi','5',8500,'75000000','cristiano'),
+    -> ('Skywalker','2',505,'100000','alvin'),
+    -> ('Travolta','5',7800,'75000000','messi'),
+    -> ('JCVD','3',4500,'10000000','baidy'),
+    -> ('JACK RYAN','1',0,'10000','fermat'),
+    -> ('Armagedon','2',2500,'100000','adja'),
+    -> ('Asbald','3',3405,'10000000','abdou'),
+    -> ('DROGON','4',4850,'50000000','fode');
+Query OK, 11 rows affected (0.01 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO personnage
+    -> (nom_perso,niveau_p,prix_perso)
+    -> VALUES
+    -> ('Thor','5','75000000'),
+    -> ('Achille','3','10000000'),
+    -> ('SKULL','4','50000000'),
+    -> ('IronSide','1','10000'),
+    -> ('GHOST SNIPER','2','100000'),
+    -> ('DARK KILLER','5','75000000');
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from personnage;
++----------+---------------+---------------+----------+-------------------+------------+
+| id_perso | nom_perso     | pseudo_joueur | niveau_p | point_vie_restant | prix_perso |
++----------+---------------+---------------+----------+-------------------+------------+
+|        1 | Merlin        | junior        | 2        |              1450 | 100000     |
+|        2 | Dracula       | allan         | 4        |              5000 | 50000000   |
+|        3 | Chuck Norris  | edgar         | 5        |              7500 | 75000000   |
+|        4 | Arnold Swarzi | cristiano     | 5        |              8500 | 75000000   |
+|        5 | Skywalker     | alvin         | 2        |               505 | 100000     |
+|        6 | Travolta      | messi         | 5        |              7800 | 75000000   |
+|        7 | JCVD          | baidy         | 3        |              4500 | 10000000   |
+|        8 | JACK RYAN     | fermat        | 1        |                 0 | 10000      |
+|        9 | Armagedon     | adja          | 2        |              2500 | 100000     |
+|       10 | Asbald        | abdou         | 3        |              3405 | 10000000   |
+|       11 | DROGON        | fode          | 4        |              4850 | 50000000   |
+|       12 | Thor          | NULL          | 5        |               100 | 75000000   |
+|       13 | Achille       | NULL          | 3        |               100 | 10000000   |
+|       14 | SKULL         | NULL          | 4        |               100 | 50000000   |
+|       15 | IronSide      | NULL          | 1        |               100 | 10000      |
+|       16 | GHOST SNIPER  | NULL          | 2        |               100 | 100000     |
+|       17 | DARK KILLER   | NULL          | 5        |               100 | 75000000   |
++----------+---------------+---------------+----------+-------------------+------------+
+17 rows in set (0.00 sec)
+
+mysql> desc arme;
++-----------+--------------------------------------------------------------------------------------------+------+-----+---------+----------------+
+| Field     | Type                                                                                       | Null | Key | Default | Extra          |
++-----------+--------------------------------------------------------------------------------------------+------+-----+---------+----------------+
+| code_arme | int(10) unsigned                                                                           | NO   | PRI | NULL    | auto_increment |
+| type      | set('fusil','epee','mitrailleuse','pistolet','lance-roquette','fusil-precision','missile') | NO   |     | NULL    |                |
+| xps_coup  | int(10) unsigned                                                                           | NO   |     | NULL    |                |
+| prix_A    | decimal(9,2)                                                                               | NO   |     | NULL    |                |
+| nom_A     | varchar(50)                                                                                | NO   |     | NULL    |                |
++-----------+--------------------------------------------------------------------------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO arme
+    -> (code_arme,type,xps_coup,prix_A,nom_A)
+    -> VALUES
+    -> (805,'fusil',50,7500,'AK-47'),
+    -> (806,'fusil',90,8500,'M 16'),
+    -> (807,'fusil',100,10000,'KALACHNIKOV RPK'),
+    -> (404,'epee',70,8000,'Excalibur'),
+    -> (405,'epee',70,10000,'Blue Rose Sword'),
+    -> (501,'mitrailleuse',100,9500,'PKM'),
+    -> (502,'mitrailleuse',105,9700,'M240'),
+    -> (604,'pistolet',100,7000,'Beretta 92'),
+    -> (605,'pistolet',105,7400,'Colt_45'),
+    -> (606,'pistolet',110,7800,'Colt M1911'),
+    -> (607,'pistolet',1000,100000,'Desert EAGLE'),
+    -> (901,'fusil-precision',1000,100000,'SIG 550 SNIPER'),
+    -> (902,'fusil-precision',1050,105000,'M24 SWS'),
+    -> (903,'fusil-precision',1000,100000,'VKS'),
+    -> (1024,'missile',2000,1000000,'SS-9 SCARP'),
+    -> (1025,'missile',2500,1500000,'SS-18 SATAN'),
+    -> (701,'lance-roquette',1000,100000,'AT-4');
+Query OK, 17 rows affected (0.00 sec)
+Records: 17  Duplicates: 0  Warnings: 0
+
+mysql> select * from arme;
++-----------+-----------------+----------+------------+-----------------+
+| code_arme | type            | xps_coup | prix_A     | nom_A           |
++-----------+-----------------+----------+------------+-----------------+
+|       404 | epee            |       70 |    8000.00 | Excalibur       |
+|       405 | epee            |       70 |   10000.00 | Blue Rose Sword |
+|       501 | mitrailleuse    |      100 |    9500.00 | PKM             |
+|       502 | mitrailleuse    |      105 |    9700.00 | M240            |
+|       604 | pistolet        |      100 |    7000.00 | Beretta 92      |
+|       605 | pistolet        |      105 |    7400.00 | Colt_45         |
+|       606 | pistolet        |      110 |    7800.00 | Colt M1911      |
+|       607 | pistolet        |     1000 |  100000.00 | Desert EAGLE    |
+|       701 | lance-roquette  |     1000 |  100000.00 | AT-4            |
+|       805 | fusil           |       50 |    7500.00 | AK-47           |
+|       806 | fusil           |       90 |    8500.00 | M 16            |
+|       807 | fusil           |      100 |   10000.00 | KALACHNIKOV RPK |
+|       901 | fusil-precision |     1000 |  100000.00 | SIG 550 SNIPER  |
+|       902 | fusil-precision |     1050 |  105000.00 | M24 SWS         |
+|       903 | fusil-precision |     1000 |  100000.00 | VKS             |
+|      1024 | missile         |     2000 | 1000000.00 | SS-9 SCARP      |
+|      1025 | missile         |     2500 | 1500000.00 | SS-18 SATAN     |
++-----------+-----------------+----------+------------+-----------------+
+17 rows in set (0.00 sec)
+
+mysql> desc possede_arme;
++-----------+---------------------+------+-----+---------+-------+
+| Field     | Type                | Null | Key | Default | Extra |
++-----------+---------------------+------+-----+---------+-------+
+| code_arme | int(10) unsigned    | NO   | MUL | NULL    |       |
+| id_perso  | tinyint(3) unsigned | NO   | MUL | NULL    |       |
++-----------+---------------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from personnage;
++----------+---------------+---------------+----------+-------------------+------------+
+| id_perso | nom_perso     | pseudo_joueur | niveau_p | point_vie_restant | prix_perso |
++----------+---------------+---------------+----------+-------------------+------------+
+|        1 | Merlin        | junior        | 2        |              1450 | 100000     |
+|        2 | Dracula       | allan         | 4        |              5000 | 50000000   |
+|        3 | Chuck Norris  | edgar         | 5        |              7500 | 75000000   |
+|        4 | Arnold Swarzi | cristiano     | 5        |              8500 | 75000000   |
+|        5 | Skywalker     | alvin         | 2        |               505 | 100000     |
+|        6 | Travolta      | messi         | 5        |              7800 | 75000000   |
+|        7 | JCVD          | baidy         | 3        |              4500 | 10000000   |
+|        8 | JACK RYAN     | fermat        | 1        |                 0 | 10000      |
+|        9 | Armagedon     | adja          | 2        |              2500 | 100000     |
+|       10 | Asbald        | abdou         | 3        |              3405 | 10000000   |
+|       11 | DROGON        | fode          | 4        |              4850 | 50000000   |
+|       12 | Thor          | NULL          | 5        |               100 | 75000000   |
+|       13 | Achille       | NULL          | 3        |               100 | 10000000   |
+|       14 | SKULL         | NULL          | 4        |               100 | 50000000   |
+|       15 | IronSide      | NULL          | 1        |               100 | 10000      |
+|       16 | GHOST SNIPER  | NULL          | 2        |               100 | 100000     |
+|       17 | DARK KILLER   | NULL          | 5        |               100 | 75000000   |
++----------+---------------+---------------+----------+-------------------+------------+
+17 rows in set (0.00 sec)
+
+mysql> INSERT INTO possede_arme
+    -> (id_perso,code_arme)
+    -> VALUES
+    -> (1,404),
+    -> (1,604),
+    -> (2,606),
+    -> (2,405),
+    -> (2,501),
+    -> (2,605),
+    -> (3,807),
+    -> (3,1024),
+    -> (3,902),
+    -> (4,1024),
+    -> (4,901),
+    -> (4,805),
+    -> (4,701),
+    -> (5,805),
+    -> (5,404),
+    -> (6,1025),
+    -> (6,903),
+    -> (6,701),
+    -> (7,605),
+    -> (7,806),
+    -> (8,604),
+    -> (9,805),
+    -> (9,501),
+    -> (10,404),
+    -> (10,607),
+    -> (11,903),
+    -> (11,701),
+    -> (11,806);
+Query OK, 28 rows affected (0.01 sec)
+Records: 28  Duplicates: 0  Warnings: 0
+
+mysql> desc equipement;
++---------------+--------------------------------------------------------+------+-----+---------+----------------+
+| Field         | Type                                                   | Null | Key | Default | Extra          |
++---------------+--------------------------------------------------------+------+-----+---------+----------------+
+| id_equipement | int(10) unsigned                                       | NO   | PRI | NULL    | auto_increment |
+| outils        | varchar(255)                                           | NO   |     | NULL    |                |
+| poids         | set('leger','moyen','lourd','mega-lourd','titanesque') | NO   |     | NULL    |                |
+| prix          | decimal(9,2) unsigned                                  | NO   |     | NULL    |                |
+| resistance    | smallint(5) unsigned                                   | NO   |     | NULL    |                |
++---------------+--------------------------------------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO equipement
+    -> (id_equipement,outils,poids,prix,resistance)
+    -> VALUES
+    -> (1001,'Combinaison US-AIR FORCE MaxQ','lourd',100000,50),
+    -> (1002,'gilet pare balle','leger',20000,10),
+    -> (1003,'Trousse Sant‚','moyen',50000,35),
+    -> (1004,'Bunker','titanesque',1000000,1000),
+    -> (1005,'simple combine','lourd',0,5);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++--------------------+
+| Tables_in_fergame  |
++--------------------+
+| appartient_elite   |
+| arme               |
+| dispose_equipement |
+| elite              |
+| equipement         |
+| groupe             |
+| groupe_cree        |
+| joueur             |
+| personnage         |
+| possede_arme       |
+| tournoi            |
+| tournoi_cree       |
+| zone               |
++--------------------+
+13 rows in set (0.00 sec)
+
+mysql> desc dispose_equipement;
++---------------+---------------------+------+-----+---------+-------+
+| Field         | Type                | Null | Key | Default | Extra |
++---------------+---------------------+------+-----+---------+-------+
+| id_equipement | int(10) unsigned    | NO   | MUL | NULL    |       |
+| id_perso      | tinyint(3) unsigned | NO   | MUL | NULL    |       |
++---------------+---------------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from personnage
+    -> ;
++----------+---------------+---------------+----------+-------------------+------------+
+| id_perso | nom_perso     | pseudo_joueur | niveau_p | point_vie_restant | prix_perso |
++----------+---------------+---------------+----------+-------------------+------------+
+|        1 | Merlin        | junior        | 2        |              1450 | 100000     |
+|        2 | Dracula       | allan         | 4        |              5000 | 50000000   |
+|        3 | Chuck Norris  | edgar         | 5        |              7500 | 75000000   |
+|        4 | Arnold Swarzi | cristiano     | 5        |              8500 | 75000000   |
+|        5 | Skywalker     | alvin         | 2        |               505 | 100000     |
+|        6 | Travolta      | messi         | 5        |              7800 | 75000000   |
+|        7 | JCVD          | baidy         | 3        |              4500 | 10000000   |
+|        8 | JACK RYAN     | fermat        | 1        |                 0 | 10000      |
+|        9 | Armagedon     | adja          | 2        |              2500 | 100000     |
+|       10 | Asbald        | abdou         | 3        |              3405 | 10000000   |
+|       11 | DROGON        | fode          | 4        |              4850 | 50000000   |
+|       12 | Thor          | NULL          | 5        |               100 | 75000000   |
+|       13 | Achille       | NULL          | 3        |               100 | 10000000   |
+|       14 | SKULL         | NULL          | 4        |               100 | 50000000   |
+|       15 | IronSide      | NULL          | 1        |               100 | 10000      |
+|       16 | GHOST SNIPER  | NULL          | 2        |               100 | 100000     |
+|       17 | DARK KILLER   | NULL          | 5        |               100 | 75000000   |
++----------+---------------+---------------+----------+-------------------+------------+
+17 rows in set (0.00 sec)
+
+mysql> INSERT INTO dispose_equipement
+    -> (id_perso,id_equipement)
+    -> VALUES
+    -> (1,1005),
+    -> (2,1005),
+    -> (2,1001),
+    -> (2,1002),
+    -> (3,1001),
+    -> (3,1005),
+    -> (3,1003),
+    -> (3,1004),
+    -> (4,1001),
+    -> (4,1002),
+    -> (4,1003),
+    -> (4,1005),
+    -> (5,1005),
+    -> (6,1002),
+    -> (6,1003),
+    -> (6,1004),
+    -> (6,1005),
+    -> (7,1005),
+    -> (8,1005),
+    -> (9,1005),
+    -> (10,1001),
+    -> (10,1004),
+    -> (10,1005),
+    -> (11,1001),
+    -> (11,1002),
+    -> (11,1004),
+    -> (11,1005);
+Query OK, 27 rows affected (0.01 sec)
+Records: 27  Duplicates: 0  Warnings: 0
+
+mysql> desc elite
+    -> ;
++------------+------------------------------------------------------------------------------------------------------------+------+-----+---------+-------+
+| Field      | Type                                                                                                       | Null | Key | Default | Extra |
++------------+------------------------------------------------------------------------------------------------------------+------+-----+---------+-------+
+| nom_elite  | varchar(75)                                                                                                | NO   | PRI | NULL    |       |
+| specialite | set('arme','epee','arme+epee','art martial','arme+art martial','art martial+epee','arme+epee+art martial') | NO   |     | NULL    |       |
+| nbre_perso | tinyint(4)                                                                                                 | NO   |     | 4       |       |
++------------+------------------------------------------------------------------------------------------------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO elite
+    -> (nom_elite,specialite,nbre_perso)
+    -> VALUES
+    -> ('THE WU ASSASSIN','art martial+epee',2),
+    -> ('Killers','arme+art martial',4),
+    -> ('La SECTE','arme',4);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc appartient_elite;
++-----------+---------------------+------+-----+---------+-------+
+| Field     | Type                | Null | Key | Default | Extra |
++-----------+---------------------+------+-----+---------+-------+
+| id_perso  | tinyint(3) unsigned | NO   | MUL | NULL    |       |
+| nom_elite | varchar(75)         | NO   | MUL | NULL    |       |
++-----------+---------------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from personnage;
++----------+---------------+---------------+----------+-------------------+------------+
+| id_perso | nom_perso     | pseudo_joueur | niveau_p | point_vie_restant | prix_perso |
++----------+---------------+---------------+----------+-------------------+------------+
+|        1 | Merlin        | junior        | 2        |              1450 | 100000     |
+|        2 | Dracula       | allan         | 4        |              5000 | 50000000   |
+|        3 | Chuck Norris  | edgar         | 5        |              7500 | 75000000   |
+|        4 | Arnold Swarzi | cristiano     | 5        |              8500 | 75000000   |
+|        5 | Skywalker     | alvin         | 2        |               505 | 100000     |
+|        6 | Travolta      | messi         | 5        |              7800 | 75000000   |
+|        7 | JCVD          | baidy         | 3        |              4500 | 10000000   |
+|        8 | JACK RYAN     | fermat        | 1        |                 0 | 10000      |
+|        9 | Armagedon     | adja          | 2        |              2500 | 100000     |
+|       10 | Asbald        | abdou         | 3        |              3405 | 10000000   |
+|       11 | DROGON        | fode          | 4        |              4850 | 50000000   |
+|       12 | Thor          | NULL          | 5        |               100 | 75000000   |
+|       13 | Achille       | NULL          | 3        |               100 | 10000000   |
+|       14 | SKULL         | NULL          | 4        |               100 | 50000000   |
+|       15 | IronSide      | NULL          | 1        |               100 | 10000      |
+|       16 | GHOST SNIPER  | NULL          | 2        |               100 | 100000     |
+|       17 | DARK KILLER   | NULL          | 5        |               100 | 75000000   |
++----------+---------------+---------------+----------+-------------------+------------+
+17 rows in set (0.00 sec)
+
+mysql> INSERT INTO appartient_elite
+    -> (id_perso,nom_elite)
+    -> VALUES
+    -> (1,'THE WU ASSASSIN'),
+    -> (10,'THE WU ASSASSIN'),
+    -> (6,'Killers'),
+    -> (2,'Killers'),
+    -> (3,'Killers'),
+    -> (4,'Killers'),
+    -> (7,'La SECTE'),
+    -> (9,'La SECTE'),
+    -> (11,'La SECTE'),
+    -> (8,'La SECTE');
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> desc zone;
++-----------+-----------------------------------------------------+------+-----+---------+-------+
+| Field     | Type                                                | Null | Key | Default | Extra |
++-----------+-----------------------------------------------------+------+-----+---------+-------+
+| id_zone   | int(10) unsigned                                    | NO   | PRI | NULL    |       |
+| pays      | varchar(30)                                         | NO   |     | NULL    |       |
+| continent | set('Afrique','Asie','Europe','Oceanie','Amerique') | YES  |     | NULL    |       |
+| nom_elite | varchar(75)                                         | NO   | MUL | NULL    |       |
++-----------+-----------------------------------------------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO zone
+    -> (id_zone,pays,continent,nom_elite)
+    -> VALUES
+    -> (47,'France','EUROPE','La SECTE'),
+    -> (51,'USA','AMERIQUE','Killers'),
+    -> (60,'Chine','ASIE','THE WU ASSASSIN');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+==================================================================>FIN DES INSERTION<========================================================================
+
+
+=================================================================>REQUETES<==================================================================================
