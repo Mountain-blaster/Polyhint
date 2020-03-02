@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Home</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'GED/decouverte/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="{% static 'GED/images/realfav.ico' %}"/>
+
+  <!-- Custom fonts for this template -->
+  <link href="{% static 'GED/decouverte/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+  <!-- Custom styles for this template -->
+  <link href="{% static 'GED/decouverte/css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top"><i class="fa fa-home"></i>PolyHint</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav text-uppercase ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger btn-outline-primary" href="#services">OBJECTIFS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger btn-outline-primary" href="#about">A PROPOS</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link js-scroll-trigger btn-outline-dark text-info" href="{% url 'GED:connexion' %}"><i class="fas fa-laptop"></i>Se Connecter</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="masthead">
+      <div class="jumbotron">
+          <h1 class="display-4 btn-outline-dark"><img src="{% static 'GED/images/ept.jpg' %}" width="45" height="45">  ECOLE POLYTECHNIQUE DE THIES  <img src="{% static 'GED/images/ept.jpg' %}" width="45" height="45"></h1>
+          <p class="lead">
+                  <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img class="d-block w-100" src="{% static 'GED/images/polytechniciens.jpg' %}" alt="First slide" width="500" height="800">
+                </div>
+                <div class="carousel-item">
+                  <img class="d-block w-100" src="{% static 'GED/images/ept.jpg' %}" alt="Second slide" width="500" height="800">
+                </div>
+                <div class="carousel-item">
+                  <img class="d-block w-100" src="{% static 'GED/images/Ept.png' %}" alt="Third slide" width="500" height="800">
+                </div>
+              </div>
+              <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+    </div>
+          </p>
+          <hr class="my-4">
+          <p class="text-info">
+              Le 25 mai 1973, son Excellence Léopold Sédar SENGHOR, Président de la République du Sénégal,
+              décrète la création de l’Ecole Polytechnique de Thiès.
+              L’Ecole polytechnique de Montréal en accepte le parrainage au cours de son implantation progressive.
+          </p>
+
+        </div>
+
+
+
+  </header>
+
+  <!-- Services -->
+  <section class="page-section" id="services">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h2 class="section-heading text-uppercase">OBJECTIFS</h2>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col-md-4">
+          <span class="fa-stack fa-4x">
+            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
+          </span>
+          <h4 class="service-heading">Transparence</h4>
+          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+        </div>
+        <div class="col-md-4">
+          <span class="fa-stack fa-4x">
+            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
+          </span>
+          <h4 class="service-heading">Numerisation</h4>
+          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+        </div>
+        <div class="col-md-4">
+          <span class="fa-stack fa-4x">
+            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
+          </span>
+          <h4 class="service-heading">Securite</h4>
+          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <SECTION>
+      <div class="embedresize">
+        <div>
+        <iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/O209XqBZVE0" width="560"></iframe>
+        </div>
+      </div>
+  </SECTION>
+  <style>
+      .embedresize {
+max-width: 560px;
+margin: auto;
+}
+
+.embedresize div {
+position: relative;
+height: 0;
+padding-bottom: 56.25%;
+}
+
+.embedresize iframe {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+
+.intro #intro .embedresize iframe,
+.exit .quizz .embedresize iframe,
+.alreadyplayed #intro .embedresize iframe,
+.identityset #intro .embedresize iframe,
+#notabene .embedresize iframe,
+#message_intro .embedresize iframe,
+.fancybox_body .embedresize iframe,
+#comments .embedresize iframe,
+#description .embedresize iframe,
+.alreadyplayed .embedresize iframe,
+#adserver .embedresize iframe {
+max-width: none !important;
+}
+  </style>
+
+  <!-- About -->
+  <section class="page-section" id="about">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h2 class="section-heading text-uppercase">A PROPOS de l'EPT</h2>
+          <h3 class="section-subheading text-muted">Une ecole d'<strong>excellence</strong></h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <ul class="timeline">
+            <li>
+              <div class="timeline-image">
+                <img class="rounded-circle img-fluid" src="{% static 'GED/images/ept.jpg' %}" alt="">
+              </div>
+              <div class="timeline-panel">
+                <div class="timeline-heading">
+                  <h4>1973-1982</h4>
+                  <h4 class="subheading">Les debuts</h4>
+                </div>
+                <div class="timeline-body">
+                  <p class="text-muted">
+                         De 1973, date de sa création à 1982, aux termes des décrets N°73-493 du 25 mai 1973,
+                      et N°74-1282 du 23 décembre 1974, l’Ecole Polytechnique de Thiès (EPT)
+                      est érigée en établissement militaire d’enseignement supérieur à encadrement militaire
+                      et placée sous la double tutelle du Ministère des Forces Armées et du Ministère
+                      de l’Education Nationale.
+                      A partir de 1982, débute la phase de sénégalisation du corps enseignant de L’EPT qui était jusqu’à cette date
+                      composé essentiellement de canadiens et de vacataires sénégalais
+                  </p>
+                </div>
+              </div>
+            </li>
+            <li class="timeline-inverted">
+              <div class="timeline-image">
+                <img class="rounded-circle img-fluid" src="{% static 'GED/images/ept.jpg' %}" alt="">
+              </div>
+              <div class="timeline-panel">
+                <div class="timeline-heading">
+                  <h4>1982-1994</h4>
+                  <h4 class="subheading">Sous l'égide de l'Armée</h4>
+                </div>
+                <div class="timeline-body">
+                    <p class="text-muted">
+                        De 1982 à 1992, l’EPT passe sous administration militaire complète aux termes des dispositions
+                        du décret 82-545 du 03 août 1982 ;
+                        Au mois de juillet 1992, l’EPT change de statut.
+                        L’Ecole est érigée en établissement public rattaché à l’université Cheikh Anta Diop de Dakar (UCAD).
+                        Ce changement de statut est régi par la loi 92-38 du 09 juillet 1992 et
+                        les décrets d’application N°92-1261 et 92-1268 du 14 septembre 1992 ;
+                        Au mois de Novembre 1994, dans le cadre de la réforme de l’Enseignement Supérieur,
+                        un nouveau changement de statut intervient. La loi 94-78 du 24 novembre 1994
+                        portant création de l’Ecole Supérieure Polytechnique (ESP) comme établissement rattaché à l’UCAD,
+                        consacre la fusion de l’EPT avec les divisions industrielles de l’ENSUT et de l’ENSETP ;
+                    </p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="timeline-image">
+                <img class="rounded-circle img-fluid" src="{% static 'GED/images/ept.jpg' %}" alt="">
+              </div>
+              <div class="timeline-panel">
+                <div class="timeline-heading">
+                  <h4>De 1995 - aujourd'hui</h4>
+                  <h4 class="subheading">Un long chemin</h4>
+                </div>
+                <div class="timeline-body">
+                  <p class="text-muted">
+                      Le 11 janvier 2007, est ouverte l’Université de Thiès à partir de la réunion de
+                      quatre écoles de formation d’ingénieurs, à savoir l’ESP centre de Thiès (ancienne Ecole Polytechnique de Thiès),
+                      l’ENSA, l’IST et l’ENCR de Bambey ;
+                      En juin 2009, aux termes du décret 2009-586, l’EPT quitte l’université de Thiès pour
+                      redevenir un établissement autonome et rattaché directement au Ministère chargé de l’enseignement supérieur.
+                      Malgré cette évolution discontinue, ponctuée par des crises parfois extrêmement graves,
+                      l’EPT a survécu et se veut un pôle d’excellence, à vocation, sous – régionale et internationale
+                      au service de la communauté pour un développement durable. L’EPT, depuis sa création, a formé plus
+                      de mille ingénieurs répartis dans les filières Électromécanique et Civil et
+                      quatre cent soixante-sept techniciens supérieurs dans les mêmes filières.
+
+                      Il s’y ajoute la tenue en Avril 2013 de la concertation Nationale sur l’Avenir
+                      de l’Enseignement supérieur (CNAES) à l’issue de laquelle 78 recommandations
+                      s’adressant aux pouvoirs publics, aux acteurs de l’enseignement supérieur et de la Recherche (ESR),
+                      au secteur privé, aux collectivités locales, à la société civile et aux partenaires au développement,
+                      ont été formulées. La suite étant le conseil présidentiel historique sur
+                      l’enseignement supérieur ponctué par onze décisions
+                      du président de la république qui vont sans nul doute transformer le visage de l’enseignement
+                      supérieur et de la Recherche au Sénégal.
+                  </p>
+                </div>
+              </div>
+            </li>
+            <li class="timeline-inverted">
+              <div class="timeline-image">
+                <img class="rounded-circle img-fluid" src="{% static 'GED/decouverte/img/about/4.jpg' %}" alt="">
+              </div>
+              <div class="timeline-panel">
+                <div class="timeline-heading">
+                  <h4>Futur</h4>
+                  <h4 class="subheading">Une ecole d'exception</h4>
+                </div>
+                <div class="timeline-body">
+                    <p class="text-muted">
+                        <img src="{% static 'GED/images/Ept.png' %}">
+                    </p></div>
+              </div>
+            </li>
+            <li class="timeline-inverted">
+              <div class="timeline-image">
+                <h4>Be Part
+                  <br>Of Our
+                  <br>Story!</h4>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <span class="copyright">Copyright &copy; POLYHINT 2020</span>
+        </div>
+        <div class="col-md-4">
+          <ul class="list-inline social-buttons">
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <ul class="list-inline quicklinks">
+            <li class="list-inline-item">
+              <a href="#">Privacy Policy</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">Terms of Use</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{% static 'GED/decouverte/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'GED/decouverte/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="{% static 'GED/decouverte/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Contact form JavaScript -->
+  <script src="{% static 'GED/decouverte/js/jqBootstrapValidation.js' %}"></script>
+  <script src="{% static 'GED/decouverte/js/contact_me.js' %}"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="{% static 'GED/decouverte/js/agency.min.js' %}"></script>
+
+</body>
+</html>

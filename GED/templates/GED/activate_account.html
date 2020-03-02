@@ -1,0 +1,7 @@
+{% load static %}
+
+    {% autoescape off %}
+    Salut {{ user.username }}, votre compte a bien été crée.
+    Veuillez cliquer sur le lien suivant pour l'activer:
+    http://{{ domain }}{% url 'GED:activate' username=username token=token %}
+    {% endautoescape %}

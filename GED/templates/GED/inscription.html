@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<head>
+    <title>INSCRIPTION</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'GED/images/realfav.ico' %}"/>
+    <link href="{% static 'GED/css/inscript.css' %}" rel="stylesheet">
+    <link href="{% static 'GED/css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="{% static 'GED/assets2/fonts/fontawesome-all.min.css' %}">
+
+
+<!--------------------------------------Debut Test--------------------------------------------->
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-black" id="mainNav">
+    <div class="container bg-black">
+        <a class="navbar-brand js-scroll-trigger btn btn-secondary" href="{% url 'GED:Home' %}"><i class="fa fa-home"></i>PolyHint</a>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav text-uppercase ml-auto bg-black">
+            <li class="nav-item">
+                <a class="nav-link js-scroll-trigger btn-primary btn-outline-info text-dark" href="{% url 'GED:connexion' %}"><i class="fas fa-laptop"></i>Se Connecter</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<hr>
+<hr>
+<h4 style="color: green">{{ success }}</h4>
+<div class="container register ">
+                <div class="row">
+                    <div class="col-md-3 register-left">
+                        <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
+                        <h3>Welcome</h3>
+                        <p>Polyhint l'avenir des documents numeriques!!</p>
+
+
+                        <a class="btn btn-secondary" type="button" href="{% url "GED:connexion" %}">Login</a>
+                        <br/>
+
+                    </div>
+                    <div class="col-md-9 register-right">
+
+                        <div class="tab-content" id="myTabContent">
+
+                            <form role="form" method="GET" action="{% url 'GED:sauver' %}">
+                                {% csrf_token %}
+                                        <div class="form-group line-block register-left">
+                                            <h4>Vous êtes:</h4>
+                                            <div class="maxl">
+                                                <label class="button">
+                                                    <span class="btn btn-primary" style="background-color: #0d0cb5"><input type="radio" style="margin: 10px; width: 80px " value="Eleve" name="role" onfocus="myFunction1()" >Eleve</span>
+                                                </label>
+                                                <label class="button">
+                                                    <span class="btn btn-secondary"><input type="radio" style="margin: 10px; width: 80px " value="Professeur" name="role" onfocus="myFunction2()" >Prof</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                <div class="row register-form">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Prenom *" name="prenom" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Nom *" name="nom" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Nom d'utilisateur *" name="username" required/>
+                                        </div>
+                                        <div id="id_password" class="form-group">
+                                            <div class="input-group">
+                                            <input type="password" id="Password" class="form-control pwd" placeholder="Password *" name="password" required/>
+                                             <span class="input-group-btn">
+                                            <button class="btn btn-default reveal" type="button"><i class="fas fa-eye"></i></button>
+                                             </span>
+                                            </div>
+                                                 <span id="result"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            {% if erreur != "" %}
+                                            <p style="color:red">{{ erreur }}</p>
+                                            {% endif %}
+                                            <input type="password" id="ConfirmPassword" class="form-control"  placeholder="Confirm Password *" name="repassword" required/>
+                                        </div>
+                                        <div id="msg"></div>
+                                        <div class="form-group">
+                                            <div class="maxl">
+                                                <label class="radio inline">
+                                                    <input type="radio" name="gender" value="M" checked>
+                                                    <span>Masculin</span>
+                                                </label>
+                                                <label class="radio inline">
+                                                    <input type="radio" name="gender" value="F">
+                                                    <span>Feminin</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    <div id="elv" class="form-group block-feature-1">
+                                            <label class="col-sm-2 control-label">FILIERE</label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control" name="filiere">
+                                                    <option value="TC">TC</option>
+                                                    <option value="GIT">GIT</option>
+                                                    <option value="GEM">GEM</option>
+                                                    <option value="GEM">AERO</option>
+                                                    <option value="GC">GC</option>
+                                                </select>
+
+                                        <label class="col-sm-2 control-label">NIVEAU</label>
+                                            <select class="selectpicker form-control" name="niveau">
+                                              <optgroup label="TRONC-COMMUN">
+                                                    <option>TC1</option>
+                                                    <option>TC2</option>
+                                              </optgroup>
+                                              <optgroup label="GENIE INFORMATIQUE ET TELECOMMUNICATION">
+                                                    <option>DIC1</option>
+                                                    <option>DIC2</option>
+                                                    <option>DIC3</option>
+                                              </optgroup>
+                                               <optgroup label="GENIE ELECTRO-MÉCANIQUE">
+                                                    <option>DIC1</option>
+                                                    <option>DIC2</option>
+                                                    <option>DIC3</option>
+                                              </optgroup>
+                                                <optgroup label="AERO">
+                                                    <option>DIC1</option>
+                                                    <option>DIC2</option>
+                                                    <option>DIC3</option>
+                                              </optgroup>
+                                                <optgroup label="GENIE CIVIL">
+                                                    <option>DIC1</option>
+                                                    <option>DIC2</option>
+                                                    <option>DIC3</option>
+                                              </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="Your Email *" name="email" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="tel" type="text"   class="form-control" placeholder="Numero telephone *" name="telephone" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="date" class="form-control" placeholder="date naissance *" name="birth" />
+                                        </div>
+                                    </div>
+                                <input type="submit" class="btnRegister"  value="S'inscrire" />
+                                </div>
+                            </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+</body>
+<script>
+    function myFunction1() {
+  var element1 = document.getElementById("tel");
+  var element2 = document.getElementById("elv");
+  element1.style.display="block";
+  element2.style.display="block";
+}
+
+function myFunction2() {
+  var element1 = document.getElementById("tel");
+  var element2 = document.getElementById("elv");
+  element1.style.display="None";
+  element2.style.display="None";
+
+}
+</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#ConfirmPassword").keyup(function(){
+             if ($("#Password").val() != $("#ConfirmPassword").val()) {
+                 $("#msg").html("Password do not match").css("color","red");
+             }else{
+                 $("#msg").html("Password matched").css("color","green");
+            }
+      });
+});
+</script>
+<script src="{% static 'GED/js/PasswordStrength.js' %}"></script>
+<script>
+    $(".reveal").on('click',function() {
+    var $pwd = $(".pwd");
+    if ($pwd.attr('type') === 'password') {
+        $pwd.attr('type', 'text');
+    } else {
+        $pwd.attr('type', 'password');
+    }
+});
+</script>
+</html>
