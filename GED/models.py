@@ -2,6 +2,7 @@ import os
 import sys
 from datetime import date
 from io import BytesIO
+from datetime import datetime
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
 from django.db import models
@@ -122,5 +123,6 @@ class Tache(models.Model):
 
 class Notifications(models.Model):
     notifs = models.CharField(max_length=45)
-    eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE)
-    prof_id = models.ForeignKey(Professeur, on_delete=models.CASCADE)
+    time_notif = models.DateTimeField(auto_now_add=True)
+    eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE, null=True)
+    prof_id = models.ForeignKey(Professeur, on_delete=models.CASCADE, null=True)

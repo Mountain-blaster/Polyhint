@@ -40,15 +40,25 @@ def homeE(request, id):
     user = Eleve.objects.get(user=newuser)
     taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
     taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
     return render(request, 'GED/index.html', {'user': user,
                                               'taches': taches,
-                                              'taskfinish': taskfinish})
+                                              'taskfinish': taskfinish,
+                                              'notifs': notifs,
+                                              'nbre': nbre})
 
 
 def homeP(request, id):
     newuser = User.objects.get(pk=id)
     user = Professeur.objects.get(userp=newuser)
-    return render(request, 'GED/indexP.html', {'user': user})
+    notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    return render(request, 'GED/indexP.html', {'user': user,
+                                               'notifs': notifs,
+                                               'nbre': nbre})
 
 
 def inscription(request):
@@ -69,16 +79,20 @@ def commentaire(request, titre_fichier, id):
     newuser = User.objects.get(pk=id)
     user = Eleve.objects.get(user=newuser)
     uploader = Eleve.objects.get(user=User.objects.get(user=doc.eleve_id))
-
     com = Commentaire.objects.filter(id_doc=doc)
     nbre_comments = len(com)
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
     if nbre_comments==0:
         nocomment = "soyez le premier a commenter"
         return render(request, 'GED/comments.html', {'user': user,
                                                      'doc': doc,
                                                      'nocomment': nocomment,
                                                      'nbre_comments': nbre_comments,
-                                                     'uploader': uploader})
+                                                     'uploader': uploader,
+                                                     'notifs': notifs,
+                                                     'nbre': nbre})
     else:
         listuser = [i.user_id for i in com]
         comments = list(zip(listuser, com))
@@ -95,6 +109,9 @@ def newComments(request, titre_fichier, id):
     doc = Document.objects.get(titre_fichier=titre)
     user = Eleve.objects.get(user=User.objects.get(pk=id))
     uploader = Eleve.objects.get(user=User.objects.get(user=doc.eleve_id))
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
     if doc.comments == True:
         newComment = Commentaire()
         newComment.user_id = Eleve.objects.get(user=User.objects.get(pk=id))
@@ -109,7 +126,9 @@ def newComments(request, titre_fichier, id):
                                                          'doc': doc,
                                                          'nocomment': nocomment,
                                                          'nbre_comments': nbre_comments,
-                                                         'uploader': uploader})
+                                                         'uploader': uploader,
+                                                         'notifs': notifs,
+                                                         'nbre': nbre})
         else:
             listuser = [i.user_id for i in com]
             comments = list(zip(listuser, com))
@@ -124,7 +143,9 @@ def newComments(request, titre_fichier, id):
                                                      'doc': doc,
                                                      'nocomment': nocomment,
                                                      'nbre_comments': 0,
-                                                     'uploader': uploader})
+                                                     'uploader': uploader,
+                                                     'notifs': notifs,
+                                                     'nbre': nbre})
 
 
 def profile(request, id):
@@ -141,12 +162,27 @@ def profile(request, id):
 
     if role == 'Eleve':
         e = Eleve.objects.get(user=newuser)
-        return render(request, 'GED/userprofile.html', {'user': e, 'role': role, 'age': 12})
+        age = datetime.date.today().year - e.date_birth.year
+        notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+        notifs.reverse()
+        nbre = len(notifs)
+        return render(request, 'GED/userprofile.html', {'user': e,
+                                                        'role': role,
+                                                        'age': age,
+                                                        'notifs': notifs,
+                                                        'nbre': nbre})
 
     elif role == 'Professeur':
         p = Professeur.objects.get(userp=newuser)
         age = datetime.date.today().year - p.date_birth.year
-        return render(request, 'GED/userprofile.html', {'user': p, 'role': role, 'age': age})
+        notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+        notifs.reverse()
+        nbre = len(notifs)
+        return render(request, 'GED/userprofile.html', {'user': p,
+                                                        'role': role,
+                                                        'age': age,
+                                                        'notifs': notifs,
+                                                        'nbre': nbre})
 
     else:
         erreur = "<h4>Impossible d'afficher le profile!!</h4> Une erreur technique veuillez réessayer lors de votre prochaine connection"
@@ -176,7 +212,13 @@ def edit_profile(request, id):
             newuser.email = request.POST['email']
             newuser.save()
             role = "Eleve"
-            return render(request, 'GED/editer_profile.html', {'user': e, 'role': role})
+            notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/editer_profile.html', {'user': e,
+                                                               'role': role,
+                                                               'notifs': notifs,
+                                                               'nbre': nbre})
 
         elif 'btnform2' in request.POST:
             e.telephone = request.POST['telephone']
@@ -194,10 +236,22 @@ def edit_profile(request, id):
                 newuser.set_password(request.POST['password'])
                 newuser.save()
                 role = "Eleve"
-                return render(request, 'GED/editer_profile.html', {'user': e, 'role': role})
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs.reverse()
+                nbre = len(notifs)
+                return render(request, 'GED/editer_profile.html', {'user': e,
+                                                                   'role': role,
+                                                                   'notifs': notifs,
+                                                                   'nbre': nbre})
             else:
+                notifs = list(Notifications.objects.exclude(eleve_id=id))
+                nbre = len(notifs)
                 erreur = "<h4>Desolé une erreur est survenue</h4>Veuillez Reessayer plus tard!!"
-                return render(request, 'GED/404.html', {'user': e, 'role': role, 'erreur': erreur})
+                return render(request, 'GED/404.html', {'user': e,
+                                                        'role': role,
+                                                        'erreur': erreur,
+                                                        'notifs': notifs,
+                                                        'nbre': nbre})
 
 
 
@@ -209,16 +263,32 @@ def edit_profile(request, id):
                 e.save()
                 os.remove(a)
                 role = "Eleve"
-                return render(request, 'GED/editer_profile.html', {'user': e, 'role': role})
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs.reverse()
+                nbre = len(notifs)
+                return render(request, 'GED/editer_profile.html', {'user': e,
+                                                                   'role': role,
+                                                                   'notifs': notifs,
+                                                                   'nbre': nbre})
             else:
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs.reverse()
+                nbre = len(notifs)
                 role = "Eleve"
                 erreur = "<h4>Desolé une erreur est survenue</h4>Veuillez Reessayer plus tard!!"
-                return render(request, 'GED/404.html', {'user': e, 'role': role, 'erreur': erreur})
+                return render(request, 'GED/404.html', {'user': e,
+                                                        'role': role,
+                                                        'erreur': erreur,
+                                                        'notifs': notifs,
+                                                        'nbre': nbre})
 
-
-
-
-        return render(request, 'GED/editer_profile.html', {'user': e, 'role': role})
+        notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+        notifs.reverse()
+        nbre = len(notifs)
+        return render(request, 'GED/editer_profile.html', {'user': e,
+                                                           'role': role,
+                                                           'notifs': notifs,
+                                                           'nbre': nbre})
 
 ##################################################################################################
 
@@ -236,8 +306,15 @@ def edit_profile(request, id):
                     newuser.email = request.POST['email']
                     newuser.save()
                 else:
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs.reverse()
+                    nbre = len(notifs)
                     erreur = form.errors
-                    return render(request, 'GED/404.html', {'user': p, 'role': role, 'erreur': erreur})
+                    return render(request, 'GED/404.html', {'user': p,
+                                                            'role': role,
+                                                            'erreur': erreur,
+                                                            'notifs': notifs,
+                                                            'nbre': nbre})
 
             elif 'btnform2' in request.POST:
                 form = ProfForm(request.POST)
@@ -245,8 +322,15 @@ def edit_profile(request, id):
                     p.telephone = request.POST['telephone']
                     p.save()
                 else:
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs.reverse()
+                    nbre = len(notifs)
                     erreur = form.errors
-                    return render(request, 'GED/404.html', {'user': p, 'role': role, 'erreur': erreur})
+                    return render(request, 'GED/404.html', {'user': p,
+                                                            'role': role,
+                                                            'erreur': erreur,
+                                                            'notifs': notifs,
+                                                            'nbre': nbre})
 
             elif 'btnform3' in request.POST:
                 form = ProfForm(request.POST)
@@ -256,7 +340,14 @@ def edit_profile(request, id):
                     p.save()
                 else:
                     erreur = form.errors
-                    return render(request, 'GED/404.html', {'user': p, 'role': role, 'erreur': erreur})
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs.reverse()
+                    nbre = len(notifs)
+                    return render(request, 'GED/404.html', {'user': p,
+                                                            'role': role,
+                                                            'erreur': erreur,
+                                                            'notifs': notifs,
+                                                            'nbre': nbre})
 
             elif 'btnform4' in request.POST:
                 form = PassForm(request.POST)
@@ -266,7 +357,14 @@ def edit_profile(request, id):
                     newuser.save()
                 else:
                     erreur = form.errors
-                    return render(request, 'GED/404.html', {'user': p, 'role': role, 'erreur': erreur})
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs.reverse()
+                    nbre = len(notifs)
+                    return render(request, 'GED/404.html', {'user': p,
+                                                            'role': role,
+                                                            'erreur': erreur,
+                                                            'notifs': notifs,
+                                                            'nbre': nbre})
 
             elif 'btnform0' in request.POST:
                 form = ProfProfileForm(request.POST, request.FILES)
@@ -280,9 +378,22 @@ def edit_profile(request, id):
                 except:
                     erreur = "request.FILES n'a pas pu obtenir l'image téléchargée de l'entrée"
                     link = "{% url 'edit' user.user.id %}"
-                    return render(request, 'GED/404.html', {'user': p, 'role': role, 'erreur': erreur, 'link':link})
-
-        return render(request, 'GED/editer_profile.html', {'user': p, 'role': role})
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs.reverse()
+                    nbre = len(notifs)
+                    return render(request, 'GED/404.html', {'user': p,
+                                                            'role': role,
+                                                            'erreur': erreur,
+                                                            'link': link,
+                                                            'notifs': nbre,
+                                                            'nbre': nbre})
+        notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+        notifs.reverse()
+        nbre = len(notifs)
+        return render(request, 'GED/editer_profile.html', {'user': p,
+                                                           'role': role,
+                                                           'notifs':notifs,
+                                                           'nbre': nbre})
 
 
 def otherprofile(request, username, id):
@@ -291,8 +402,14 @@ def otherprofile(request, username, id):
     role = "Eleve"
     newother = User.objects.get(username=username)
     other = Eleve.objects.get(user=newother)
-
-    return render(request, 'GED/othersprofile.html', {'other': other, 'user': user, 'role': role})
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    return render(request, 'GED/othersprofile.html', {'other': other,
+                                                      'user': user,
+                                                      'role': role,
+                                                      'notifs': notifs,
+                                                      'nbre':nbre})
 
 
 ##################################################################################################
@@ -311,7 +428,17 @@ def documentsEleve(request, id):
     top.reverse()
     list1 = top[:4]
     list2 = top[4:]
-    return render(request, "GED/table.html", {'user': e, 'docs': doc, 'list1': list1, 'list2': list2, 'fils': fils, 'mats': mats})
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    return render(request, "GED/table.html", {'user': e,
+                                              'docs': doc,
+                                              'list1': list1,
+                                              'list2': list2,
+                                              'fils': fils,
+                                              'mats': mats,
+                                              'notifs': notifs,
+                                              'nbre': nbre})
 
 
 def PubEleve(request, id):
@@ -321,7 +448,14 @@ def PubEleve(request, id):
     matiere = [j for (i, j) in doc]
     fil = Document.LIST_FILIERE
     filiere = [j for (i,j) in fil]
-    return render(request, 'GED/PubEleve.html', {'user': e, 'matieres': matiere, 'filieres': filiere})
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    return render(request, 'GED/PubEleve.html', {'user': e,
+                                                 'matieres': matiere,
+                                                 'filieres': filiere,
+                                                 'notifs':notifs,
+                                                 'nbre':nbre})
 
 
 def Traitement(request, id):
@@ -343,8 +477,19 @@ def Traitement(request, id):
         else:
             newDoc.comments = False
         newDoc.save()
-        success = 'cest fait!! <a href ="{% url "GED:documents" user.user.id %}">Retourner</a> à la page précedente'
-    return render(request, 'GED/PubEleve.html', {'user': e, 'success': success})
+        newnotif = Notifications()
+        newnotif.eleve_id = e
+        notif = str(e.user.first_name) + " a publier un document"
+        newnotif.notifs = notif
+        newnotif.save()
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    success = 'cest fait!! <a href ="{% url "GED:documents" user.user.id %}">Retourner</a> à la page précedente'
+    return render(request, 'GED/PubEleve.html', {'user': e,
+                                                 'success': success,
+                                                 'notifs':notifs,
+                                                 'nbre':nbre})
 
 
 
@@ -368,13 +513,18 @@ def search(request, id):
     doc = list(set(doc) & set(Document.objects.filter(filiere__icontains=request.GET['filiere'])))
     doc = list(set(doc) & set(Document.objects.filter(updload_date__year=request.GET['year'])))
     doc = list(set(doc) & set(Document.objects.filter(updload_date__month=request.GET['month'])))
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
 
     return render(request, 'GED/table.html', {'docs': doc,
                                               'user': e,
                                               'list1': list1,
                                               'list2': list2,
                                               'fils': fils,
-                                              'mats': mats})
+                                              'mats': mats,
+                                              'notifs':notifs,
+                                              'nbre':nbre})
 
 
 def pagePerso(request, id):
@@ -386,10 +536,15 @@ def pagePerso(request, id):
     listprof = [e.prof_id for e in lastdoc]
     lastdoc = list(zip(listprof, lastdoc))
     lastdoc.reverse()
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
     context={'user': e,
              'docs': mydocs,
              'profs': docprof,
-             'lastdoc': lastdoc}
+             'lastdoc': lastdoc,
+             'notifs':notifs,
+             'nbre':nbre}
     return render(request, 'GED/pagePerso.html', context)
 
 def deleteDoc(request, titre_fichier, id):
@@ -398,7 +553,13 @@ def deleteDoc(request, titre_fichier, id):
     mydocs = Document.objects.filter(eleve_id=e)
     doc = Document.objects.get(titre_fichier=titre_fichier)
     doc.delete()
-    return render(request, 'GED/pagePerso.html', {'user': e, 'docs': mydocs})
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    return render(request, 'GED/pagePerso.html', {'user': e,
+                                                  'docs': mydocs,
+                                                  'notifs':notifs,
+                                                  'nbre':nbre})
 
 
 
@@ -411,7 +572,14 @@ def pubProf(request, id):
     matiere = [j for (i, j) in doc]
     fil = Document.LIST_FILIERE
     filiere = [j for (i,j) in fil]
-    return render(request, 'GED/publish.html', {'user': p, 'matieres': matiere, 'filieres': filiere})
+    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    return render(request, 'GED/publish.html', {'user': p,
+                                                'matieres': matiere,
+                                                'filieres': filiere,
+                                                'notifs':notifs,
+                                                'nbre':nbre})
 
 
 def publish(request, id):
@@ -433,9 +601,19 @@ def publish(request, id):
         if request.POST['share'] == "OUI":
             newdoc.share = True
         newdoc.save()
+        newnotif = Notifications()
+        newnotif.prof_id=p
+        notif = str(p.userp.first_name)+" a publier un document"
+        newnotif.notifs = notif
+        newnotif.save()
+    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
     doc = Document.objects.filter(prof_id=p)
     return render(request, "GED/table_prof.html", {'doc': doc,
-                                                   'user': p})
+                                                   'user': p,
+                                                   'notifs':notifs,
+                                                   'nbre':nbre})
 
 def document_prof(request, id):
 
@@ -453,7 +631,6 @@ def del_doc_prof(request, titre_fichier, id):
     doc.delete()
     return render(request, "GED/delete_prof.html")
 
-@login_required(login_url='POLYHINT/connection/')
 def valider(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -636,7 +813,7 @@ def recover(request):
 #Some greats!!!!
 
 def some_view(request):
-    # Create a file-like buffer to receive PDF data.
+
     buffer = io.BytesIO()
 
     # Create the PDF object, using the buffer as its "file."

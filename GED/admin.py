@@ -9,6 +9,22 @@ class ModelEleve(admin.ModelAdmin):
     list_display = ('user', 'filiere', 'niveau', 'joindate', 'avertissement')
     list_filter = ('user', 'niveau', 'filiere')
     date_hierarchy = 'joindate'
+class ModelProf(admin.ModelAdmin):
+    list_display = ('userp', 'joindate')
+    list_filter = ('userp', )
 
+class ModelDocument(admin.ModelAdmin):
+    list_display = ('titre_fichier', 'type', 'matiere', 'niveau', 'filiere', 'updload_date', 'note')
+    list_filter = ('titre_fichier', 'type', 'matiere', 'niveau', 'filiere', 'updload_date')
+    date_hierarchy = 'updload_date'
 
+class ModelComments(admin.ModelAdmin):
+    list_display = ('user_id', 'id_doc', 'date_comments')
+    list_filter = ('date_comments',)
+    date_hierarchy = 'date_comments'
 admin.site.register(Eleve, ModelEleve)
+admin.site.register(Professeur, ModelProf)
+admin.site.register(Document, ModelDocument)
+admin.site.register(Commentaire, ModelComments)
+admin.site.register(Tache)
+admin.site.register(Notifications)
