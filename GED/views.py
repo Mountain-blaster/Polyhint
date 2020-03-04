@@ -21,6 +21,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import update_session_auth_hash
 from .forms import *
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class EleveViewSet(viewsets.ModelViewSet):
@@ -706,6 +707,11 @@ def email_test(email):
         return True
     return False
 
+def username_test(username):
+    if User.objects.filter(username=username).exists():
+        return True
+    return False
+
 
 def save(request):
     # Instanciations
@@ -807,10 +813,9 @@ def activate_account(request, username, token):
 def recover(request):
     recup = request.POST['recup']
     if recup is not None:
-        try:
-            userforget = User.objects.get(email=recup)
-        except:
-            userforget = User.objects.get(username=recup)
+
+        a = email_test(recup)
+        b = username_test(recup)
         alert1 = "Nous vous avons envoyé un lien a l'adresse :"
         alert2 = "Veuillez ouvrir votre boite de reception"
         current_site = get_current_site(request)
@@ -819,24 +824,33 @@ def recover(request):
         chaine = string.ascii_letters + string.digits
         randpass = "".join(random.choice(chaine) for i in range(random.randint(8, 16)))
         ################################################################################
-        message = render_to_string('GED/recupPass.html', {
-            'userforget': userforget,
-            'domain': current_site.domain,
-            'username': userforget.username,
-            'password': randpass,
-            'token': account_activation_token.make_token(userforget),
-        })
-        to_email = userforget.email
-        email = EmailMessage(email_subject, message, to=[to_email])
-        email.send()
-        userforget.set_password(randpass)
-        userforget.save()
-        return render(request, 'GED/forgotpassword.html', {'alert1': alert1,
-                                                           'alert2': alert2,
-                                                           'userforget': userforget})
+        if a or b:
+            userforget = ""
+            if a:
+                userforget = User.objects.get(email=recup)
+            elif b:
+                userforget = User.objects.get(username=recup)
+            message = render_to_string('GED/recupPass.html', {
+                'userforget': userforget,
+                'domain': current_site.domain,
+                'username': userforget.username,
+                'password': randpass,
+                'token': account_activation_token.make_token(userforget),
+            })
+            to_email = userforget.email
+            email = EmailMessage(email_subject, message, to=[to_email])
+            email.send()
+            userforget.set_password(randpass)
+            userforget.save()
+            return render(request, 'GED/forgotpassword.html', {'alert1': alert1,
+                                                               'alert2': alert2,
+                                                               'userforget': userforget})
+        else:
+            alert3 = "Compte inexistant.. Veuillez renseigner les bonnes informations"
+            return render(request, 'GED/forgotpassword.html', {'alert3': alert3})
     else:
-        alert1 = "Compte inexistant.. Veuillez renseigner les bonnes informations"
-        return render(request, 'GED/forgotpassword.html', {'alert1': alert1})
+        alert3 = "Compte inexistant.. Veuillez renseigner les bonnes informations"
+        return render(request, 'GED/forgotpassword.html', {'alert3': alert3})
 
 
 #Some greats!!!!
