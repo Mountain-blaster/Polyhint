@@ -21,8 +21,7 @@
                 <hr class="sidebar-divider my-0">
                 <ul class="nav navbar-nav text-light" id="accordionSidebar">
                     <li role="presentation" class="nav-item"><a class="nav-link active" href="{% url 'GED:homeP' user.userp.id %}"><i class="fas fa-tachometer-alt"></i><span>Accueil</span></a>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:doc_prof' user.userp.id %}"><i class="fas fa-table"></i><span>Documents</span></a></li>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:publish' user.userp.id %}"><i class="fas fa-table"></i><span>Publier</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:doc_prof' user.userp.id %}"><i class="fas fa-window-maximize"></i><span>Documents</span></a></li>
                     <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.userp.id %}"><i class="fas fa-user"></i><span>Profile</span></a></li>
                     <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:Deconnecter' %}"><i class="fas fa-user"></i><span>Deconnecter</span></a></li>
                 </ul>
@@ -33,7 +32,7 @@
         </nav>
 
         <div id="content-wrapper" class="d-flex flex-column">
-            <div id="content" style="background-color: #75aadb !important;filter: blur(0px) brightness(100%) contrast(100%);">
+            <div id="content">
                 <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
                     <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
                         <ul class="nav navbar-nav flex-nowrap ml-auto">
@@ -128,7 +127,7 @@
                             <li class="nav-item dropdown no-arrow" role="presentation">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
-                                        <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.userp.first_name }} {{ user.userp.last_name }}</span>
+                                        <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.userp.username }}</span>
                                     <img class="rounded-circle" src="{{ user.profile.url }}" width="50" height="50" alt="image"/></a>
 
                                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
@@ -170,14 +169,10 @@
                         <input type="text" name="titre_fichier" id="titre_fichier" class="form-control form" required>
                         <hr>
 
-                        <!-----<label class="form-check-label">Fichier(s)</label>
-                        <input class="form-control" type="file" name="fichier" multiple/>
-                        <hr>--->
-
-
-                            <label class="form-check-label" >Fichier(s)</label>
-                            <input type="file" class="form-control" name="fichier" multiple/>
-
+                        <div class="custom-file">
+                            <input type="file" class="form-control custom-file-input" id="customFile" name="fichier" multiple/>
+                            <label class="custom-file-label" for="customFile">Fichier(s)</label>
+                        </div>
                         <hr>
                         <div class="card" style="background-color: bisque">
                             <h5 class="card-header">Autres infos</h5>
@@ -251,6 +246,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
 <script src="{% static 'GED/assets2/js/theme.js' %}"></script>
 
+<script>
+		$(document).ready(function(){
+  $("form#upload_new_file_frm").submit(function(event) {
+    event.preventDefault(); // Prevent the form from submitting via the browser
+    var formData = new FormData(this);
+    var form = $(this);
+    // Adding spinner while submitting form.
+    $("form#upload_new_file_frm").after('<div class="form_submit_loader">Please wait submitting...</div>');
+    $.ajax({
+      type: form.attr('method'),
+      url: form.attr('action'),
+      data: formData,
+      enctype: 'multipart/form-data',
+      processData: false,  // Important!
+      contentType: false,
+      cache: false
+    }).done(function(response) {
+      $(".form_submit_loader").remove();
+      if(response.status == "succes") {
+        // On success response do your stuff here...
+      } else {
+        // On error response do your stuff here...
+      }
+    }).fail(function(data) {
+      $(".form_submit_loader").remove();
+      console.log("Echec!!");
+    });
+  });
+});
+</script>
+
 <script type="text/javascript">
 $(function () {
     var nMaxLength = 250; //set the characters length
@@ -270,6 +296,13 @@ $(function () {
             $('.remaining').text(nRemaining);
         }
     }
+});
+
+
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 });
 </script>
 </body>

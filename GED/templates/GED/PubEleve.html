@@ -21,9 +21,9 @@
       <hr class="sidebar-divider my-0">
       <ul class="nav navbar-nav text-light" id="accordionSidebar">
          <li role="presentation" class="nav-item"><a class="nav-link active" href="{% url 'GED:homeE' user.user.id %}"><i class="fas fa-tachometer-alt"></i><span>Accueil</span></a>
-          <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:documents' user.user.id %}"><i class="fas fa-table"></i><span>Documents</span></a></li>
-          <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:pagePerso' user.user.id %}"><i class="fas fa-dochub"></i><span>Perso</span></a></li>
-          <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.user.id %}"><i class="fas fa-user"></i><span>profile</span></a></li>
+          <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:documents' user.user.id %}"><i class="fas fa-window-maximize"></i><span>Documents</span></a></li>
+          <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:pagePerso' user.user.id %}"><i class="fas fa-table"></i><span>Perso</span></a></li>
+          <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.user.id %}"><i class="fas fa-user"></i><span>Profile</span></a></li>
           <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:Deconnecter' %}"><i class="fas fa-user"></i><span>Deconnecter</span></a></li>
        </ul>
       <div class="text-center d-none d-md-inline">
@@ -58,7 +58,7 @@
               </div>
             </li>
             <li class="nav-item dropdown no-arrow mx-1" role="presentation">
-              <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="badge badge-danger badge-counter">{{ nbre }}+</span><i class="fas fa-bell fa-fw"></i></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="badge badge-danger badge-counter">{{ nbre }}+</span><i class="fas fa-bell fa-fw"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-list dropdown-menu-right animated--grow-in"
                                         role="menu">
                                         <h6 class="dropdown-header">centre de notifications</h6>
@@ -74,7 +74,7 @@
                                         {% endfor %}
                                         <a class="text-center dropdown-item small text-gray-500" href="#">Show All Alerts</a></div>
                                 </div>
-            </li>
+                            </li>
             <li class="nav-item dropdown no-arrow mx-1" role="presentation">
               <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><i class="fas fa-envelope fa-fw"></i><span class="badge badge-danger badge-counter">7</span></a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-list dropdown-menu-right animated--grow-in"
@@ -118,7 +118,7 @@
             </li>
             <div class="d-none d-sm-block topbar-divider"></div>
             <li class="nav-item dropdown no-arrow" role="presentation">
-              <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.user.first_name }}</span><img class="border rounded-circle img-profile" src="{{ user.profile.url }}"></a>
+              <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.user.username }}</span><img class="border rounded-circle img-profile" src="{{ user.profile.url }}"></a>
                                     <div
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="{% url 'GED:profile' user.user.id %}"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" role="presentation" href="{% url 'GED:edit' user.user.id %}"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
@@ -130,9 +130,8 @@
         </div>
       </nav>
 		<div class="row breadcrumb bg-gradient-light border-bottom-secondary text-center">
-			<div class="col-lg-7 offset-lg-3 text-justify form-check-inline">
+			<div class="offset-lg-4 text-justify form-check-inline">
 				<button class="btn-circle btn-facebook btn-user btn-outline-primary"><i class="fas fa-upload"></i></button><h1 class="text-justify text-center">Upload documents</h1><button class="btn-circle btn-facebook btn-user btn-outline-primary"><i class="fas fa-upload"></i></button>
-
 			</div>
 			<hr>
 			<hr>
@@ -153,21 +152,33 @@
                             </div>
                                 <form action="{% url 'GED:traitement' user.user.id %}" class="user" method="post" enctype="multipart/form-data" id="upload_new_file_frm" style="background-color: azure">
 								  {% csrf_token %}
-                                    <p>
-									<label class="form-check-label">Titre fichier</label>
-									<input type="text" class="form-control form" name="titre_fichier" value="" />
-								  <hr>
-									<label class="form-check-label">Fichier(s)</label>
-									<input type="file" class="form-control" name="fichier" multiple/>
-								  <hr>
-									<hr>
+                        <p>
+                        <label class="form-check-label">Titre fichier</label>
+                        <input type="text" name="titre_fichier" id="titre_fichier" class="form-control form" required>
+                        <hr>
+
+
+                        <div class="custom-file">
+                            <input type="file" class="form-control custom-file-input" id="customFile" name="fichier" multiple/>
+                            <label class="custom-file-label" for="customFile">Fichier(s)</label>
+                        </div>
+                        <hr>
+
 									  <div class="card" style="background-color: bisque">
 										  <h5 class="card-header">Autres infos</h5>
 										  <div class="card-body">
 											  <label class="form-check-label">Matière</label>
 											<input type="text" class="form-control" name="matiere">
-											  <label class="form-check-label">Filière</label>
-											<input type="text" class="form-control" name="filiere">
+                                              <hr>
+                                              <select class="form-control" name="filiere">
+                                                <option selected hidden>Filiere</option>
+                                                <option value="GIT">GIT</option>
+                                                <option value="GEM">GEM</option>
+                                                <option value="GC">GC</option>
+                                                <option value="AERO">AERO</option>
+                                                <option value="TC">TC</option>
+                                                </select>
+                                              <hr>
 											<p class="card-text">
 
 												<div class="form-group">
@@ -181,13 +192,13 @@
 										  <label class="form-check-label">Commentaires</label>
 										  <div class="form-group">
 											<div class="form-check form-check-inline">
-											  <input type="radio" class="form-check-input" id="materialInline1" name="comments">
+											  <input type="radio" class="form-check-input" id="materialInline1" name="comments" value="OUI">
 											  <label class="form-check-label" for="materialInline1">OUI</label>
 											</div>
 
 											<!-- Material inline 2 -->
 											<div class="form-check form-check-inline">
-											  <input type="radio" class="form-check-input" id="materialInline2" name="comments">
+											  <input type="radio" class="form-check-input" id="materialInline2" name="comments" value="NON">
 											  <label class="form-check-label" for="materialInline2">NON</label>
 											</div>
 										  </div>
@@ -213,6 +224,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
 <script src="{% static 'GED/assets2/js/theme.js' %}"></script>
 
+<script>
+		$(document).ready(function(){
+  $("form#upload_new_file_frm").submit(function(event) {
+    event.preventDefault(); // Prevent the form from submitting via the browser
+    var formData = new FormData(this);
+    var form = $(this);
+    // Adding spinner while submitting form.
+    $("form#upload_new_file_frm").after('<div class="form_submit_loader">Please wait submitting...</div>');
+    $.ajax({
+      type: form.attr('method'),
+      url: form.attr('action'),
+      data: formData,
+      enctype: 'multipart/form-data',
+      processData: false,  // Important!
+      contentType: false,
+      cache: false
+    }).done(function(response) {
+      $(".form_submit_loader").remove();
+      if(response.status == "succes") {
+        // On success response do your stuff here...
+      } else {
+        // On error response do your stuff here...
+      }
+    }).fail(function(data) {
+      $(".form_submit_loader").remove();
+      console.log("Echec!!");
+    });
+  });
+});
+</script>
+
 <script type="text/javascript">
 $(function () {
     var nMaxLength = 250; //set the characters length
@@ -232,6 +274,12 @@ $(function () {
             $('.remaining').text(nRemaining);
         }
     }
+});
+
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 });
 </script>
 </body>

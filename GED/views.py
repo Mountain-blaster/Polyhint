@@ -215,20 +215,23 @@ def edit_profile(request, id):
         e = Eleve.objects.get(user=newuser)
 
         if 'btnform1' in request.POST:
-
-            newuser.username = request.POST['username']
-            newuser.first_name = request.POST['first_name']
-            newuser.last_name = request.POST['last_name']
-            newuser.email = request.POST['email']
-            newuser.save()
-            role = "Eleve"
-            notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
-            notifs.reverse()
-            nbre = len(notifs)
-            return render(request, 'GED/editer_profile.html', {'user': e,
-                                                               'role': role,
-                                                               'notifs': notifs,
-                                                               'nbre': nbre})
+            form = UserForm(request.POST)
+            if form.is_valid():
+                newuser.username = request.POST['username']
+                newuser.first_name = request.POST['first_name']
+                newuser.last_name = request.POST['last_name']
+                newuser.email = request.POST['email']
+                newuser.save()
+            else:
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs.reverse()
+                nbre = len(notifs)
+                erreur = form.errors
+                return render(request, 'GED/404.html', {'user': e,
+                                                        'role': role,
+                                                        'erreur': erreur,
+                                                        'notifs': notifs,
+                                                        'nbre': nbre})
 
         elif 'btnform2' in request.POST:
             e.telephone = request.POST['telephone']
@@ -345,7 +348,6 @@ def edit_profile(request, id):
             elif 'btnform3' in request.POST:
                 form = ProfForm(request.POST)
                 if form.is_valid():
-
                     p.about = request.POST['about']
                     p.save()
                 else:
@@ -362,7 +364,6 @@ def edit_profile(request, id):
             elif 'btnform4' in request.POST:
                 form = PassForm(request.POST)
                 if form.is_valid():
-
                     newuser.set_password(request.POST['password'])
                     newuser.save()
                 else:
@@ -378,14 +379,13 @@ def edit_profile(request, id):
 
             elif 'btnform0' in request.POST:
                 form = ProfProfileForm(request.POST, request.FILES)
-                try:
-                    if form.is_multipart():
-                        a = p.profile.path
-                        p.profile = request.FILES['profile']
-                        p.save()
-                        os.remove(a)
+                if form.is_multipart():
+                    a = p.profile.path
+                    p.profile = request.FILES['profile']
+                    p.save()
+                    os.remove(a)
 
-                except:
+                else:
                     erreur = "request.FILES n'a pas pu obtenir l'image téléchargée de l'entrée"
                     link = "{% url 'edit' user.user.id %}"
                     notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]

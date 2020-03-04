@@ -22,16 +22,16 @@
                 <ul class="nav navbar-nav text-light" id="accordionSidebar">
                     {% if role == "Eleve" %}
                     <li role="presentation" class="nav-item"><a class="nav-link active" href="{% url 'GED:homeE' user.user.id %}"><i class="fas fa-tachometer-alt"></i><span>Accueil</span></a>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:documents' user.user.id %}"><i class="fas fa-table"></i><span>Documents</span></a></li>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:pagePerso' user.user.id %}"><i class="fas fa-dochub"></i><span>Perso</span></a></li>
-                        <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.user.id %}"><i class="fas fa-user"></i><span>profile</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:documents' user.user.id %}"><i class="fas fa-window-maximize"></i><span>Documents</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:pagePerso' user.user.id %}"><i class="fas fa-table"></i><span>Perso</span></a></li>
+                        <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.user.id %}"><i class="fas fa-user"></i><span>Profile</span></a></li>
                     <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:Deconnecter' %}"><i class="fas fa-user"></i><span>Deconnecter</span></a></li>
 
                     {% else %}
                     <li role="presentation" class="nav-item"><a class="nav-link active" href="{% url 'GED:homeP' user.userp.id %}"><i class="fas fa-tachometer-alt"></i><span>Accueil</span></a>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:doc_prof' user.userp.id %}"><i class="fas fa-table"></i><span>Documents</span></a></li>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:publish' user.userp.id %}"><i class="fas fa-table"></i><span>Publier</span></a></li>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.userp.id %}"><i class="fas fa-user"></i><span>profile</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:doc_prof' user.userp.id %}"><i class="fas fa-window-maximize"></i><span>Documents</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:publish' user.userp.id %}"><i class="fas fa-upload"></i><span>Publier</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.userp.id %}"><i class="fas fa-user"></i><span>Profile</span></a></li>
                     <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:Deconnecter' %}"><i class="fas fa-user"></i><span>Deconnecter</span></a></li>
 
                     {% endif %}
@@ -43,9 +43,10 @@
             </div>
         </nav>
         <div class="d-flex flex-column" id="content-wrapper">
-            <div id="content">
-                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
-                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+            <div class="col-lg-12" id="content">
+                <nav class="navbar navbar-light navbar-expand shadow mb-4 topbar static-top" id="topNav">
+                    <div class="container-fluid">
+                        <button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
                             <!---------------------------------------------Form Research-------------------------------------------->
                         <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                             <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
@@ -108,14 +109,14 @@
                                      <div class="nav-item dropdown no-arrow">
                                          {% if role == "Eleve" %}
                                          <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
-                                             <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.user.first_name }} {{ user.user.last_name }}</span>
+                                             <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.user.username }}</span>
                                          <img class="rounded-circle" src="{{ user.profile.url }}" width="50" height="50" alt="image"/></a>
                                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
                                         <a class="dropdown-item" role="presentation" href="{% url 'GED:profile' user.user.id %}">
                                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a>
                                         {% else %}
                                         <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
-                                             <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.userp.first_name }} {{ user.userp.last_name }}</span>
+                                             <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.userp.username }}</span>
                                          <img class="rounded-circle" src="{{ user.profile.url }}" width="50" height="50" alt="image"/></a>
                                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
                                         <a class="dropdown-item" role="presentation" href="{% url 'GED:profile' user.userp.id %}">
@@ -199,18 +200,18 @@
                                             <!---------------------- User Information Settings------------------------------>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="{{ user.user.username }}" name="username"></div>
+                                                    <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="{{ user.user.username }}" name="username" required></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="email"><strong>Email Address</strong></label><input class="form-control" type="email" placeholder="{{ user.user.email }}" name="email"></div>
+                                                    <div class="form-group"><label for="email"><strong>Email Address</strong></label><input class="form-control" type="email" placeholder="{{ user.user.email }}" name="email" required></div>
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" placeholder="{{ user.user.first_name }}" name="first_name"></div>
+                                                    <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" placeholder="{{ user.user.first_name }}" name="first_name" required></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" placeholder="{{ user.user.last_name }}" name="last_name"></div>
+                                                    <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" placeholder="{{ user.user.last_name }}" name="last_name" required></div>
                                                 </div>
                                             </div>
                                             <div class="form-group"><button class="btn btn-primary btn-sm" type="submit" name="btnform1">Enregistrer</button></div>
@@ -222,18 +223,18 @@
                                             <!---------------------- User Information Settings------------------------------>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="{{ user.userp.username }}" name="username"></div>
+                                                    <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="{{ user.userp.username }}" name="username" required></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="email"><strong>Email Address</strong></label><input class="form-control" type="email" placeholder="{{ user.userp.email }}" name="email"></div>
+                                                    <div class="form-group"><label for="email"><strong>Email Address</strong></label><input class="form-control" type="email" placeholder="{{ user.userp.email }}" name="email" required></div>
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" placeholder="{{ user.userp.first_name }}" name="first_name"></div>
+                                                    <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" placeholder="{{ user.userp.first_name }}" name="first_name" required></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" placeholder="{{ user.userp.last_name }}" name="last_name"></div>
+                                                    <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" placeholder="{{ user.userp.last_name }}" name="last_name" required></div>
                                                 </div>
                                             </div>
                                             <div class="form-group"><button class="btn btn-primary btn-sm" type="submit" name="btnform1">Enregistrer</button></div>
@@ -247,18 +248,16 @@
                                         <p class="text-primary m-0 font-weight-bold">Contact Settings</p>
                                     </div>
                                     <div class="card-body">
-                                        {% if role == 'Eleve' %}
                                         <form method="post">
                                             {% csrf_token %}
                                             <!---------------------- El/Prof Information Settings----------------------->
-
-                                                <div class="form-group"><label for="mobile"><strong>Phone</strong></label>
-                                                <input class="form-control" type="text" placeholder="{{ user.telephone }}" name="telephone" required></div>
+                                            {% if role == 'Eleve' %}
                                             <div class="form-row">
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label for="filiere"><strong>Filière</strong></label>
                                                         <select class="form-control" name="filiere">
+                                                            <option value="{{ user.user.filiere }}" selected hidden></option>
                                                             <option value="GIT">GIT</option>
                                                             <option value="GEM">GEM</option>
                                                             <option value="GC">GC</option>
@@ -271,6 +270,7 @@
                                                     <div class="form-group">
                                                         <label for="niveau"><strong>Niveau</strong></label>
                                                         <select class="form-control" name="niveau">
+                                                            <option value="{{ user.user.niveau }}" selected hidden></option>
                                                             <option value="TC1">TC1</option>
                                                             <option value="TC2">TC2</option>
                                                             <option value="DIC1">DIC1</option>
@@ -280,11 +280,15 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            {% endif %}
+
+                                            <div class="form-group"><label for="mobile"><strong>Phone</strong></label>
+                                            <input class="form-control" type="text" placeholder="{{ user.telephone }}" name="telephone" required></div>
 
                                             <div class="form-group"><button class="btn btn-primary btn-sm" type="submit" name="btnform2">Enregistrer</button></div>
                                             <!---------------------- End Settings----------------------->
                                         </form>
-                                         {% endif %}
+
                                     </div>
                                 </div>
                             </div>
@@ -327,8 +331,8 @@
                                 <form class="user" method="post">
                                     {% csrf_token %}
                                     <!---------------------- Password Settings----------------------->
-                                    <div class="form-group"><input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Password" name="password"><br>
-                                        <input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Saisir à nouveau" name="repassword">
+                                    <div class="form-group"><input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Password" name="password" required><br>
+                                        <input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Saisir à nouveau" name="repassword" required>
                                     </div>
                                     <button class="btn btn-primary btn-block text-white btn-user" type="submit" name="btnform4">Changer</button><br>
                                     <!---------------------- End Settings----------------------->

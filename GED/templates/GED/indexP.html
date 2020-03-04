@@ -21,9 +21,9 @@
                 <hr class="sidebar-divider my-0">
                 <ul class="nav navbar-nav text-light" id="accordionSidebar">
                     <li role="presentation" class="nav-item"><a class="nav-link active" href="#"><i class="fas fa-tachometer-alt"></i><span>Accueil</span></a>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:doc_prof' user.userp.id %}"><i class="fas fa-table"></i><span>Documents</span></a></li>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:publish' user.userp.id %}"><i class="fas fa-table"></i><span>Publier</span></a></li>
-                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.userp.id %}"><i class="fas fa-user"></i><span>profile</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:doc_prof' user.userp.id %}"><i class="fas fa-window-maximize"></i><span>Documents</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:publish' user.userp.id %}"><i class="fas fa-upload"></i><span>Publier</span></a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.userp.id %}"><i class="fas fa-user"></i><span>Profile</span></a></li>
                     <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:Deconnecter' %}"><i class="fas fa-user"></i><span>Deconnecter</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline">
@@ -40,7 +40,7 @@
                                 <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
                             </div>
                         </form>
-                        <ul class="nav navbar-nav flex-nowrap ml-auto" style="background-color: #75b2dd;">
+                        <ul class="nav navbar-nav flex-nowrap ml-auto">
                             <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><i class="fas fa-search"></i></a>
                                 <div class="dropdown-menu dropdown-menu-right p-3 animated--grow-in" role="menu" aria-labelledby="searchDropdown">
                                     <form class="form-inline mr-auto navbar-search w-100">
@@ -127,7 +127,7 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow" role="presentation">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{user.userp.first_name}}</span><img class="border rounded-circle img-profile" src="{{ user.profile.url }}"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{user.userp.username}}</span><img class="border rounded-circle img-profile" src="{{ user.profile.url }}"></a>
                                     <div
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="{% url 'GED:profile' user.userp.id %}"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a

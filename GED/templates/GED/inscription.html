@@ -12,20 +12,7 @@
 <!--------------------------------------Debut Test--------------------------------------------->
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-black" id="mainNav">
-    <div class="container bg-black">
-        <a class="navbar-brand js-scroll-trigger btn btn-secondary" href="{% url 'GED:Home' %}"><i class="fa fa-home"></i>PolyHint</a>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav text-uppercase ml-auto bg-black">
-            <li class="nav-item">
-                <a class="nav-link js-scroll-trigger btn-primary btn-outline-info text-dark" href="{% url 'GED:connexion' %}"><i class="fas fa-laptop"></i>Se Connecter</a>
-            </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-<hr>
-<hr>
+<br>
 {% autoescape off %}
 {% if success %}
 <div class="alert alert-success" role="alert" align="center">
@@ -100,6 +87,7 @@
                                                     <input type="radio" name="gender" value="M" checked>
                                                     <span>Masculin</span>
                                                 </label>
+                                                <label></label>
                                                 <label class="radio inline">
                                                     <input type="radio" name="gender" value="F">
                                                     <span>Feminin</span>
@@ -107,42 +95,23 @@
                                             </div>
                                         </div>
                                     <div id="elv" class="form-group block-feature-1">
-                                            <label class="col-sm-2 control-label">FILIERE</label>
                                             <div class="col-sm-10">
                                                 <select class="form-control" name="filiere">
+                                                    <option hidden selected>Filiere</option>
                                                     <option value="TC">TC</option>
                                                     <option value="GIT">GIT</option>
                                                     <option value="GEM">GEM</option>
                                                     <option value="GEM">AERO</option>
                                                     <option value="GC">GC</option>
                                                 </select>
-
-                                        <label class="col-sm-2 control-label">NIVEAU</label>
+                                            <br>
                                             <select class="selectpicker form-control" name="niveau">
-                                              <optgroup label="TRONC-COMMUN">
-                                                    <option>TC1</option>
-                                                    <option>TC2</option>
-                                              </optgroup>
-                                              <optgroup label="GENIE INFORMATIQUE ET TELECOMMUNICATION">
-                                                    <option>DIC1</option>
-                                                    <option>DIC2</option>
-                                                    <option>DIC3</option>
-                                              </optgroup>
-                                               <optgroup label="GENIE ELECTRO-MÉCANIQUE">
-                                                    <option>DIC1</option>
-                                                    <option>DIC2</option>
-                                                    <option>DIC3</option>
-                                              </optgroup>
-                                                <optgroup label="AERO">
-                                                    <option>DIC1</option>
-                                                    <option>DIC2</option>
-                                                    <option>DIC3</option>
-                                              </optgroup>
-                                                <optgroup label="GENIE CIVIL">
-                                                    <option>DIC1</option>
-                                                    <option>DIC2</option>
-                                                    <option>DIC3</option>
-                                              </optgroup>
+                                                <option hidden selected>Niveau</option>
+                                                <option>TC1</option>
+                                                <option>TC2</option>
+                                                <option>DIC1</option>
+                                                <option>DIC2</option>
+                                                <option>DIC3</option>
                                             </select>
                                         </div>
                                     </div>
@@ -150,7 +119,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="email" class="form-control" placeholder="Your Email *" name="email" required/>
+                                            <input type="email" class="form-control" placeholder="@ept.sn" name="email" required/>
                                         </div>
                                         <div class="form-group">
                                             <input id="tel" type="text"   class="form-control" placeholder="Numero telephone *" name="telephone" />

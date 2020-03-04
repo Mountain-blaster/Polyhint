@@ -59,6 +59,7 @@ class Professeur(models.Model):
     userp = models.OneToOneField(User, related_name='userp', on_delete=models.CASCADE)
     joindate = models.DateTimeField(auto_now_add=True)
     date_birth = models.DateField(null=True)
+    telephone = models.CharField(null=True, max_length=15)
     profile = models.ImageField(upload_to='GED/img_profile/', default='GED/img_profile/rien.jpg')
     sexe = models.CharField(max_length=10, null=False, choices=[('Masculin', 'Masculin'), ('Feminin', 'Feminin')])
     about = models.TextField(max_length=250)
@@ -77,7 +78,11 @@ class Document(models.Model):
     LIST_MATIERE = [
         ('MATHEMATIQUES','MATHS'),
         ('PHYSIQUE', 'PHYSIQUE'),
-        ('ANALYSE DE DONNÉES', 'ANALYSE DE DONNÉES')
+        ('ANALYSE DE DONNÉES', 'ANALYSE DE DONNÉES'),
+        ('DJANGO', 'DJANGO'),
+        ('UML', 'UML'),
+        ('HERO', 'HERO'),
+        ('ALGEBRE', 'ALGEBRE')
     ]
     titre_fichier = models.CharField(null=False, max_length=80, unique=True)
     description = models.TextField(max_length=250)
@@ -118,7 +123,7 @@ class Tache(models.Model):
     eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE)
 
 class Notifications(models.Model):
-    notifs = models.CharField(max_length=45)
+    notifs = models.CharField(max_length=150)
     time_notif = models.DateTimeField(auto_now_add=True)
     eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE, null=True)
     prof_id = models.ForeignKey(Professeur, on_delete=models.CASCADE, null=True)

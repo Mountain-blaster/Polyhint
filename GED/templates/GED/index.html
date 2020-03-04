@@ -18,9 +18,10 @@
         <hr
             class="sidebar-divider my-0" />
         <ul class="nav navbar-nav text-light" id="accordionSidebar">
-            <li role="presentation" class="nav-item"><a class="nav-link active" href="{% url 'GED:homeE' user.user.id %}"><i class="fas fa-tachometer-alt"></i><span>Accueil</span></a>            <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:documents' user.user.id %}"><i class="fas fa-table"></i><span>Documents</span></a></li>
-            <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:pagePerso' user.user.id %}"><i class="fas fa-file"></i><span>Perso</span></a></li>
-            <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.user.id %}"><i class="fas fa-user"></i><span>profile</span></a></li>
+            <li role="presentation" class="nav-item"><a class="nav-link active" href="{% url 'GED:homeE' user.user.id %}"><i class="fas fa-tachometer-alt"></i><span>Accueil</span></a>
+            <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:documents' user.user.id %}"><i class="fas fa-window-maximize"></i><span>Documents</span></a></li>
+            <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:pagePerso' user.user.id %}"><i class="fas fa-table"></i><span>Perso</span></a></li>
+            <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:profile' user.user.id %}"><i class="fas fa-user"></i><span>Profile</span></a></li>
             <li role="presentation" class="nav-item"><a class="nav-link" href="{% url 'GED:Deconnecter' %}"><i class="fas fa-user"></i><span>Deconnecter</span></a></li>
 
         </ul>
@@ -112,7 +113,7 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow" role="presentation">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.user.first_name }}</span><img class="border rounded-circle img-profile" src="{{ user.profile.url }}"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{ user.user.username }}</span><img class="border rounded-circle img-profile" src="{{ user.profile.url }}"></a>
                                     <div
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="{% url 'GED:profile' user.user.id %}"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" role="presentation" href="{% url 'GED:edit' user.user.id %}"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
@@ -124,35 +125,37 @@
             </nav>
             <div class="container-fluid">
                 <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                    <h3 class="text-dark mb-0"><button class="btn-primary bg-gradient-info" onClick="randomBgColor()">POLYHINT<i class="fas fa-chain-broken"></i></button>
-</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generer un rapport</a></div>
-                <div class="d-sm-flex justify-content-between">
-                    <div class="col-lg-6 col-md-4 mb-4">
-
-                        <div class="card" style="width: 18rem;">
-                          <img class="card-img-top" src="{% static 'GED/images/polytechniciens.jpg' %}" alt="Eleves ingenieurs" width="300" height="300"/>
+                    <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generer un rapport</a></div>
+                <div class="d-sm-flex justify-content-between container">
+                    <div class="col-lg-4 col-md-4 mb-4">
+                        <div class="card" style="width: 16rem;">
+                          <img class="card-img-top" src="{% static 'GED/assets2/img/dogs/image6.jpg' %}" alt="Eleves ingenieurs" width="300" height="250"/>
                           <div class="card-body" align="center">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                             <a href="#" class="btn btn-primary">PolytechPub</a>
                           </div>
                         </div>
-
-
-
                     </div>
-                   <div class="col-lg-3 col-md-3 mb-4">
-
-
-                        <div class="card" style="width: 18rem;">
-                          <img class="card-img-top" src="{% static 'GED/images/ept.jpg' %}" alt="Polytechnique" width="300" height="300">
+                   <div class="col-lg-4 col-md-4 mb-4">
+                        <div class="card" style="width: 16rem;">
+                          <img class="card-img-top" src="{% static 'GED/assets2/img/dogs/image7.jpg' %}" alt="Polytechnique" width="300" height="250">
                           <div class="card-body" align="center">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Teachers</a>
+                            <a href="#" class="btn btn-primary">PolytechPub</a>
                           </div>
                         </div>
-
+                   </div>
+                    <div class="col-lg-4 col-md-4 mb-4">
+                        <div class="card" style="width: 16rem;">
+                          <img class="card-img-top" src="{% static 'GED/assets2/img/dogs/imageD.jpeg' %}" alt="Polytechnique" width="300" height="250">
+                          <div class="card-body" align="center">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">PolytechPub</a>
+                          </div>
+                        </div>
                    </div>
                 </div>
                 <div class="row">
