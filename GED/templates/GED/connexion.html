@@ -28,18 +28,24 @@
   </nav>
 
 <div class="container">
-
     <div class="row">
       <div class="col-lg-10 col-xl-9 mx-auto" >
         <div class="card card-signin flex-row my-5">
           <div class="card-img-left d-none d-md-flex">
-             <h4 style="color: #4dbd74">{{ ok }}</h4>
+
           </div>
           <div class="card-body">
             <h5 class="card-title text-center">Polyhint</h5>
+             {% if ok %}
+              <div class="alert alert-success" role="alert" align="center">
+             <h4>{{ ok }}</h4>
+              </div>
+              {% endif %}
 			<p>Veuillez saisir vos informations pour vous connecter</p>
               <br>
-              <div>{{ errno }}</div>
+              {% if errno %}
+              <div class="alert alert-danger" role="alert">{{ errno }}</div>
+              {% endif %}
 			<form method="POST" action="{% url 'GED:valider' %}">
                 {% csrf_token %}
 				<div class="form-group" >

@@ -661,11 +661,16 @@ def valider(request):
             if user.is_active:
                 login(request, user)
                 e = Eleve.objects.get(user=user)
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs.reverse()
+                nbre = len(notifs)
                 taches = Tache.objects.filter(eleve_id=e, state=False).order_by('tache_time')
                 taskfinish = Tache.objects.filter(eleve_id=e, state=True).order_by('tache_time')
                 return render(request, 'GED/index.html', {'user': e,
                                                           'taches': taches,
-                                                          'taskfinish': taskfinish})
+                                                          'taskfinish': taskfinish,
+                                                          'notifs': notifs,
+                                                          'nbre': nbre})
             else:
                 erreur = "Compte pas encore activé"
                 return render(request, 'GED/connexion.html', {'errno': erreur})
@@ -696,6 +701,12 @@ def logout_view(request):
     return HttpResponseRedirect('POLYHINT/connection/')
 
 
+def email_test(email):
+    if User.objects.filter(email=email).exists():
+        return True
+    return False
+
+
 def save(request):
     # Instanciations
     newEleve = Eleve()
@@ -705,6 +716,9 @@ def save(request):
     username = request.GET['username']
     password = request.GET['password']
     email = request.GET['email']
+    if email.split("@")[-1] != "ept.sn":
+        erreur = "les emails doivent se terminer par @ept.sn"
+        return render(request, 'GED/inscription.html', {'errno': erreur})
     try:
         role = request.GET['role']
     except MultiValueDictKeyError:
@@ -712,11 +726,15 @@ def save(request):
         return render(request, 'GED/404page.html', {'erreur': erreur})
     repassword = request.GET['repassword']
 
-    # Creation
-    user = User.objects.create_user(username=username, email=email, password=password)
-    user.first_name = request.GET['prenom']
-    user.last_name = request.GET['nom']
-    user.is_active = False
+    test = email_test(email)
+    if test == False:
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.first_name = request.GET['prenom']
+        user.last_name = request.GET['nom']
+        user.is_active = False
+    else:
+        erreur = "cet email est associé à un compte!"
+        return render(request, 'GED/inscription.html', {'errno': erreur})
 
     if role == "Eleve":
         choix = request.GET['filiere']
@@ -823,26 +841,6 @@ def recover(request):
 
 #Some greats!!!!
 
-def some_view(request):
-
-    buffer = io.BytesIO()
-
-    # Create the PDF object, using the buffer as its "file."
-    p = canvas.Canvas(buffer)
-
-    # Draw things on the PDF. Here's where the PDF generation happens.
-    # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 100, "Hello world.")
-
-    # Close the PDF object cleanly, and we're done.
-    p.showPage()
-    p.save()
-
-    # FileResponse sets the Content-Disposition header so that browsers
-    # present the option to save the file.
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
-
 def newtask(request, id):
     newuser = User.objects.get(pk=id)
     user = Eleve.objects.get(user=newuser)
@@ -863,6 +861,7 @@ def newtask(request, id):
         return render(request, 'GED/index.html', {'user': user,
                                                   'taches': taches,
                                                   'taskfinish': taskfinish})
+
 
 def taskdone(request, id, tache):
     user = Eleve.objects.get(user=User.objects.get(pk=id))

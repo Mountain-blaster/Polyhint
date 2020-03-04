@@ -26,12 +26,23 @@
   </nav>
 <hr>
 <hr>
-<h4 style="color: green">{{ success }}</h4>
+{% autoescape off %}
+{% if success %}
+<div class="alert alert-success" role="alert" align="center">
+  {{ success }}
+</div>
+{% endif %}
+{% if errno %}
+<div class="alert alert-danger" role="alert" align="center">
+  {{ errno }}
+</div>
+{% endif %}
+{% endautoescape %}
 <div class="container register ">
                 <div class="row">
                     <div class="col-md-3 register-left">
                         <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
-                        <h3>Welcome</h3>
+                        <h3>Bienvenue</h3>
                         <p>Polyhint l'avenir des documents numeriques!!</p>
 
 
