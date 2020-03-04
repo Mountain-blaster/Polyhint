@@ -15,6 +15,7 @@ urlpatterns = [
     path('perso/', include(router.urls)),
     ##Pages
     path('', views.home, name="Home"),
+    path('add/', views.addEpreuve, name="add"),
     path('POLYHINT/connection/', views.connexion, name="connexion"),
     path('POLYHINT/inscription/', views.inscription, name="Inscription"),
     path('POLYHINT/Eleve/<int:id>', views.homeE, name="homeE"),

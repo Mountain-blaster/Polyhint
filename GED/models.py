@@ -1,16 +1,19 @@
-import os
-import sys
-from datetime import date
-from io import BytesIO
-from datetime import datetime
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from PIL import Image
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
-from django.urls import reverse
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
-from POLYHINT import settings
-from django.core.files.storage import default_storage
+try:
+    e = Group()
+    e.name = "Eleve"
+    e.save()
+except:
+    pass
+try:
+    p = Group()
+    p.name = "Professeur"
+    p.save()
+except:
+    pass
 
 
 
@@ -93,13 +96,6 @@ class Document(models.Model):
     def __str__(self):
         return self.titre_fichier+"\t"+str(self.eleve_id)+ "\t"+str(self.prof_id)
 
-    @property
-    def filename(self):
-        name = self.fichier.name.split("/")[1].replace('_', ' ').replace('-', ' ')
-        return name
-
-    def get_absolute_url(self):
-        return reverse('GED:document-detail', kwargs={'pk': self.pk})
 
 
 class Commentaire(models.Model):
@@ -126,3 +122,12 @@ class Notifications(models.Model):
     time_notif = models.DateTimeField(auto_now_add=True)
     eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE, null=True)
     prof_id = models.ForeignKey(Professeur, on_delete=models.CASCADE, null=True)
+
+class Sujet(models.Model):
+    titre = models.CharField(max_length=45, unique=True)
+    annee = models.IntegerField(null=False)
+    epreuve = models.FileField(upload_to='GED/sujets', unique=True)
+    uploader = models.ForeignKey(Eleve, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.titre

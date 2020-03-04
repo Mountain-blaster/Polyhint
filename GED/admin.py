@@ -22,9 +22,19 @@ class ModelComments(admin.ModelAdmin):
     list_display = ('user_id', 'id_doc', 'date_comments')
     list_filter = ('date_comments',)
     date_hierarchy = 'date_comments'
+
+
+class ModelSujet(admin.ModelAdmin):
+    list_display = ('titre', 'annee', 'uploader')
+    list_filter = ('titre', 'annee',)
+    date_hierarchy = 'year'
+
+
+
 admin.site.register(Eleve, ModelEleve)
 admin.site.register(Professeur, ModelProf)
 admin.site.register(Document, ModelDocument)
 admin.site.register(Commentaire, ModelComments)
 admin.site.register(Tache)
 admin.site.register(Notifications)
+admin.site.register(Sujet)

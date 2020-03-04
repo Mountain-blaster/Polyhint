@@ -1,348 +1,241 @@
 <!DOCTYPE html>
+<html>
 {% load static %}
-<html lang="en">
 <head>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>Home</title>
-
-  <!-- Bootstrap core CSS -->
-  <link href="{% static 'GED/decouverte/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="{% static 'GED/images/realfav.ico' %}"/>
-
-  <!-- Custom fonts for this template -->
-  <link href="{% static 'GED/decouverte/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-  <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-  <!-- Custom styles for this template -->
-  <link href="{% static 'GED/decouverte/css/style.css' %}" rel="stylesheet">
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>POLYHINT</title>
+    <link rel="stylesheet" href="{%  static 'GED/sujets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
 </head>
 
-<body id="page-top">
+<body id="page-top" onLoad="initialize()"><a class="menu-toggle rounded" href="#"><i class="fa fa-bars"></i></a>
+    <nav class="navbar navbar-light navbar-expand" id="sidebar-wrapper">
+        <div class="container"><button data-toggle="collapse" class="navbar-toggler d-none" data-target="#"></button>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav sidebar-nav" id="sidebar-nav">
+                    <li class="nav-item sidebar-brand" role="presentation"><a class="nav-link active js-scroll-trigger" href="#page-top">POLYHINT</a></li>
+                    <li class="nav-item sidebar-nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="#page-top">Accueil</a></li>
+                    <li class="nav-item sidebar-nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="#about">A propos</a></li>
+                    <li class="nav-item sidebar-nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="#services">Services</a></li>
+                    <li class="nav-item sidebar-nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="#portfolio">Concours EPT</a></li>
+                    <li class="nav-item sidebar-nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="#contact">Contacts</a></li>
+					<li class="nav-item sidebar-nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{% url 'GED:connexion' %}">Connexion</a></li>
+                    <li class="nav-item sidebar-nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{% url 'GED:Inscription' %}">S'inscrire</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <header class="d-flex masthead" style="background-image:url({% static 'GED/images/ept.sn' %});">
+        <div class="container my-auto text-center">
+            <h1 class="mb-1">E.P.T</h1>
+            <h3 class="mb-5"><em>Une école d'excellence</em></h3><a class="btn btn-primary btn-xl js-scroll-trigger" role="button" href="#about">Find Out More</a>
+            <div class="overlay"></div>
+        </div>
+    </header>
+    <section id="about" class="content-section bg-light">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <h2>Stylish Portfolio is the perfect theme for your next project!</h2>
+                    <p class="lead mb-5"><span>This theme features a flexible, UX friendly sidebar menu and stock photos from our friends at&nbsp;</span><a href="https://unsplash.com/">Unsplash</a><span>!</span></p><a class="btn btn-dark btn-xl js-scroll-trigger" role="button"
+                        href="#services">What We Offer</a></div>
+            </div>
+        </div>
+    </section>
+    <section id="services" class="content-section bg-primary text-white text-center">
+        <div class="container">
+            <div class="content-section-heading">
+                <h3 class="text-secondary mb-0">Services</h3>
+                <h2 class="mb-5">What We Offer</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="icon-screen-smartphone"></i></span>
+                    <h4><strong>Responsive</strong></h4>
+                    <p class="mb-0 text-faded">Looks great on any screen size!</p>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="icon-pencil"></i></span>
+                    <h4><strong>Redesigned</strong></h4>
+                    <p class="mb-0 text-faded">Freshly redesigned for Bootstrap 4.</p>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="icon-like"></i></span>
+                    <h4><strong>Favorited</strong></h4>
+                    <p class="mb-0 text-faded"><span>Milions of users&nbsp;</span><i class="fa fa-heart"></i><span>&nbsp;us!</span></p>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="icon-mustache"></i></span>
+                    <h4><strong>Question</strong></h4>
+                    <p class="mb-0 text-faded">I mustache you a question...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="callout" style="background:linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url({% static 'GED/sujets/img/bg-callout.jpg' %});background-position:center center;background-repeat:no-repeat;background-size:cover;">
+        <div class="container text-center">
+            <h2 class="mx-auto mb-5"><span>Welcome to&nbsp;</span><em>your</em><span><br>next website!<br></span></h2><a class="btn btn-primary btn-xl" role="button" href="#">Download Now!</a></div>
+    </section>
+    <section id="portfolio" class="content-section">
+        <div class="container">
+            <div class="content-section-heading text-center">
+                <h3 class="text-secondary mb-0">Sujets du concours EPT</h3>
+                <h2 class="mb-5">Sujets recents</h2>
+            </div>
+            <div class="row no-gutters">
+                {% for doc in list4 %}
+                <div class="col-lg-6">
+                    <a class="portfolio-item" href="{{ doc.epreuve.url }}">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <h2>{{ doc.titre }}</h2>
+                                <p class="mb-0">{{ doc.annee }}</p>
+                            </div>
+                        </div><img class="img-fluid" src="{% static 'GED/images/pdf.jpg' %}"></a>
+                </div>
+                {% endfor %}
 
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-    <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top"><i class="fa fa-home"></i>PolyHint</a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        Menu
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav text-uppercase ml-auto">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger btn-outline-primary" href="#services">OBJECTIFS</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger btn-outline-primary" href="#about">A PROPOS</a>
-          </li>
-            <li class="nav-item">
-                <a class="nav-link js-scroll-trigger btn-outline-dark text-info" href="{% url 'GED:connexion' %}"><i class="fas fa-laptop"></i>Se Connecter</a>
-            </li>
-        </ul>
+        </div>
+        <table class="table">
+          <caption>Ensemble des sujets</caption>
+          <thead>
+            <tr>
+              <th scope="col">Titre</th>
+              <th scope="col">Année</th>
+              <th scope="col">voir</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for sujet in sujets %}
+                <tr>
+                  <td>{{ sujet.titre }}</td>
+                  <td>{{sujet.annee}}</td>
+                  <td><a class="btn btn-primary" href="{{ sujet.epreuve.url }}"><i class="fas fa-eye"></i></a></td>
+                </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+    </section>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+ <span data-toggle="tooltip" data-target="#id" data-placement="top" title="Seul les polytechniciens sont autorisés">
+     <i class="icon-upload"></i> Ajouter un sujet</span>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="icon-file"></i>Publier un sujet</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <form method="post" action="{% url 'GED:add' %}">
+           {% csrf_token %}
+           <div class="custom-file">
+              <input type="file" name="sujet" class="custom-file-input" id="customFile" lang="fr">
+              <label class="custom-file-label" for="customFile">Selectionner le fichier</label>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Username</label>
+                  <input type="text" class="form-control" name="username" placeholder="nom d'utilisateur">
+                </div>
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Mot de passe</label>
+                  <input type="password" class="form-control" name="password" placeholder="Mot de passe">
+                </div>
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Titre</label>
+                  <input type="text" class="form-control" placeholder="titre">
+                </div>
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Année</label>
+                  <input type="number" class="form-control" placeholder="année du concours">
+                </div>
+            </div>
+           <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary">Publier</button>
+          </div>
+       </form>
       </div>
     </div>
-  </nav>
+  </div>
+</div>
+<hr>
+<hr>
+    <section class="content-section bg-primary text-white">
+        <div class="container text-center">
+            <h2 class="mb-4">Préparer vous!</h2>
 
-  <!-- Header -->
-  <header class="masthead">
-      <div class="jumbotron">
-          <h1 class="display-4 btn-outline-dark"><img src="{% static 'GED/images/ept.jpg' %}" width="45" height="45">  ECOLE POLYTECHNIQUE DE THIES  <img src="{% static 'GED/images/ept.jpg' %}" width="45" height="45"></h1>
-          <p class="lead">
-                  <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <img class="d-block w-100" src="{% static 'GED/images/polytechniciens.jpg' %}" alt="First slide" width="500" height="800">
-                </div>
-                <div class="carousel-item">
-                  <img class="d-block w-100" src="{% static 'GED/images/ept.jpg' %}" alt="Second slide" width="500" height="800">
-                </div>
-                <div class="carousel-item">
-                  <img class="d-block w-100" src="{% static 'GED/images/Ept.png' %}" alt="Third slide" width="500" height="800">
-                </div>
-              </div>
-              <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
-    </div>
-          </p>
-          <hr class="my-4">
-          <p class="text-info">
-              Le 25 mai 1973, son Excellence Léopold Sédar SENGHOR, Président de la République du Sénégal,
-              décrète la création de l’Ecole Polytechnique de Thiès.
-              L’Ecole polytechnique de Montréal en accepte le parrainage au cours de son implantation progressive.
-          </p>
+        <!-- Button trigger modal -->
 
         </div>
+    </section>
+    <!--<section id="contact" class="map">
+        <div class="col-sm-offset-1" id="map_canvas" style="width:500px; height:500px" align="center"></div>
+                  <br>
+         <label class="form-check-label">Latitude</label>
+                  <input type="text" id="lat">
+        <label class="form-check-label">Longitude</label>
+                  <input type="text" id="lng">
+    </section>-->
+<hr>
+<hr>
+    <footer class="footer text-center">
+        <div class="container">
+            <ul class="list-inline mb-5">
+                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="#"><i class="icon-social-facebook"></i></a></li>
+                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="#"><i class="icon-social-twitter"></i></a></li>
+                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="#"><i class="icon-social-github"></i></a></li>
+            </ul>
+            <p class="text-muted mb-0 small">Copyright &nbsp;© POLYHINT 2020</p>
+        </div><a class="js-scroll-trigger scroll-to-top rounded" href="#page-top"><i class="fa fa-angle-up"></i></a></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <script src="{% static 'GED/sujets/js/script.min.js' %}"></script>
+    <style>
+  body{
+    text-align:center;
+  }
+  .gmap3{
+    margin: 20px auto;
+    border: 1px dashed #C0C0C0;
+    width: 500px;
+    height: 500px;
+  }
+</style>
+<script type="text/javascript">
+   var map;
+ function initialize() {
+ var myLatlng = new google.maps.LatLng(36.85341604753753,10.176080866332995);
+ var myOptions = {
+ zoom: 14,
+ minZoom:14,
+ center: myLatlng,
+ draggable:false,
+ mapTypeId: google.maps.MapTypeId.SATELLITE
+ }
+map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+ var marker = new google.maps.Marker({
 
 
-
-  </header>
-
-  <!-- Services -->
-  <section class="page-section" id="services">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <h2 class="section-heading text-uppercase">OBJECTIFS</h2>
-        </div>
-      </div>
-      <div class="row text-center">
-        <div class="col-md-4">
-          <span class="fa-stack fa-4x">
-            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
-          </span>
-          <h4 class="service-heading">Transparence</h4>
-          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
-        </div>
-        <div class="col-md-4">
-          <span class="fa-stack fa-4x">
-            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
-          </span>
-          <h4 class="service-heading">Numerisation</h4>
-          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
-        </div>
-        <div class="col-md-4">
-          <span class="fa-stack fa-4x">
-            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
-          </span>
-          <h4 class="service-heading">Securite</h4>
-          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-  <SECTION>
-      <div class="embedresize">
-        <div>
-        <iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/O209XqBZVE0" width="560"></iframe>
-        </div>
-      </div>
-  </SECTION>
-  <style>
-      .embedresize {
-max-width: 560px;
-margin: auto;
+draggable: true,
+position: myLatlng,
+map: map,
+  });
+google.maps.event.addListener(marker, 'dragend', function (event) {
+document.getElementById("lat").value = this.getPosition().lat();
+document.getElementById("lng").value = this.getPosition().lng();
 }
-
-.embedresize div {
-position: relative;
-height: 0;
-padding-bottom: 56.25%;
+);
 }
-
-.embedresize iframe {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-}
-
-.intro #intro .embedresize iframe,
-.exit .quizz .embedresize iframe,
-.alreadyplayed #intro .embedresize iframe,
-.identityset #intro .embedresize iframe,
-#notabene .embedresize iframe,
-#message_intro .embedresize iframe,
-.fancybox_body .embedresize iframe,
-#comments .embedresize iframe,
-#description .embedresize iframe,
-.alreadyplayed .embedresize iframe,
-#adserver .embedresize iframe {
-max-width: none !important;
-}
-  </style>
-
-  <!-- About -->
-  <section class="page-section" id="about">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <h2 class="section-heading text-uppercase">A PROPOS de l'EPT</h2>
-          <h3 class="section-subheading text-muted">Une ecole d'<strong>excellence</strong></h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-12">
-          <ul class="timeline">
-            <li>
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="{% static 'GED/images/ept.jpg' %}" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h4>1973-1982</h4>
-                  <h4 class="subheading">Les debuts</h4>
-                </div>
-                <div class="timeline-body">
-                  <p class="text-muted">
-                         De 1973, date de sa création à 1982, aux termes des décrets N°73-493 du 25 mai 1973,
-                      et N°74-1282 du 23 décembre 1974, l’Ecole Polytechnique de Thiès (EPT)
-                      est érigée en établissement militaire d’enseignement supérieur à encadrement militaire
-                      et placée sous la double tutelle du Ministère des Forces Armées et du Ministère
-                      de l’Education Nationale.
-                      A partir de 1982, débute la phase de sénégalisation du corps enseignant de L’EPT qui était jusqu’à cette date
-                      composé essentiellement de canadiens et de vacataires sénégalais
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="timeline-inverted">
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="{% static 'GED/images/ept.jpg' %}" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h4>1982-1994</h4>
-                  <h4 class="subheading">Sous l'égide de l'Armée</h4>
-                </div>
-                <div class="timeline-body">
-                    <p class="text-muted">
-                        De 1982 à 1992, l’EPT passe sous administration militaire complète aux termes des dispositions
-                        du décret 82-545 du 03 août 1982 ;
-                        Au mois de juillet 1992, l’EPT change de statut.
-                        L’Ecole est érigée en établissement public rattaché à l’université Cheikh Anta Diop de Dakar (UCAD).
-                        Ce changement de statut est régi par la loi 92-38 du 09 juillet 1992 et
-                        les décrets d’application N°92-1261 et 92-1268 du 14 septembre 1992 ;
-                        Au mois de Novembre 1994, dans le cadre de la réforme de l’Enseignement Supérieur,
-                        un nouveau changement de statut intervient. La loi 94-78 du 24 novembre 1994
-                        portant création de l’Ecole Supérieure Polytechnique (ESP) comme établissement rattaché à l’UCAD,
-                        consacre la fusion de l’EPT avec les divisions industrielles de l’ENSUT et de l’ENSETP ;
-                    </p>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="{% static 'GED/images/ept.jpg' %}" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h4>De 1995 - aujourd'hui</h4>
-                  <h4 class="subheading">Un long chemin</h4>
-                </div>
-                <div class="timeline-body">
-                  <p class="text-muted">
-                      Le 11 janvier 2007, est ouverte l’Université de Thiès à partir de la réunion de
-                      quatre écoles de formation d’ingénieurs, à savoir l’ESP centre de Thiès (ancienne Ecole Polytechnique de Thiès),
-                      l’ENSA, l’IST et l’ENCR de Bambey ;
-                      En juin 2009, aux termes du décret 2009-586, l’EPT quitte l’université de Thiès pour
-                      redevenir un établissement autonome et rattaché directement au Ministère chargé de l’enseignement supérieur.
-                      Malgré cette évolution discontinue, ponctuée par des crises parfois extrêmement graves,
-                      l’EPT a survécu et se veut un pôle d’excellence, à vocation, sous – régionale et internationale
-                      au service de la communauté pour un développement durable. L’EPT, depuis sa création, a formé plus
-                      de mille ingénieurs répartis dans les filières Électromécanique et Civil et
-                      quatre cent soixante-sept techniciens supérieurs dans les mêmes filières.
-
-                      Il s’y ajoute la tenue en Avril 2013 de la concertation Nationale sur l’Avenir
-                      de l’Enseignement supérieur (CNAES) à l’issue de laquelle 78 recommandations
-                      s’adressant aux pouvoirs publics, aux acteurs de l’enseignement supérieur et de la Recherche (ESR),
-                      au secteur privé, aux collectivités locales, à la société civile et aux partenaires au développement,
-                      ont été formulées. La suite étant le conseil présidentiel historique sur
-                      l’enseignement supérieur ponctué par onze décisions
-                      du président de la république qui vont sans nul doute transformer le visage de l’enseignement
-                      supérieur et de la Recherche au Sénégal.
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="timeline-inverted">
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="{% static 'GED/decouverte/img/about/4.jpg' %}" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h4>Futur</h4>
-                  <h4 class="subheading">Une ecole d'exception</h4>
-                </div>
-                <div class="timeline-body">
-                    <p class="text-muted">
-                        <img src="{% static 'GED/images/Ept.png' %}">
-                    </p></div>
-              </div>
-            </li>
-            <li class="timeline-inverted">
-              <div class="timeline-image">
-                <h4>Be Part
-                  <br>Of Our
-                  <br>Story!</h4>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-4">
-          <span class="copyright">Copyright &copy; POLYHINT 2020</span>
-        </div>
-        <div class="col-md-4">
-          <ul class="list-inline social-buttons">
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fab fa-twitter"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fab fa-facebook-f"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fab fa-linkedin-in"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-md-4">
-          <ul class="list-inline quicklinks">
-            <li class="list-inline-item">
-              <a href="#">Privacy Policy</a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">Terms of Use</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="{% static 'GED/decouverte/vendor/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'GED/decouverte/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-  <!-- Plugin JavaScript -->
-  <script src="{% static 'GED/decouverte/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-  <!-- Contact form JavaScript -->
-  <script src="{% static 'GED/decouverte/js/jqBootstrapValidation.js' %}"></script>
-  <script src="{% static 'GED/decouverte/js/contact_me.js' %}"></script>
-
-  <!-- Custom scripts for this template -->
-  <script src="{% static 'GED/decouverte/js/agency.min.js' %}"></script>
-
+</script>
 </body>
+
 </html>

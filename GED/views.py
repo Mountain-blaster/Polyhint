@@ -1,4 +1,5 @@
 import datetime
+import os
 import random
 import string
 import io
@@ -120,6 +121,11 @@ def newComments(request, titre_fichier, id):
         newComment.save()
         com = Commentaire.objects.filter(id_doc=doc)
         nbre_comments = len(com)
+        notifsCom = Notifications()
+        contenu = user.user.first_name+" a commenté "+titre+" publié par "+uploader.user.first_name
+        notifsCom.notifs = contenu
+        notifsCom.eleve_id = user
+        notifsCom.save()
         if nbre_comments == 0:
             nocomment = "soyez le premier a commenter"
             return render(request, 'GED/comments.html', {'user': user,
@@ -631,6 +637,7 @@ def del_doc_prof(request, titre_fichier, id):
     doc.delete()
     return render(request, "GED/delete_prof.html")
 
+
 def valider(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -865,3 +872,32 @@ def taskdone(request, id, tache):
         return render(request, 'GED/index.html', {'user':user,
                                                   'taches': tache,
                                                   'taskfinish': taskfinish})
+
+
+def concoursDoc(request):
+    sujets = Sujet.objects.all()
+    list4 = list(Sujet.objects.filter(annee__gte=2016).order_by('annee'))[-4:]
+    list4.reverse()
+    return render(request, 'GED/home.html', {'sujets': sujets,
+                                             'list4': list4})
+
+def addEpreuve(request):
+    try:
+        username = request.POST['username']
+        password = request.POST['password']
+        newuser = authenticate(username=username, password=password)
+        if newuser is not None:
+            eleve = Eleve.objects.get(user=newuser)
+            newSujet = Sujet()
+            newSujet.uploader = eleve
+            newSujet.titre = request.POST['titre']
+            newSujet.annee = int(request.POST['annee'])
+            newSujet.epreuve = request.FILES['epreuve']
+            newSujet.save()
+            succes = "Partage réussi!"
+            return redirect('GED:Home')
+        else:
+            erreur = "Vous n\'êtes pas autorisé pour ce service!"
+            return render(request, 'GED/home.html', {'erreur': erreur})
+    except:
+        return render(request, 'GED/home.html', {'erreur': 'Vous n\'êtes pas autorisé pour ce service'})
