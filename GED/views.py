@@ -39,38 +39,31 @@ def home(request):
                                              'list4': list4})
 
 
-@login_required(login_url="GED:connexion")
+@login_required(login_url="POLYHINT/connection/")
 def homeE(request, id):
-    try:
-        newuser = User.objects.get(pk=id)
-        user = Eleve.objects.get(user=newuser)
-        taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-        taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
-        notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
-        notifs.reverse()
-        nbre = len(notifs)
-        return render(request, 'GED/index.html', {'user': user,
-                                                  'taches': taches,
-                                                  'taskfinish': taskfinish,
-                                                  'notifs': notifs,
-                                                  'nbre': nbre})
-    except:
-        return render(request, 'GED/connexion.html')
+    newuser = User.objects.get(pk=id)
+    user = Eleve.objects.get(user=newuser)
+    taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+    taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    return render(request, 'GED/index.html', {'user': user,
+                                              'taches': taches,
+                                              'taskfinish': taskfinish,
+                                              'notifs': notifs,
+                                              'nbre': nbre})
 
 
-@login_required(login_url="GED:connexion")
 def homeP(request, id):
-    try:
-        newuser = User.objects.get(pk=id)
-        user = Professeur.objects.get(userp=newuser)
-        notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
-        notifs.reverse()
-        nbre = len(notifs)
-        return render(request, 'GED/indexP.html', {'user': user,
+    newuser = User.objects.get(pk=id)
+    user = Professeur.objects.get(userp=newuser)
+    notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+    notifs.reverse()
+    nbre = len(notifs)
+    return render(request, 'GED/indexP.html', {'user': user,
                                                'notifs': notifs,
                                                'nbre': nbre})
-    except:
-        return render(request, 'GED/connexion.html')
 
 
 def inscription(request):
@@ -632,14 +625,13 @@ def publish(request, id):
                                                    'notifs':notifs,
                                                    'nbre':nbre})
 
-
 def document_prof(request, id):
+
     newuser = User.objects.get(pk=id)
     p = Professeur.objects.get(userp=newuser)
     doc = Document.objects.filter(prof_id=p)
     return render(request, "GED/table_prof.html", {'doc': doc,
                                                    'user': p})
-
 
 def del_doc_prof(request, titre_fichier, id):
     newuser = User.objects.get(pk=id)
@@ -697,14 +689,13 @@ def valider(request):
         erreur = "nom d'utilisiteur ou mot de passe incorrecte"
         return render(request, 'GED/connexion.html', {'errno': erreur})
 
-
 def csrf_failure(request, reason=""):
     erreur = {'erreur': 'some custom messages'}
     return render(request, 'GED/404page.html', erreur)
 
 
 # DECONNECTION
-@login_required(login_url="GED:connexion")
+@login_required(login_url="POLYHINT/connection/")
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('POLYHINT/connection/')
