@@ -32,7 +32,11 @@ class EleveViewSet(viewsets.ModelViewSet):
 ##LES PAGES
 
 def home(request):
-    return render(request, 'GED/home.html')
+    sujets = Sujet.objects.all()
+    list4 = list(Sujet.objects.filter(annee__gte=2016).order_by('annee'))[-4:]
+    list4.reverse()
+    return render(request, 'GED/home.html',{'sujets': sujets,
+                                             'list4': list4})
 
 
 @login_required(login_url="POLYHINT/connection/")
@@ -874,15 +878,8 @@ def taskdone(request, id, tache):
                                                   'taskfinish': taskfinish})
 
 
-def concoursDoc(request):
-    sujets = Sujet.objects.all()
-    list4 = list(Sujet.objects.filter(annee__gte=2016).order_by('annee'))[-4:]
-    list4.reverse()
-    return render(request, 'GED/home.html', {'sujets': sujets,
-                                             'list4': list4})
-
 def addEpreuve(request):
-    try:
+    if len(request.POST) != 0:
         username = request.POST['username']
         password = request.POST['password']
         newuser = authenticate(username=username, password=password)
@@ -898,6 +895,9 @@ def addEpreuve(request):
             return redirect('GED:Home')
         else:
             erreur = "Vous n\'êtes pas autorisé pour ce service!"
-            return render(request, 'GED/home.html', {'erreur': erreur})
-    except:
-        return render(request, 'GED/home.html', {'erreur': 'Vous n\'êtes pas autorisé pour ce service'})
+            sujets = Sujet.objects.all()
+            list4 = list(Sujet.objects.filter(annee__gte=2016).order_by('annee'))[-4:]
+            list4.reverse()
+            return render(request, 'GED/home.html', {'erreur': erreur,
+                                                     'sujets': sujets,
+                                                     'list4': list4})

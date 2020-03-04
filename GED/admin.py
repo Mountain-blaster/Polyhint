@@ -27,7 +27,6 @@ class ModelComments(admin.ModelAdmin):
 class ModelSujet(admin.ModelAdmin):
     list_display = ('titre', 'annee', 'uploader')
     list_filter = ('titre', 'annee',)
-    date_hierarchy = 'year'
 
 
 
@@ -37,4 +36,4 @@ admin.site.register(Document, ModelDocument)
 admin.site.register(Commentaire, ModelComments)
 admin.site.register(Tache)
 admin.site.register(Notifications)
-admin.site.register(Sujet)
+admin.site.register(Sujet, ModelSujet)

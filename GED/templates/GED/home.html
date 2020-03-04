@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="{% static 'GED/assets3/fonts/fontawesome-all.min.css' %}">
 </head>
 
 <body id="page-top" onLoad="initialize()"><a class="menu-toggle rounded" href="#"><i class="fa fa-bars"></i></a>
@@ -84,7 +85,7 @@
             <div class="row no-gutters">
                 {% for doc in list4 %}
                 <div class="col-lg-6">
-                    <a class="portfolio-item" href="{{ doc.epreuve.url }}">
+                    <a class="portfolio-item" href="{{ doc.epreuve.url }}" target="_blank">
                         <div class="caption">
                             <div class="caption-content">
                                 <h2>{{ doc.titre }}</h2>
@@ -94,6 +95,7 @@
                 </div>
                 {% endfor %}
 
+        </div>
         </div>
         <table class="table">
           <caption>Ensemble des sujets</caption>
@@ -131,10 +133,10 @@
         </button>
       </div>
       <div class="modal-body">
-       <form method="post" action="{% url 'GED:add' %}">
+       <form method="post" action="{% url 'GED:add' %}" enctype="multipart/form-data">
            {% csrf_token %}
            <div class="custom-file">
-              <input type="file" name="sujet" class="custom-file-input" id="customFile" lang="fr">
+              <input type="file" name="epreuve" class="custom-file-input" id="customFile" lang="fr">
               <label class="custom-file-label" for="customFile">Selectionner le fichier</label>
             </div>
 
@@ -149,11 +151,11 @@
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Titre</label>
-                  <input type="text" class="form-control" placeholder="titre">
+                  <input type="text" name="titre" class="form-control" placeholder="titre">
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Année</label>
-                  <input type="number" class="form-control" placeholder="année du concours">
+                  <input type="number" name="annee" class="form-control" placeholder="année du concours">
                 </div>
             </div>
            <div class="modal-footer">
