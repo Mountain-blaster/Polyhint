@@ -27,7 +27,7 @@ SECRET_KEY = '@8kek@cn9$ojttkj@ut%fei67%*@-eq-hip=en_bj^p$a0!hlc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://polyhint.herokuapp.com/']
 
 # Application definition
 
