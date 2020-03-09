@@ -24,7 +24,7 @@ SECRET_KEY = '@8kek@cn9$ojttkj@ut%fei67%*@-eq-hip=en_bj^p$a0!hlc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['polyhint.herokuapp.com']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -167,6 +167,6 @@ AUTHENTICATION_BACKENDS = [
 # AUTH_USER_MODEL = "GED.User"
 CSRF_FAILURE_VIEW = 'GED.views.csrf_failure'
 
-INTERNAL_IPS=['127.0.0.1']
+INTERNAL_IPS=['127.0.0.1/8000']
 
 
