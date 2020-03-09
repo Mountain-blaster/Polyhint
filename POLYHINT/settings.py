@@ -13,9 +13,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import dj_database_url
-from dj_config_url import config
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -25,9 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '@8kek@cn9$ojttkj@ut%fei67%*@-eq-hip=en_bj^p$a0!hlc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['https://polyhint.herokuapp.com/']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -38,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whitenoise.runserver_nostatic',
     ###myapps
     'rest_framework',
     'rest_framework.authtoken',
@@ -49,7 +45,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -83,9 +78,14 @@ WSGI_APPLICATION = 'POLYHINT.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'polyhint',
+        'USER': 'postgres',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 
 REST_FRAMEWORK = {
@@ -128,14 +128,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "static"),
-    ]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Media files (CSS, JavaScript, Images)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -167,5 +164,7 @@ AUTHENTICATION_BACKENDS = [
 # )
 # AUTH_USER_MODEL = "GED.User"
 CSRF_FAILURE_VIEW = 'GED.views.csrf_failure'
+
+INTERNAL_IPS=['127.0.0.1']
 
 

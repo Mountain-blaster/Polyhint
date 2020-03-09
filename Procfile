@@ -1,1 +1,1 @@
-web: gunicorn POLYHINT.wsgi
+web: gunicorn POLYHINT.wsgi --log-file -

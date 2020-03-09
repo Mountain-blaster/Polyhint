@@ -1,0 +1,36 @@
+{
+"name": "characterCounter",
+"title": "jQuery Character Counter",
+"description": "jQuery plugin for input character counter.",
+"keywords": [
+"character",
+"counter",
+"length",
+"maxlength"
+],
+"version": "0.0.1",
+"author": {
+"name": "serdar ozturk",
+"url": "https://twitter.com/kokulusilgi"
+},
+"maintainers": [
+{
+"name": "Serdar Ozturk",
+"email": "serdarforever@yahoo.com.tr",
+"url": "http://kokulusilgi.com"
+}
+],
+"licenses": [
+{
+"type": "MIT",
+"url": "http://serdar.mit-license.org/"
+}
+],
+"bugs": "https://github.com/kokulusilgi/Character-Counter-Plugin-for-jQuery/issues",
+"homepage": "https://github.com/kokulusilgi/Character-Counter-Plugin-for-jQuery",
+"docs": "https://github.com/kokulusilgi/Character-Counter-Plugin-for-jQuery",
+"download": "https://github.com/kokulusilgi/Character-Counter-Plugin-for-jQuery",
+"dependencies": {
+"jquery": ">=1.5"
+}
+}
