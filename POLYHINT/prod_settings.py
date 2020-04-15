@@ -6,11 +6,20 @@ TEMPLATE_DEBUG = False
 
 SECRET_KEY = 'd%5_y%y8&cu2k%1j*k80f$+qd7ix5q$&jkplokgsdo4=o#)3ek'
 
-ALLOWED_HOSTS = ['polyhint.herokuapp.com']
+ALLOWED_HOSTS = ['polyhint.herokuapp.com', 'polyhint2.herokuapp.com']
 
 DATABASES['default'] = dj_database_url.config()
 
 MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+INSTALLED_APPS += ('storages',)
+
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorages'
+
+AWS_QUERYSTRING_AUTH = False
+AWS_ACCESS_KEY_ID = ['AKIAIYKJDOYIV5UATSUA']
+AWS_SECRET_ACCESS_KEY = ['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']
+AWS_STORAGE_BUCKET_NAME = ['polyhint2']
+MEDIA_URL = 'http://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 
