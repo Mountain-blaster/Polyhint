@@ -16,10 +16,10 @@ INSTALLED_APPS += ('storages',)
 
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorages'
 
-AWS_QUERYSTRING_AUTH = False
-AWS_ACCESS_KEY_ID = ['AKIAIYKJDOYIV5UATSUA']
-AWS_SECRET_ACCESS_KEY = ['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']
-AWS_STORAGE_BUCKET_NAME = ['polyhint2']
-MEDIA_URL = 'http://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
+#AWS_QUERYSTRING_AUTH = False
+#AWS_ACCESS_KEY_ID = ['AKIAIYKJDOYIV5UATSUA']
+#AWS_SECRET_ACCESS_KEY = ['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']
+#AWS_STORAGE_BUCKET_NAME = ['polyhint2']
+#MEDIA_URL = 'http://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
+#DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 
