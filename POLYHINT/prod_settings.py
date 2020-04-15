@@ -3,7 +3,7 @@ import dj_database_url
 import storages
 
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = False
 
 SECRET_KEY = 'd%5_y%y8&cu2k%1j*k80f$+qd7ix5q$&jkplokgsdo4=o#)3ek'
