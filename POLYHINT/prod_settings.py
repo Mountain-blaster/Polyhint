@@ -1,6 +1,7 @@
 from .settings import *
 import dj_database_url
 import storages
+from storages import backends.s3boto
 
 
 DEBUG = True
