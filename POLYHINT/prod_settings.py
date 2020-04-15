@@ -27,10 +27,10 @@ INSTALLED_APPS += ('storages',)
 #MEDIA_URL = 'http://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
 #DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 
-AWS_STORAGE_BUCKET_NAME = 'polyhint2'
-AWS_S3_REGION_NAME = 'us-east-2'  # e.g. us-east-2
-AWS_ACCESS_KEY_ID = 'AKIAIYKJDOYIV5UATSUA'
-AWS_SECRET_ACCESS_KEY = 'hP9mmdCJnvbHHoz+JT0I3AqrDNKwdQGxItMxnx1P'
+export AWS_STORAGE_BUCKET_NAME = 'polyhint2'
+export AWS_S3_REGION_NAME = 'us-east-2'  # e.g. us-east-2
+export AWS_ACCESS_KEY_ID = 'AKIAIYKJDOYIV5UATSUA'
+export AWS_SECRET_ACCESS_KEY = 'hP9mmdCJnvbHHoz+JT0I3AqrDNKwdQGxItMxnx1P'
 
 # Tell django-storages the domain to use to refer to static files.
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
