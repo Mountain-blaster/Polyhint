@@ -1,5 +1,7 @@
 from .settings import *
 import dj_database_url
+import storages.backends.s3boto3
+
 
 DEBUG = False
 TEMPLATE_DEBUG = False
