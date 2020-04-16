@@ -27,12 +27,10 @@ INSTALLED_APPS += ('storages',)
 #MEDIA_URL = 'http://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
 #DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 
-AWS_STORAGE_BUCKET_NAME = 'polyhint2'
+AWS_STORAGE_BUCKET_NAME = 'polyhint'
+AWS_S3_REGION_NAME = 'eu-west-3'
 AWS_ACCESS_KEY_ID = 'AKIAIYKJDOYIV5UATSUA'
 AWS_SECRET_ACCESS_KEY = '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'
-
-
-
 
 MEDIA_URL = 'http://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
 
