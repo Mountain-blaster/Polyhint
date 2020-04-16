@@ -1,6 +1,8 @@
 from .settings import *
 import dj_database_url
 import storages
+from boto.s3.connection import S3Connection
+import boto
 
 
 
@@ -30,6 +32,10 @@ INSTALLED_APPS += ('storages',)
 AWS_STORAGE_BUCKET_NAME = 'polyhint2'
 AWS_ACCESS_KEY_ID = 'AKIAIYKJDOYIV5UATSUA'
 AWS_SECRET_ACCESS_KEY = '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'
+
+REGION_HOST = 's3.eu-central-1.amazonaws.com'
+conn = S3Connection(S3_ACCESS_KEY, S3_SECRET_KEY, host=REGION_HOST)
+
 
 
 MEDIA_URL = 'http://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
