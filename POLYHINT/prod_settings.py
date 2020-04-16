@@ -34,6 +34,8 @@ AWS_S3_REGION_NAME = 'us-east-2'  # e.g. us-east-2
 AWS_ACCESS_KEY_ID = 'AKIAIYKJDOYIV5UATSUA'
 AWS_SECRET_ACCESS_KEY = 'hP9mmdCJnvbHHoz+JT0I3AqrDNKwdQGxItMxnx1P'
 
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
 boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 
 MEDIA_URL = 'http://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
