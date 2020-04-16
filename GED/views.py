@@ -272,7 +272,7 @@ def edit_profile(request, id):
         elif 'btnform0' in request.POST:
             form = ElProfileForm(request.POST, request.FILES)
             if form.is_multipart():
-                a = e.profile.path
+                a = e.profile.name
                 e.profile = request.FILES['profile']
                 e.save()
                 os.remove(a)
