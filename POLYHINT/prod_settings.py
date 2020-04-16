@@ -28,7 +28,7 @@ INSTALLED_APPS += ('storages',)
 #DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 
 AWS_STORAGE_BUCKET_NAME = 'polymedia'
-AWS_S3_REGION_NAME = 'eu-west-2'
+AWS_S3_REGION_NAME = 'us-west-2'
 AWS_ACCESS_KEY_ID = 'AKIAIYKJDOYIV5UATSUA'
 AWS_SECRET_ACCESS_KEY = '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'
 
