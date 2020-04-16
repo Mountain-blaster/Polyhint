@@ -275,7 +275,8 @@ def edit_profile(request, id):
                 a = e.profile.name
                 e.profile = request.FILES['profile']
                 e.save()
-                os.remove(a)
+                if a:
+                    os.remove(a)
                 role = "Eleve"
                 notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
                 notifs.reverse()
