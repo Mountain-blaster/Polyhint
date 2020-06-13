@@ -150,7 +150,7 @@ PASSWORD_HASHERS = [
 
 # EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'dpapaomar@ept.sn'
+EMAIL_HOST_USER = 'polyhint@gmail.com'
 EMAIL_HOST_PASSWORD = 'lpmss1998(a-b)(a+b)'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = True
