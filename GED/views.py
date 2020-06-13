@@ -272,10 +272,8 @@ def edit_profile(request, id):
         elif 'btnform0' in request.POST:
             form = ElProfileForm(request.POST, request.FILES)
             if form.is_multipart():
-                a = e.profile.path
                 e.profile = request.FILES['profile']
                 e.save()
-                os.remove(a)
                 role = "Eleve"
                 notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
                 notifs.reverse()
