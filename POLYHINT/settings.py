@@ -148,12 +148,12 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
 
-EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'sadiakhou1997@gmail.com'
-EMAIL_HOST_PASSWORD = 'F@nt@bdouFermat1976'
+EMAIL_HOST_USER = 'polyhint@gmail.com'
+EMAIL_HOST_PASSWORD = 'lpmss1998(a-b)(a+b)'
 EMAIL_PORT = 465
-
+EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 DEFAULT_FROM_EMAIL = 'admin@my-site.com'
 
