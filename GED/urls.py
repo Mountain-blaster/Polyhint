@@ -40,14 +40,14 @@ urlpatterns = [
     path('POLYHINT/Prof/document/<int:id>/', views.document_prof, name='doc_prof'),
     path('POLYHINT/Prof/document/suppression/<str:titre_fichier>/<int:id>/delete/', views.del_doc_prof, name='del_doc'),
     path('POLYHINT/Prof/document/publish/<int:id>/', views.pubProf, name="publish"),
-path('POLYHINT/Prof/document/publish/<int:id>/validate', views.publish, name="traitementP"),
+    path('POLYHINT/Prof/document/publish/<int:id>/validate', views.publish, name="traitementP"),
 
     ##Traitements
     path('POLYHINT/sauvegarde/', views.save, name='sauver'),
     re_path(r'^activate/(?P<username>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
             views.activate_account, name='activate'),
     path('POLYHINT/connection/login/', views.valider, name='valider'),
-    path("POLYHINT/connection/", views.logout_view, name="Deconnecter"),
+    path("POLYHINT/connection/logout/", views.logout_view, name="Deconnecter"),
     path('POLYHINT/recuperation/', views.recover, name='recover'),
     path('POLYHINT/page-recuperation/', views.recoverpage, name='recoverpage'),
     #re_path(r'^test-delete/$', views.test_delete, name='test_delete'),

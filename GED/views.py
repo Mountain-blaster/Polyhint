@@ -4,6 +4,9 @@ import random
 import string
 import io
 from django.http import FileResponse
+from django.template import RequestContext
+from django.utils import timezone
+from django.views.decorators.cache import cache_control
 from reportlab.pdfgen import canvas
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -17,11 +20,12 @@ from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
 from GED.permis import *
-from django.contrib.auth.models import Group
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group, AnonymousUser
+from django.contrib.auth import authenticate, login, get_user, logout
 from django.contrib.auth import update_session_auth_hash
 from .forms import *
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 
 
 class EleveViewSet(viewsets.ModelViewSet):
@@ -33,14 +37,47 @@ class EleveViewSet(viewsets.ModelViewSet):
 ##LES PAGES
 
 def home(request):
-    sujets = Sujet.objects.all()
-    list4 = list(Sujet.objects.filter(annee__gte=2016).order_by('annee'))[-4:]
-    list4.reverse()
-    return render(request, 'GED/home.html',{'sujets': sujets,
-                                             'list4': list4})
+    newuser = get_user(request)
+    if newuser.is_authenticated:
+        try:
+            user = Eleve.objects.get(user=newuser)
+            role = "Eleve"
+        except Eleve.DoesNotExist:
+            try:
+                user = Professeur.objects.get(userp=newuser)
+                role = "Professeur"
+            except Professeur.DoesNotExist:
+                role = "admin"
+        if role == "Eleve":
+            taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+            taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexE.html', {'user': user,
+                                                       'taches': taches,
+                                                       'taskfinish': taskfinish,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        elif role == "Professeur":
+            user = Professeur.objects.get(userp=newuser)
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexP.html', {'user': user,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        elif role == "admin":
+            return redirect('/')
+    else:
+        sujets = Sujet.objects.all()
+        list4 = list(Sujet.objects.filter(annee__gte=2016).order_by('annee'))[-4:]
+        list4.reverse()
+        return render(request, 'GED/home.html',{'sujets': sujets,
+                                                 'list4': list4})
 
 
-@login_required(login_url="POLYHINT/connection/")
+@login_required(login_url="/POLYHINT/connection/")
 def homeE(request, id):
     newuser = User.objects.get(pk=id)
     user = Eleve.objects.get(user=newuser)
@@ -49,13 +86,13 @@ def homeE(request, id):
     notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
     notifs.reverse()
     nbre = len(notifs)
-    return render(request, 'GED/index.html', {'user': user,
-                                              'taches': taches,
-                                              'taskfinish': taskfinish,
-                                              'notifs': notifs,
-                                              'nbre': nbre})
+    return render(request, 'GED/indexE.html', {'user': user,
+                                                  'taches': taches,
+                                                  'taskfinish': taskfinish,
+                                                  'notifs': notifs,
+                                                  'nbre': nbre})
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def homeP(request, id):
     newuser = User.objects.get(pk=id)
     user = Professeur.objects.get(userp=newuser)
@@ -77,9 +114,42 @@ def recoverpage(request):
 
 
 def connexion(request):
-    return render(request, "GED/connexion.html")
+    newuser = get_user(request)
+    if not newuser.is_authenticated:
+        return render(request, "GED/connexion.html")
+    else:
+        try:
+            user = Eleve.objects.get(user=newuser)
+            role = "Eleve"
+        except Eleve.DoesNotExist:
+            try:
+                user = Professeur.objects.get(userp=newuser)
+                role = "Professeur"
+            except Professeur.DoesNotExist:
+                role = "admin"
+        if role == "Eleve":
+            taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+            taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexE.html', {'user': user,
+                                                       'taches': taches,
+                                                       'taskfinish': taskfinish,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        elif role == "Professeur":
+            user = Professeur.objects.get(userp=newuser)
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexP.html', {'user': user,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        elif role == "admin":
+                return redirect('/admin/')
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def commentaire(request, titre_fichier, id):
     doc = Document.objects.get(titre_fichier=titre_fichier)
     newuser = User.objects.get(pk=id)
@@ -109,7 +179,7 @@ def commentaire(request, titre_fichier, id):
                                                      'uploader': uploader})
 
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def newComments(request, titre_fichier, id):
     titre = str(titre_fichier)
     doc = Document.objects.get(titre_fichier=titre)
@@ -157,22 +227,17 @@ def newComments(request, titre_fichier, id):
                                                      'uploader': uploader,
                                                      'notifs': notifs,
                                                      'nbre': nbre})
-
-
+@login_required(login_url="/POLYHINT/connection/")
 def profile(request, id):
-
     newuser = User.objects.get(pk=id)
-
     try:
         e = Eleve.objects.get(user=newuser)
         role = 'Eleve'
-
     except Eleve.DoesNotExist:
         p = Professeur.objects.get(userp=newuser)
         role = 'Professeur'
 
     if role == 'Eleve':
-        e = Eleve.objects.get(user=newuser)
         age = datetime.date.today().year - e.date_birth.year
         notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
         notifs.reverse()
@@ -184,7 +249,6 @@ def profile(request, id):
                                                         'nbre': nbre})
 
     elif role == 'Professeur':
-        p = Professeur.objects.get(userp=newuser)
         age = datetime.date.today().year - p.date_birth.year
         notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
         notifs.reverse()
@@ -200,7 +264,7 @@ def profile(request, id):
         return render(request, 'GED/404.html', {'erreur', erreur})
 
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def edit_profile(request, id):
     newuser = User.objects.get(pk=id)
     try:
@@ -272,8 +336,10 @@ def edit_profile(request, id):
         elif 'btnform0' in request.POST:
             form = ElProfileForm(request.POST, request.FILES)
             if form.is_multipart():
+                a = e.profile.path
                 e.profile = request.FILES['profile']
                 e.save()
+                os.remove(a)
                 role = "Eleve"
                 notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
                 notifs.reverse()
@@ -404,7 +470,7 @@ def edit_profile(request, id):
                                                            'notifs':notifs,
                                                            'nbre': nbre})
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def otherprofile(request, username, id):
     newuser = User.objects.get(pk=id)
     user = Eleve.objects.get(user=newuser)
@@ -424,7 +490,7 @@ def otherprofile(request, username, id):
 ##################################################################################################
 
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def documentsEleve(request, id):
     newuser = User.objects.get(pk=id)
     e = Eleve.objects.get(user=newuser)
@@ -449,7 +515,7 @@ def documentsEleve(request, id):
                                               'notifs': notifs,
                                               'nbre': nbre})
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def PubEleve(request, id):
     newuser = User.objects.get(pk=id)
     e = Eleve.objects.get(user=newuser)
@@ -466,7 +532,7 @@ def PubEleve(request, id):
                                                  'notifs':notifs,
                                                  'nbre':nbre})
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def Traitement(request, id):
     newuser = User.objects.get(pk=id)
     e = Eleve.objects.get(user=newuser)
@@ -501,7 +567,7 @@ def Traitement(request, id):
                                                  'nbre':nbre})
 
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def search(request, id):
     e = Eleve.objects.get(user=User.objects.get(pk=id))
     doc = list(Document.objects.filter(prof_id=None))
@@ -535,7 +601,7 @@ def search(request, id):
                                               'notifs':notifs,
                                               'nbre':nbre})
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def pagePerso(request, id):
     newuser = User.objects.get(pk=id)
     e = Eleve.objects.get(user=newuser)
@@ -556,6 +622,7 @@ def pagePerso(request, id):
              'nbre':nbre}
     return render(request, 'GED/pagePerso.html', context)
 
+@login_required(login_url="/POLYHINT/connection/")
 def deleteDoc(request, titre_fichier, id):
     newuser = User.objects.get(pk=id)
     e = Eleve.objects.get(user=newuser)
@@ -574,6 +641,7 @@ def deleteDoc(request, titre_fichier, id):
 
 ###PROF#####
 
+@login_required(login_url="/POLYHINT/connection/")
 def pubProf(request, id):
     newuser = User.objects.get(pk=id)
     p = Professeur.objects.get(userp=newuser)
@@ -590,7 +658,7 @@ def pubProf(request, id):
                                                 'notifs':notifs,
                                                 'nbre':nbre})
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def publish(request, id):
     files = request.FILES.getlist('fichier')
     newuser = User.objects.get(pk=id)
@@ -624,6 +692,7 @@ def publish(request, id):
                                                    'notifs':notifs,
                                                    'nbre':nbre})
 
+@login_required(login_url="/POLYHINT/connection/")
 def document_prof(request, id):
 
     newuser = User.objects.get(pk=id)
@@ -632,6 +701,7 @@ def document_prof(request, id):
     return render(request, "GED/table_prof.html", {'doc': doc,
                                                    'user': p})
 
+@login_required(login_url="/POLYHINT/connection/")
 def del_doc_prof(request, titre_fichier, id):
     newuser = User.objects.get(pk=id)
     p = Professeur.objects.get(userp=newuser)
@@ -642,51 +712,88 @@ def del_doc_prof(request, titre_fichier, id):
 
 
 def valider(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
+    newuser = get_user(request)
+    if newuser.is_authenticated:
         try:
-            e = Eleve.objects.get(user=user)
+            user = Eleve.objects.get(user=newuser)
             role = "Eleve"
-            del e
         except Eleve.DoesNotExist:
-            p = Professeur.objects.get(userp=user)
-            role = "Professeur"
-            del p
-        except:
-            role = "admin"
+            try:
+                user = Professeur.objects.get(userp=newuser)
+                role = "Professeur"
+            except Professeur.DoesNotExist:
+                role = "admin"
         if role == "Eleve":
-            if user.is_active:
-                login(request, user)
-                e = Eleve.objects.get(user=user)
-                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
-                notifs.reverse()
-                nbre = len(notifs)
-                taches = Tache.objects.filter(eleve_id=e, state=False).order_by('tache_time')
-                taskfinish = Tache.objects.filter(eleve_id=e, state=True).order_by('tache_time')
-                return render(request, 'GED/index.html', {'user': e,
-                                                          'taches': taches,
-                                                          'taskfinish': taskfinish,
-                                                          'notifs': notifs,
-                                                          'nbre': nbre})
-            else:
-                erreur = "Compte pas encore activé"
-                return render(request, 'GED/connexion.html', {'errno': erreur})
+            taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+            taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexE.html', {'user': user,
+                                                       'taches': taches,
+                                                       'taskfinish': taskfinish,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
         elif role == "Professeur":
-            if user.is_active:
-                login(request, user)
-                p = Professeur.objects.get(userp=user)
-                return render(request, 'GED/indexP.html', {'user': p})
-            else:
-                erreur = "Compte pas encore activé"
-                return render(request, 'GED/connexion.html', {'errno': erreur})
+            user = Professeur.objects.get(userp=newuser)
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexP.html', {'user': user,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
         elif role == "admin":
-            login(request, user)
             return redirect('/admin/')
     else:
-        erreur = "nom d'utilisiteur ou mot de passe incorrecte"
-        return render(request, 'GED/connexion.html', {'errno': erreur})
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            try:
+                e = Eleve.objects.get(user=user)
+                role = "Eleve"
+                del e
+            except Eleve.DoesNotExist:
+                try:
+                    p = Professeur.objects.get(userp=user)
+                    role = "Professeur"
+                    del p
+                except Professeur.DoesNotExist:
+                    role = "admin"
+
+            if role == "Eleve":
+                if user.is_active:
+                    login(request, user)
+                    e = Eleve.objects.get(user=user)
+                    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                    notifs.reverse()
+                    nbre = len(notifs)
+                    taches = Tache.objects.filter(eleve_id=e, state=False).order_by('tache_time')
+                    taskfinish = Tache.objects.filter(eleve_id=e, state=True).order_by('tache_time')
+                    return render(request, 'GED/indexE.html', {'user': e,
+                                                              'taches': taches,
+                                                              'taskfinish': taskfinish,
+                                                              'notifs': notifs,
+                                                              'nbre': nbre})
+                else:
+                    erreur = "Compte pas encore activé"
+                    return render(request, 'GED/connexion.html', {'errno': erreur})
+            elif role == "Professeur":
+                if user.is_active:
+                    login(request, user)
+                    p = Professeur.objects.get(userp=user)
+                    return render(request, 'GED/indexP.html', {'user': p})
+                else:
+                    erreur = "Compte pas encore activé"
+                    return render(request, 'GED/connexion.html', {'errno': erreur})
+            elif role == "admin":
+                if user.is_staff:
+                    login(request, user)
+                    return redirect('/admin/')
+        else:
+            erreur = "nom d'utilisiteur ou mot de passe incorrecte"
+            return render(request, 'GED/connexion.html', {'errno': erreur})
+
 
 def csrf_failure(request, reason=""):
     erreur = {'erreur': 'some custom messages'}
@@ -694,10 +801,9 @@ def csrf_failure(request, reason=""):
 
 
 # DECONNECTION
-@login_required(login_url="POLYHINT/connection/")
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('POLYHINT/connection/')
+    return HttpResponseRedirect('/POLYHINT/connection/')
 
 
 def email_test(email):
@@ -853,6 +959,7 @@ def recover(request):
 
 #Some greats!!!!
 
+@login_required(login_url="/POLYHINT/connection/")
 def newtask(request, id):
     newuser = User.objects.get(pk=id)
     user = Eleve.objects.get(user=newuser)
@@ -864,17 +971,17 @@ def newtask(request, id):
         newtache.save()
         taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
         taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
-        return render(request, 'GED/index.html', {'user': user,
+        return render(request, 'GED/indexE.html', {'user': user,
                                                   'taches': taches,
                                                   'taskfinish': taskfinish})
     except:
         taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
         taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-        return render(request, 'GED/index.html', {'user': user,
+        return render(request, 'GED/indexE.html', {'user': user,
                                                   'taches': taches,
                                                   'taskfinish': taskfinish})
 
-
+@login_required(login_url="/POLYHINT/connection/")
 def taskdone(request, id, tache):
     user = Eleve.objects.get(user=User.objects.get(pk=id))
     task = Tache.objects.get(tache=tache)
@@ -884,7 +991,7 @@ def taskdone(request, id, tache):
         task.save()
         tache = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
         taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
-        return render(request, 'GED/index.html', {'user':user,
+        return render(request, 'GED/indexE.html', {'user':user,
                                                   'taches': tache,
                                                   'taskfinish': taskfinish})
 

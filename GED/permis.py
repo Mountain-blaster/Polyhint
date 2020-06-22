@@ -1,18 +1,5 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, user_logged_in
-
-
-
-def nonAuthentifie(view_dest):
-    def wrapper_func(request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('valider')
-        else:
-            return view_dest(request, *args, **kwargs)
-    return wrapper_func
-
 
 def allowed_user(role=[]):
     def maFonc(view_dest):
