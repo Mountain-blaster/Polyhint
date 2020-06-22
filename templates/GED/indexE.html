@@ -12,6 +12,17 @@
     <link rel="stylesheet" href="{% static 'GED/assets2/css/untitled.css' %}">
 </head>
 
+<script type="text/javascript">
+			window.addEventListener( 'beforeunload', function(ev) {
+				document.body.style.display = "none";
+			})
+			window.onpageshow = function (event) {
+			    if (event.persisted) {
+			        window.location.reload();
+			    }
+			};
+</script>
+
 <body id="page-top">
     <div id="wrapper" class="bg-gradient-info">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
