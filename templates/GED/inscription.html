@@ -112,7 +112,7 @@
 
                                         <div id="elv" class="form-group block-feature-1" style="display: none;" pk="1">
                                             <div class="form-group">
-                                                <input type="date" class="form-control" placeholder="date naissance *" name="birth" />
+                                                <input type="date" class="form-control" placeholder="date naissance *" name="birth" id="birth" />
                                             </div>
                                             <div class="form-group">
                                                 <select class="form-control" name="filiere" id="filiere">
@@ -126,12 +126,12 @@
                                             </div>
                                             <div class="form-group">
                                                 <select class="selectpicker form-control" name="niveau" id="niveau">
-                                                    <option hidden selected>Niveau</option>
-                                                    <option>TC1</option>
-                                                    <option>TC2</option>
-                                                    <option>DIC1</option>
-                                                    <option>DIC2</option>
-                                                    <option>DIC3</option>
+                                                    <option hidden>Niveau</option>
+                                                    <option value="TC1">TC1</option>
+                                                    <option value="TC2">TC2</option>
+                                                    <option value="DIC1">DIC1</option>
+                                                    <option value="DIC2">DIC2</option>
+                                                    <option value="DIC3">DIC3</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -193,8 +193,7 @@ function myFunction2() {
 
     if (selected_option === 'Eleve') {
     	$('#elv').attr('pk','1').show();
-    	$('#niveau').attr("required", true);
-    	$('#filiere').attr("required", true);
+    	$('#birth').attr("required", true);
     }
     if (selected_option != 'Eleve') {
     	$("#elv").removeAttr('pk').hide();
