@@ -105,8 +105,40 @@ def homeP(request, id):
 
 
 def inscription(request):
-    dept = Eleve.objects.all()
-    return render(request, 'GED/inscription.html', {'departements': dept})
+    newuser = get_user(request)
+    if newuser.is_authenticated:
+        try:
+            user = Eleve.objects.get(user=newuser)
+            role = "Eleve"
+        except Eleve.DoesNotExist:
+            try:
+                user = Professeur.objects.get(userp=newuser)
+                role = "Professeur"
+            except Professeur.DoesNotExist:
+                role = "admin"
+        if role == "Eleve":
+            taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+            taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexE.html', {'user': user,
+                                                       'taches': taches,
+                                                       'taskfinish': taskfinish,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        elif role == "Professeur":
+            user = Professeur.objects.get(userp=newuser)
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexP.html', {'user': user,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        elif role == "admin":
+            return redirect('/admin/')
+    else:
+        return render(request, 'GED/inscription.html')
 
 
 def recoverpage(request):
