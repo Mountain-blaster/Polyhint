@@ -208,8 +208,9 @@
           <th>Titre</th>
           <th>date publication</th>
           <th>matiere</th>
-          <th>filiere</th>
+          <th>publié par</th>
           <th>type</th>
+          <th>voir</th>
         </tr>
       </thead>
       <tbody>
@@ -218,7 +219,7 @@
           <td>{{ doc.titre_fichier }}</td>
           <td>{{ doc.updload_date}}</td>
           <td>{{ doc.matiere }}</td>
-          <td>{{ doc.filiere }}</td>
+          <td>{{ doc.prof_id }}</td>
           <td>
               {% if doc.type == ".pdf" %}
                   <img height='30' width='30' src="{% static 'GED/extension/pdf.png'%}" alt="file">
@@ -237,9 +238,10 @@
               {% elif doc.type == ".docx" %}
                   <img height='30' width='30' src="{% static 'GED/extension/docx.jpg'%}" alt="file">
               {% else %}
-                                                inconnu
+                  inconnu
               {% endif %}
           </td>
+          <td><a href="{{ doc.fichier.url }}"><i class="fas fa-eye"></i></a></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -248,8 +250,9 @@
           <th>Titre</th>
           <th>date publication</th>
           <th>matiere</th>
-          <th>filiere</th>
+          <th>publié par</th>
           <th>type</th>
+          <th>voir</th>
         </tr>
       </tfoot>
     </table>

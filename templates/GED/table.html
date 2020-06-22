@@ -219,7 +219,6 @@
         <tr>
             <th>Titre</th>
             <th>matiere</th>
-            <th>niveau</th>
             <th>publié par</th>
             <th>publié le</th>
             <th>type</th>
@@ -230,13 +229,12 @@
       <tbody>
       {% for doc in docs %}
         <tr>
-            <td><a href="{% url 'GED:comments' doc.titre_fichier user.user.id %}">{{ doc.titre_fichier }}</a></td>
+          <td><a href="{% url 'GED:comments' doc.titre_fichier user.user.id %}">{{ doc.titre_fichier }}</a></td>
           <td>{{doc.matiere}}</td>
-          <td>{{doc.filiere}}</td>
           <td>{{ doc.eleve_id }}</td>
           <td>{{ doc.updload_date }}</td>
-            <td>
-                {% if doc.type == ".pdf" %}
+          <td>
+              {% if doc.type == ".pdf" %}
                   <img height='30' width='30' src="{% static 'GED/extension/pdf.png'%}" alt="file">
               {% elif doc.type == ".zip" %}
                   <img height='30' width='30' src="{% static 'GED/extension/zip.png'%}" alt="file">
@@ -253,10 +251,10 @@
               {% elif doc.type == ".docx" %}
                   <img height='30' width='30' src="{% static 'GED/extension/docx.jpg'%}" alt="file">
               {% else %}
-                                                inconnu
+                  inconnu
               {% endif %}
             </td>
-          <td><a href="{{ doc.fichier.url }}"><i class="fas fa-eye"></i></a></td>
+            <td><a href="{{ doc.fichier.url }}"><i class="fas fa-eye"></i></a></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -265,7 +263,6 @@
         <tr>
           <th>Titre</th>
             <th>matiere</th>
-            <th>niveau</th>
             <th>publié par</th>
             <th>publié le</th>
             <th>type</th>
