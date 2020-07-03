@@ -82,8 +82,8 @@ def homeE(request, id):
     newuser = User.objects.get(pk=id)
     user = Eleve.objects.get(user=newuser)
     taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-    taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
-    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-2:]
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     return render(request, 'GED/indexE.html', {'user': user,
@@ -643,15 +643,23 @@ def pagePerso(request, id):
     listprof = [e.prof_id for e in lastdoc]
     lastdoc = list(zip(listprof, lastdoc))
     lastdoc.reverse()
-    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
-    context={'user': e,
-             'docs': mydocs,
-             'profs': docprof,
-             'lastdoc': lastdoc,
-             'notifs':notifs,
-             'nbre':nbre}
+    if len(lastdoc) >= 3:
+        context={'user': e,
+                 'docs': mydocs,
+                 'profs': docprof,
+                 'lastdoc': lastdoc,
+                 'notifs':notifs,
+                 'nbre':nbre}
+    else:
+        context = {'user': e,
+                   'docs': mydocs,
+                   'profs': docprof,
+                   'notifs': notifs,
+                   'nbre': nbre}
+
     return render(request, 'GED/pagePerso.html', context)
 
 @login_required(login_url="/POLYHINT/connection/")
@@ -757,8 +765,8 @@ def valider(request):
                 role = "admin"
         if role == "Eleve":
             taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-            taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
-            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-2:]
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
             return render(request, 'GED/indexE.html', {'user': user,
@@ -797,11 +805,11 @@ def valider(request):
                 if user.is_active:
                     login(request, user)
                     e = Eleve.objects.get(user=user)
-                    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
                     notifs.reverse()
                     nbre = len(notifs)
                     taches = Tache.objects.filter(eleve_id=e, state=False).order_by('tache_time')
-                    taskfinish = Tache.objects.filter(eleve_id=e, state=True).order_by('tache_time')
+                    taskfinish = list(Tache.objects.filter(eleve_id=e, state=True).order_by('tache_time'))[-2:]
                     return render(request, 'GED/indexE.html', {'user': e,
                                                               'taches': taches,
                                                               'taskfinish': taskfinish,
@@ -1002,12 +1010,12 @@ def newtask(request, id):
         newtache.eleve_id = user
         newtache.save()
         taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-        taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+        taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-2:]
         return render(request, 'GED/indexE.html', {'user': user,
                                                   'taches': taches,
                                                   'taskfinish': taskfinish})
     except:
-        taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+        taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[:-2]
         taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
         return render(request, 'GED/indexE.html', {'user': user,
                                                   'taches': taches,
@@ -1022,7 +1030,7 @@ def taskdone(request, id, tache):
         task.state = True
         task.save()
         tache = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-        taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
+        taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-2:]
         return render(request, 'GED/indexE.html', {'user':user,
                                                   'taches': tache,
                                                   'taskfinish': taskfinish})

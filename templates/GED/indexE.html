@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dashboard - PolyHint</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'GED/images/realfav.ico' %}"/>
-    <link rel="stylesheet" href="{% static 'GED/assets2/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'GED/assets5/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-    <link rel="stylesheet" href="{% static 'GED/assets2/fonts/fontawesome-all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'GED/assets2/css/untitled.css' %}">
+    <link rel="stylesheet" href="{% static 'GED/assets5/fonts/fontawesome-all.min.css' %}">
 </head>
 
 <script type="text/javascript">
@@ -45,9 +44,10 @@
             </div>
         </nav>
         <div class="d-flex flex-column" id="content-wrapper">
-            <div id="content" class="bg-gray-400">
+            <div id="content" class="bg-gray-200">
                 <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
-                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                    <div class="container-fluid">
+                        <button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
                         <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                             <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
                                 <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
@@ -138,39 +138,19 @@
             </div>
             </nav>
             <div class="container-fluid">
-                <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                    <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generer un rapport</a></div>
-                <div class="d-sm-flex justify-content-between container">
-                    <div class="col-lg-4 col-md-4 mb-4">
-                        <div class="card" style="width: 16rem;">
-                          <img class="card-img-top" src="{% static 'GED/assets2/img/dogs/image6.jpg' %}" alt="Eleves ingenieurs" width="300" height="250"/>
-                          <div class="card-body" align="center">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">PolytechPub</a>
-                          </div>
-                        </div>
+                <div class="row">
+                    <div class="col-md-6 col-xl-3 mb-4">
+                        <div class="card shadow border-left-primary py-2"></div>
                     </div>
-                   <div class="col-lg-4 col-md-4 mb-4">
-                        <div class="card" style="width: 16rem;">
-                          <img class="card-img-top" src="{% static 'GED/assets2/img/dogs/image7.jpg' %}" alt="Polytechnique" width="300" height="250">
-                          <div class="card-body" align="center">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">PolytechPub</a>
-                          </div>
-                        </div>
-                   </div>
-                    <div class="col-lg-4 col-md-4 mb-4">
-                        <div class="card" style="width: 16rem;">
-                          <img class="card-img-top" src="{% static 'GED/assets2/img/dogs/imageD.jpeg' %}" alt="Polytechnique" width="300" height="250">
-                          <div class="card-body" align="center">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">PolytechPub</a>
-                          </div>
-                        </div>
-                   </div>
+                    <div class="col-md-6 col-xl-3 mb-4">
+                        <div class="card shadow border-left-success py-2"></div>
+                    </div>
+                    <div class="col-md-6 col-xl-3 mb-4">
+                        <div class="card shadow border-left-info py-2"></div>
+                    </div>
+                    <div class="col-md-6 col-xl-3 mb-4">
+                        <div class="card shadow border-left-warning py-2"></div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 mb-4">
@@ -233,15 +213,13 @@
                                     </button>
                                   </div>
                                     <form method="get" action="{% url 'GED:tache' user.user.id %}">
-                                  <div class="modal-body">
-
+                                    <div class="modal-body">
                                         {% csrf_token %}
                                         <div class="form-group ">
-                                            <input type="text" name="tache" placeholder="la tâche" class="text-justify form-control" required>
+                                            <input type="text" name="tache" placeholder="la tâche" class="text-justify form-control" required><br>
                                             <input type="time" name="tache_time" placeholder="heure" class="ti-alarm-clock rounded" required>
                                             <br>
                                         </div>
-
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
