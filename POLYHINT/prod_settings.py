@@ -14,6 +14,8 @@ MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 
 INSTALLED_APPS += ('storages',)
 
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
 AWS_STORAGE_BUCKET_NAME = 'polymedia'
 AWS_S3_REGION_NAME = 'us-west-2'
 AWS_ACCESS_KEY_ID = 'AKIAIYKJDOYIV5UATSUA'
