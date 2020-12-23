@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+import mimetypes
 
 try:
     e = Group()
@@ -18,6 +19,7 @@ except:
 
 
 class Eleve(models.Model):
+
     LIST_NIVEAU = [
         ('TC1', 'TC1'),
         ('TC2', 'TC2'),
@@ -34,8 +36,8 @@ class Eleve(models.Model):
     ]
 
     user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
-    joindate = models.DateTimeField(auto_now_add=True)
-    date_birth = models.DateField(null=False)
+    joindate = models.DateField(auto_now_add=True)
+    date_birth = models.DateField(null=True)
     profile = models.ImageField(upload_to='GED/img_profile/', default='GED/img_profile/rien.jpg')
     sexe = models.CharField(max_length=10, null=False, choices=[('Masculin', 'Masculin'), ('Feminin', 'Feminin')])
     about = models.TextField(max_length=250)
@@ -49,6 +51,7 @@ class Eleve(models.Model):
 
 
 class Professeur(models.Model):
+
     LIST_FILIERE = [
         ('GIT', 'GIT'),
         ('GEM', 'GEM'),
@@ -57,8 +60,7 @@ class Professeur(models.Model):
         ('TC', 'TC')
     ]
     userp = models.OneToOneField(User, related_name='userp', on_delete=models.CASCADE)
-    joindate = models.DateTimeField(auto_now_add=True)
-    date_birth = models.DateField(null=True)
+    joindate = models.DateField(auto_now_add=True)
     telephone = models.CharField(null=True, max_length=15)
     profile = models.ImageField(upload_to='GED/img_profile/', default='GED/img_profile/rien.jpg')
     sexe = models.CharField(max_length=10, null=False, choices=[('Masculin', 'Masculin'), ('Feminin', 'Feminin')])
@@ -68,6 +70,18 @@ class Professeur(models.Model):
         return self.userp.username
 
 class Document(models.Model):
+
+    def get_extensions_for_type(general_type):
+        for ext in mimetypes.types_map:
+            if mimetypes.types_map[ext].split('/')[0] == general_type:
+                yield ext
+
+    extensions = list(get_extensions_for_type('image'))
+    for ext in ['.pdf', '.zip', '.ppt', '.djvu', '.txt', '.docx', '.mlx']:
+        extensions.append(ext)
+
+    EXTENSIONS = list(zip(iter(extensions), tuple(extensions)))
+
     LIST_FILIERE = [
         ('GIT', 'GIT'),
         ('GEM', 'GEM'),
@@ -75,6 +89,7 @@ class Document(models.Model):
         ('AERO', 'AERO'),
         ('TC', 'TC')
     ]
+
     LIST_MATIERE = [
         ('MATHEMATIQUES','MATHS'),
         ('PHYSIQUE', 'PHYSIQUE'),
@@ -86,7 +101,7 @@ class Document(models.Model):
     ]
     titre_fichier = models.CharField(null=False, max_length=80, unique=True)
     description = models.TextField(max_length=250)
-    type = models.CharField(null=True, max_length=25, choices=[('image', 'png'), ('document', 'fichiers')])
+    type = models.CharField(null=True, max_length=25, choices=EXTENSIONS)
     filiere = models.CharField(max_length=45, null=False, choices=LIST_FILIERE, default="GIT")
     matiere = models.CharField(null=False, max_length=50, choices=LIST_MATIERE)
     niveau = models.CharField(null=True, max_length=8, blank=True)
@@ -105,7 +120,7 @@ class Document(models.Model):
 
 class Commentaire(models.Model):
     contents = models.TextField(null=True, max_length=350)
-    date_comments = models.DateTimeField(auto_now_add=True)
+    date_comments = models.DateField(auto_now_add=True)
     user_id = models.ForeignKey(Eleve, on_delete=models.CASCADE)
     id_doc = models.ForeignKey(Document, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
@@ -118,9 +133,10 @@ class Commentaire(models.Model):
 
 class Tache(models.Model):
     tache = models.CharField(null=False, max_length=45, primary_key=True)
-    tache_time = models.TimeField(null=True)
+    tache_time = models.DateField(null=False, auto_now_add=True)
     state = models.BooleanField(default=False)
-    eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE)
+    eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE, null=True)
+    prof_id = models.ForeignKey(Professeur, on_delete=models.CASCADE, null=True)
 
 class Notifications(models.Model):
     notifs = models.CharField(max_length=150)
@@ -136,3 +152,18 @@ class Sujet(models.Model):
 
     def __str__(self):
         return self.titre
+
+class SocialProfile(models.Model):
+
+    LIST_MEDIA = [
+        ('facebook', 'Facebook'),
+        ('twitter', 'Twitter'),
+        ('google', 'Google'),
+        ('linkedin', 'Linkedin'),
+        ('instagram', 'Instagram')
+    ]
+
+    network = models.CharField(max_length=100, choices=LIST_MEDIA)
+    url = models.URLField(max_length=500)
+    eleve_id = models.ForeignKey(Eleve, on_delete=models.CASCADE, null=True)
+    prof_id = models.ForeignKey(Professeur, on_delete=models.CASCADE, null=True)

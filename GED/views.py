@@ -50,8 +50,8 @@ def home(request):
                 role = "admin"
         if role == "Eleve":
             taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-            taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
-            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-3:]
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
             return render(request, 'GED/indexE.html', {'user': user,
@@ -61,7 +61,7 @@ def home(request):
                                                        'nbre': nbre})
         elif role == "Professeur":
             user = Professeur.objects.get(userp=newuser)
-            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
             return render(request, 'GED/indexP.html', {'user': user,
@@ -82,7 +82,7 @@ def homeE(request, id):
     newuser = User.objects.get(pk=id)
     user = Eleve.objects.get(user=newuser)
     taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-    taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-2:]
+    taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-3:]
     notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
@@ -96,7 +96,7 @@ def homeE(request, id):
 def homeP(request, id):
     newuser = User.objects.get(pk=id)
     user = Professeur.objects.get(userp=newuser)
-    notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     return render(request, 'GED/indexP.html', {'user': user,
@@ -118,8 +118,8 @@ def inscription(request):
                 role = "admin"
         if role == "Eleve":
             taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-            taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
-            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-3:]
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
             return render(request, 'GED/indexE.html', {'user': user,
@@ -129,7 +129,7 @@ def inscription(request):
                                                        'nbre': nbre})
         elif role == "Professeur":
             user = Professeur.objects.get(userp=newuser)
-            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
             return render(request, 'GED/indexP.html', {'user': user,
@@ -142,7 +142,40 @@ def inscription(request):
 
 
 def recoverpage(request):
-    return render(request, 'GED/forgotpassword.html')
+    newuser = get_user(request)
+    if newuser.is_authenticated:
+        try:
+            user = Eleve.objects.get(user=newuser)
+            role = "Eleve"
+        except Eleve.DoesNotExist:
+            try:
+                user = Professeur.objects.get(userp=newuser)
+                role = "Professeur"
+            except Professeur.DoesNotExist:
+                role = "admin"
+        if role == "Eleve":
+            taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-3:]
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexE.html', {'user': user,
+                                                       'taches': taches,
+                                                       'taskfinish': taskfinish,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        elif role == "Professeur":
+            user = Professeur.objects.get(userp=newuser)
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-3:]
+            notifs.reverse()
+            nbre = len(notifs)
+            return render(request, 'GED/indexP.html', {'user': user,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        elif role == "admin":
+            return redirect('/admin/')
+    else:
+        return render(request, 'GED/forgotpassword.html')
 
 
 def connexion(request):
@@ -161,8 +194,8 @@ def connexion(request):
                 role = "admin"
         if role == "Eleve":
             taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-            taskfinish = Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time')
-            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-3:]
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
             return render(request, 'GED/indexE.html', {'user': user,
@@ -172,7 +205,7 @@ def connexion(request):
                                                        'nbre': nbre})
         elif role == "Professeur":
             user = Professeur.objects.get(userp=newuser)
-            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
             return render(request, 'GED/indexP.html', {'user': user,
@@ -189,7 +222,7 @@ def commentaire(request, titre_fichier, id):
     uploader = Eleve.objects.get(user=User.objects.get(user=doc.eleve_id))
     com = Commentaire.objects.filter(id_doc=doc)
     nbre_comments = len(com)
-    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     if nbre_comments==0:
@@ -217,7 +250,7 @@ def newComments(request, titre_fichier, id):
     doc = Document.objects.get(titre_fichier=titre)
     user = Eleve.objects.get(user=User.objects.get(pk=id))
     uploader = Eleve.objects.get(user=User.objects.get(user=doc.eleve_id))
-    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     if doc.comments == True:
@@ -270,24 +303,26 @@ def profile(request, id):
         role = 'Professeur'
 
     if role == 'Eleve':
+        medias = SocialProfile.objects.filter(eleve_id=e)
         age = datetime.date.today().year - e.date_birth.year
-        notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+        notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
         notifs.reverse()
         nbre = len(notifs)
         return render(request, 'GED/userprofile.html', {'user': e,
+                                                        'medias':medias,
                                                         'role': role,
                                                         'age': age,
                                                         'notifs': notifs,
                                                         'nbre': nbre})
 
     elif role == 'Professeur':
-        age = datetime.date.today().year - p.date_birth.year
-        notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+        medias = SocialProfile.objects.filter(prof_id=p)
+        notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
         notifs.reverse()
         nbre = len(notifs)
         return render(request, 'GED/userprofile.html', {'user': p,
+                                                        'medias': medias,
                                                         'role': role,
-                                                        'age': age,
                                                         'notifs': notifs,
                                                         'nbre': nbre})
 
@@ -320,7 +355,7 @@ def edit_profile(request, id):
                 newuser.email = request.POST['email']
                 newuser.save()
             else:
-                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
                 notifs.reverse()
                 nbre = len(notifs)
                 erreur = form.errors
@@ -336,17 +371,19 @@ def edit_profile(request, id):
             e.niveau = request.POST['niveau']
             e.save()
             role = "Eleve"
+
         elif 'btnform3' in request.POST:
             e.about = request.POST['about']
             e.save()
             role = "Eleve"
+
         elif 'btnform4' in request.POST:
             form = PassForm(request.POST)
             if form.is_valid():
                 newuser.set_password(request.POST['password'])
                 newuser.save()
                 role = "Eleve"
-                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
                 notifs.reverse()
                 nbre = len(notifs)
                 return render(request, 'GED/editer_profile.html', {'user': e,
@@ -373,7 +410,7 @@ def edit_profile(request, id):
                 e.save()
                 os.remove(a)
                 role = "Eleve"
-                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
                 notifs.reverse()
                 nbre = len(notifs)
                 return render(request, 'GED/editer_profile.html', {'user': e,
@@ -381,7 +418,7 @@ def edit_profile(request, id):
                                                                    'notifs': notifs,
                                                                    'nbre': nbre})
             else:
-                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+                notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
                 notifs.reverse()
                 nbre = len(notifs)
                 role = "Eleve"
@@ -392,7 +429,21 @@ def edit_profile(request, id):
                                                         'notifs': notifs,
                                                         'nbre': nbre})
 
-        notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+
+        elif 'btnform5' in request.POST:
+            network = request.POST['network']
+            url = request.POST['url']
+            try:
+                media = SocialProfile.objects.filter(network=network).get(eleve_id=e)
+                media.network = network
+                media.url = url
+                media.save()
+            except:
+                media = SocialProfile.objects.create(network=network, url=url, eleve_id=e)
+                media.save()
+
+
+        notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
         notifs.reverse()
         nbre = len(notifs)
         return render(request, 'GED/editer_profile.html', {'user': e,
@@ -416,7 +467,7 @@ def edit_profile(request, id):
                     newuser.email = request.POST['email']
                     newuser.save()
                 else:
-                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
                     notifs.reverse()
                     nbre = len(notifs)
                     erreur = form.errors
@@ -432,7 +483,7 @@ def edit_profile(request, id):
                     p.telephone = request.POST['telephone']
                     p.save()
                 else:
-                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
                     notifs.reverse()
                     nbre = len(notifs)
                     erreur = form.errors
@@ -449,7 +500,7 @@ def edit_profile(request, id):
                     p.save()
                 else:
                     erreur = form.errors
-                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
                     notifs.reverse()
                     nbre = len(notifs)
                     return render(request, 'GED/404.html', {'user': p,
@@ -465,7 +516,7 @@ def edit_profile(request, id):
                     newuser.save()
                 else:
                     erreur = form.errors
-                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
                     notifs.reverse()
                     nbre = len(notifs)
                     return render(request, 'GED/404.html', {'user': p,
@@ -485,7 +536,7 @@ def edit_profile(request, id):
                 else:
                     erreur = "request.FILES n'a pas pu obtenir l'image téléchargée de l'entrée"
                     link = "{% url 'edit' user.user.id %}"
-                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+                    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
                     notifs.reverse()
                     nbre = len(notifs)
                     return render(request, 'GED/404.html', {'user': p,
@@ -494,7 +545,20 @@ def edit_profile(request, id):
                                                             'link': link,
                                                             'notifs': nbre,
                                                             'nbre': nbre})
-        notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+
+            elif 'btnform5' in request.POST:
+                network = request.POST['network']
+                url = request.POST['url']
+                try:
+                    media = SocialProfile.objects.filter(network=network).get(prof_id=p)
+                    media.network = network
+                    media.url = url
+                    media.save()
+                except:
+                    media = SocialProfile.objects.create(network=network, url=url, prof_id=p)
+                    media.save()
+
+        notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
         notifs.reverse()
         nbre = len(notifs)
         return render(request, 'GED/editer_profile.html', {'user': p,
@@ -509,15 +573,16 @@ def otherprofile(request, username, id):
     role = "Eleve"
     newother = User.objects.get(username=username)
     other = Eleve.objects.get(user=newother)
-    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-8:]
+    medias = SocialProfile.objects.filter(eleve_id=other)
+    notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     return render(request, 'GED/othersprofile.html', {'other': other,
+                                                      'medias': medias,
                                                       'user': user,
                                                       'role': role,
                                                       'notifs': notifs,
                                                       'nbre':nbre})
-
 
 ##################################################################################################
 
@@ -528,6 +593,12 @@ def documentsEleve(request, id):
     e = Eleve.objects.get(user=newuser)
     mats = Document.LIST_MATIERE
     fils = Document.LIST_FILIERE
+    years = []
+    for i in range(5):
+        years.append(datetime.date.today().year - i)
+    months = []
+    for i in range(1, 13):
+        months.append((i, datetime.date(2008, i, 1).strftime('%B')))
     doc = Document.objects.filter(prof_id=None)
     tops = list(Document.objects.filter(prof_id=None).order_by('updload_date'))[-8:]
     listuser = [i.eleve_id for i in tops]
@@ -535,7 +606,7 @@ def documentsEleve(request, id):
     top.reverse()
     list1 = top[:4]
     list2 = top[4:]
-    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     return render(request, "GED/table.html", {'user': e,
@@ -545,7 +616,9 @@ def documentsEleve(request, id):
                                               'fils': fils,
                                               'mats': mats,
                                               'notifs': notifs,
-                                              'nbre': nbre})
+                                              'nbre': nbre,
+                                              'months': months,
+                                              'years': years,})
 
 @login_required(login_url="/POLYHINT/connection/")
 def PubEleve(request, id):
@@ -555,7 +628,7 @@ def PubEleve(request, id):
     matiere = [j for (i, j) in doc]
     fil = Document.LIST_FILIERE
     filiere = [j for (i,j) in fil]
-    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     return render(request, 'GED/PubEleve.html', {'user': e,
@@ -589,7 +662,7 @@ def Traitement(request, id):
         notif = str(e.user.first_name) + " a publier un document"
         newnotif.notifs = notif
         newnotif.save()
-    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     success = 'cest fait!! <a href ="{% url "GED:documents" user.user.id %}">Retourner</a> à la page précedente'
@@ -605,7 +678,14 @@ def search(request, id):
     doc = list(Document.objects.filter(prof_id=None))
     mats = Document.LIST_MATIERE
     fils = Document.LIST_FILIERE
-    tops = list(Document.objects.order_by('updload_date'))[-8:]
+    years = []
+    for i in range(5):
+        years.append(datetime.date.today().year - i)
+    months = []
+    for i in range(1, 13):
+        months.append((i, datetime.date(2008, i, 1).strftime('%B')))
+
+    tops = list(Document.objects.filter(prof_id=None).order_by('updload_date'))[-8:]
     listuser = [i.eleve_id for i in tops]
     top = list(zip(listuser, tops))
     top.reverse()
@@ -616,22 +696,35 @@ def search(request, id):
         doc = doc + list(Document.objects.all())
     else:
         doc = doc+list(Document.objects.filter(titre_fichier__contains=titre))
-    doc = list(set(doc) & set(Document.objects.filter(matiere__icontains=request.GET['matiere'])))
-    doc = list(set(doc) & set(Document.objects.filter(filiere__icontains=request.GET['filiere'])))
-    doc = list(set(doc) & set(Document.objects.filter(updload_date__year=request.GET['year'])))
-    doc = list(set(doc) & set(Document.objects.filter(updload_date__month=request.GET['month'])))
-    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+
+    try:
+        if request.GET['year']:
+            doc = list(set(doc) & set(Document.objects.filter(updload_date__year=request.GET['year'])))
+
+        if request.GET['month']:
+            doc = list(set(doc) & set(Document.objects.filter(updload_date__month=request.GET['month'])))
+
+        doc = list(set(doc) & set(Document.objects.filter(matiere__icontains=request.GET['matiere'])))
+        doc = list(set(doc) & set(Document.objects.filter(filiere__icontains=request.GET['filiere'])))
+
+    except MultiValueDictKeyError:
+        pass
+
+
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
 
-    return render(request, 'GED/table.html', {'docs': doc,
+    return render(request, 'GED/search.html', {'docs': doc,
                                               'user': e,
                                               'list1': list1,
                                               'list2': list2,
                                               'fils': fils,
                                               'mats': mats,
                                               'notifs':notifs,
-                                              'nbre':nbre})
+                                              'nbre':nbre,
+                                            'months':months,
+                                            'years':years})
 
 @login_required(login_url="/POLYHINT/connection/")
 def pagePerso(request, id):
@@ -669,7 +762,7 @@ def deleteDoc(request, titre_fichier, id):
     mydocs = Document.objects.filter(eleve_id=e)
     doc = Document.objects.get(titre_fichier=titre_fichier)
     doc.delete()
-    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(eleve_id=e).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     return render(request, 'GED/pagePerso.html', {'user': e,
@@ -689,7 +782,7 @@ def pubProf(request, id):
     matiere = [j for (i, j) in doc]
     fil = Document.LIST_FILIERE
     filiere = [j for (i,j) in fil]
-    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     return render(request, 'GED/publish.html', {'user': p,
@@ -723,7 +816,7 @@ def publish(request, id):
         notif = str(p.userp.first_name)+" a publier un document"
         newnotif.notifs = notif
         newnotif.save()
-    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-8:]
+    notifs = list(Notifications.objects.exclude(prof_id=p).order_by('time_notif'))[-3:]
     notifs.reverse()
     nbre = len(notifs)
     doc = Document.objects.filter(prof_id=p)
@@ -745,10 +838,11 @@ def document_prof(request, id):
 def del_doc_prof(request, titre_fichier, id):
     newuser = User.objects.get(pk=id)
     p = Professeur.objects.get(userp=newuser)
-    mydocs = Document.objects.filter(prof_id=p)
     doc = Document.objects.get(titre_fichier=titre_fichier)
     doc.delete()
-    return render(request, "GED/delete_prof.html")
+    mydocs = Document.objects.filter(prof_id=p)
+    return render(request, "GED/table_prof.html", {'doc': mydocs,
+                                                   'user': p})
 
 
 def valider(request):
@@ -765,7 +859,7 @@ def valider(request):
                 role = "admin"
         if role == "Eleve":
             taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-2:]
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-3:]
             notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
@@ -776,7 +870,7 @@ def valider(request):
                                                        'nbre': nbre})
         elif role == "Professeur":
             user = Professeur.objects.get(userp=newuser)
-            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-8:]
+            notifs = list(Notifications.objects.exclude(prof_id=user).order_by('time_notif'))[-3:]
             notifs.reverse()
             nbre = len(notifs)
             return render(request, 'GED/indexP.html', {'user': user,
@@ -809,7 +903,7 @@ def valider(request):
                     notifs.reverse()
                     nbre = len(notifs)
                     taches = Tache.objects.filter(eleve_id=e, state=False).order_by('tache_time')
-                    taskfinish = list(Tache.objects.filter(eleve_id=e, state=True).order_by('tache_time'))[-2:]
+                    taskfinish = list(Tache.objects.filter(eleve_id=e, state=True).order_by('tache_time'))[-3:]
                     return render(request, 'GED/indexE.html', {'user': e,
                                                               'taches': taches,
                                                               'taskfinish': taskfinish,
@@ -950,6 +1044,42 @@ def activate_account(request, username, token):
     user = User.objects.get(username=username)
     user.is_active = True
     user.save()
+
+    ##################################################################################################
+
+    networks = ['facebook', 'twitter', 'google', 'linkedin', 'instagram']
+
+    try:
+        Eleve.objects.get(user=user)
+        role = 'Eleve'
+    except Eleve.DoesNotExist:
+        Professeur.objects.get(userp=user)
+        role = 'Professeur'
+
+    if role == 'Eleve':
+        e = Eleve.objects.get(user=user)
+        for row in networks:
+            try:
+                media = SocialProfile.objects.filter(network=row).get(eleve_id=e)
+                media.network = row
+                media.url = ''
+                media.save()
+            except:
+                media = SocialProfile.objects.create(network=row, url='', eleve_id=e)
+                media.save()
+
+    elif role == 'Professeur':
+        p = Professeur.objects.get(user=user)
+        for row in networks:
+            try:
+                media = SocialProfile.objects.filter(network=row).get(prof_id=p)
+                media.network = row
+                media.url = ''
+                media.save()
+            except:
+                media = SocialProfile.objects.create(network=row, url='', prof_id=p)
+                media.save()
+
     ok = "Compte activé avec succès!!"
     return render(request, 'GED/connexion.html', {'ok': ok})
 
@@ -1002,38 +1132,98 @@ def recover(request):
 @login_required(login_url="/POLYHINT/connection/")
 def newtask(request, id):
     newuser = User.objects.get(pk=id)
-    user = Eleve.objects.get(user=newuser)
+
     try:
-        newtache = Tache()
-        newtache.tache = request.GET['tache']
-        newtache.tache_time = request.GET['tache_time']
-        newtache.eleve_id = user
-        newtache.save()
-        taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-        taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-2:]
-        return render(request, 'GED/indexE.html', {'user': user,
-                                                  'taches': taches,
-                                                  'taskfinish': taskfinish})
-    except:
-        taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[:-2]
-        taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-        return render(request, 'GED/indexE.html', {'user': user,
-                                                  'taches': taches,
-                                                  'taskfinish': taskfinish})
+        Eleve.objects.get(user=newuser)
+        role = 'Eleve'
+    except Eleve.DoesNotExist:
+        Professeur.objects.get(userp=newuser)
+        role = 'Professeur'
+
+    if role == 'Eleve':
+        user = Eleve.objects.get(user=newuser)
+        try:
+            newtache = Tache()
+            newtache.tache = request.GET['tache']
+            newtache.tache_time = request.GET['tache_time']
+            newtache.eleve_id = user
+            newtache.save()
+            notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
+            notifs.reverse()
+            nbre = len(notifs)
+            taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-3:]
+            return render(request, 'GED/indexE.html', {'user': user,
+                                                      'taches': taches,
+                                                      'taskfinish': taskfinish,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+        except:
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[:-3]
+            taches = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+            return render(request, 'GED/indexE.html', {'user': user,
+                                                      'taches': taches,
+                                                      'taskfinish': taskfinish})
+
+    if role == 'Professeur':
+        user = Professeur.objects.get(userp=newuser)
+        try:
+            newtache = Tache()
+            newtache.tache = request.GET['tache']
+            newtache.tache_time = request.GET['tache_time']
+            newtache.prof_id = user
+            newtache.save()
+            taches = Tache.objects.filter(prof_id=user, state=False).order_by('tache_time')
+            taskfinish = list(Tache.objects.filter(prof_id=user, state=True).order_by('tache_time'))[-3:]
+            return render(request, 'GED/indexP.html', {'user': user,
+                                                       'taches': taches,
+                                                       'taskfinish': taskfinish})
+        except:
+            taskfinish = list(Tache.objects.filter(prof_id=user, state=True).order_by('tache_time'))[:-3]
+            taches = Tache.objects.filter(prof_id=user, state=False).order_by('tache_time')
+            return render(request, 'GED/indexP.html', {'user': user,
+                                                       'taches': taches,
+                                                       'taskfinish': taskfinish})
+
 
 @login_required(login_url="/POLYHINT/connection/")
 def taskdone(request, id, tache):
-    user = Eleve.objects.get(user=User.objects.get(pk=id))
-    task = Tache.objects.get(tache=tache)
-    if 'done' in request.GET:
 
-        task.state = True
-        task.save()
-        tache = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
-        taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-2:]
-        return render(request, 'GED/indexE.html', {'user':user,
-                                                  'taches': tache,
-                                                  'taskfinish': taskfinish})
+    try:
+        Eleve.objects.get(user=User.objects.get(pk=id))
+        role = 'Eleve'
+    except Eleve.DoesNotExist:
+        Professeur.objects.get(userp=User.objects.get(pk=id))
+        role = 'Professeur'
+
+    if role == 'Eleve':
+        user = Eleve.objects.get(user=User.objects.get(pk=id))
+        task = Tache.objects.get(tache=tache)
+        notifs = list(Notifications.objects.exclude(eleve_id=user).order_by('time_notif'))[-3:]
+        notifs.reverse()
+        nbre = len(notifs)
+        if 'done' in request.GET:
+            task.state = True
+            task.save()
+            tache = Tache.objects.filter(eleve_id=user, state=False).order_by('tache_time')
+            taskfinish = list(Tache.objects.filter(eleve_id=user, state=True).order_by('tache_time'))[-3:]
+            return render(request, 'GED/indexE.html', {'user':user,
+                                                      'taches': tache,
+                                                      'taskfinish': taskfinish,
+                                                       'notifs': notifs,
+                                                       'nbre': nbre})
+
+    if role == 'Professeur':
+        user = Professeur.objects.get(userp=User.objects.get(pk=id))
+        task = Tache.objects.get(tache=tache)
+        if 'done' in request.GET:
+            task.state = True
+            task.save()
+            tache = Tache.objects.filter(prof_id=user, state=False).order_by('tache_time')
+            taskfinish = list(Tache.objects.filter(prof_id=user, state=True).order_by('tache_time'))[-3:]
+            return render(request, 'GED/indexP.html', {'user': user,
+                                                       'taches': tache,
+                                                       'taskfinish': taskfinish})
 
 
 def addEpreuve(request):

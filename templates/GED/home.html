@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>POLYHINT</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'GED/images/realfav.ico' %}"/>
-    <link rel="stylesheet" href="{%  static 'GED/sujets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'GED/sujets/bootstrap/css/bootstrap.min1.css' %}">
     <!--
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
-    <link rel="stylesheet" href="{% static 'GED/assets2/fonts/fontawesome-all.min.css' %}" >
+    <link rel="stylesheet" href="{% static 'GED/assets3/fonts/fontawesome-all.min.css' %}" >
 </head>
 
 <script type="text/javascript">
@@ -52,9 +52,9 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col-lg-10 mx-auto">
-                    <h2>Stylish Portfolio is the perfect theme for your next project!</h2>
-                    <p class="lead mb-5"><span>This theme features a flexible, UX friendly sidebar menu and stock photos from our friends at&nbsp;</span><a href="https://unsplash.com/">Unsplash</a><span>!</span></p><a class="btn btn-dark btn-xl js-scroll-trigger" role="button"
-                        href="#services">What We Offer</a></div>
+                    <h2>Préservons notre patrimoine</h2>
+                    <p class="lead mb-5"><span>Site accessible que pour les étudiants et professeurs de l'Ecole Polytechnique.</span></p><a class="btn btn-dark btn-xl js-scroll-trigger" role="button"
+                        href="#services">Objectifs</a></div>
             </div>
         </div>
     </section>
@@ -62,24 +62,24 @@
         <div class="container">
             <div class="content-section-heading">
                 <h3 class="text-secondary mb-0">Services</h3>
-                <h2 class="mb-5">What We Offer</h2>
+                <h2 class="mb-5">Objectifs</h2>
             </div>
             <div class="row">
-                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="icon-screen-smartphone"></i></span>
-                    <h4><strong>Responsive</strong></h4>
-                    <p class="mb-0 text-faded">Looks great on any screen size!</p>
+                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="fa fa-check"></i></span>
+                    <h4><strong>Rapidité</strong></h4>
+                    <p class="mb-0 text-faded">Partagez vos documents en un rien de temps et rendez-le accessible à toute la classe.</p>
                 </div>
-                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="icon-pencil"></i></span>
-                    <h4><strong>Redesigned</strong></h4>
-                    <p class="mb-0 text-faded">Freshly redesigned for Bootstrap 4.</p>
+                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="fa fa-tasks"></i></span>
+                    <h4><strong>Continuité</strong></h4>
+                    <p class="mb-0 text-faded">Stockez tous vos documents dans une même plateforme afin de faciliter leur réutilisation.</p>
                 </div>
-                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="icon-like"></i></span>
-                    <h4><strong>Favorited</strong></h4>
-                    <p class="mb-0 text-faded"><span>Milions of users&nbsp;</span><i class="fa fa-heart"></i><span>&nbsp;us!</span></p>
+                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="fa fa-globe"></i></span>
+                    <h4><strong>Transparence</strong></h4>
+                    <p class="mb-0 text-faded"><span>Accédez à vos documents numérisés ainsi que les publications des profs à n'importe quel moment.</span></p>
                 </div>
-                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="icon-mustache"></i></span>
-                    <h4><strong>Question</strong></h4>
-                    <p class="mb-0 text-faded">I mustache you a question...</p>
+                <div class="col-md-6 col-lg-3 mb-5 mb-lg-0"><span class="mx-auto service-icon rounded-circle mb-3"><i class="fa fa-lock"></i></span>
+                    <h4><strong>Sécurité</strong></h4>
+                    <p class="mb-0 text-faded">Soyez plus rassurer quant à la durabilité de ces documents.</p>
                 </div>
             </div>
         </div>
@@ -144,26 +144,26 @@
        <form method="post" action="{% url 'GED:add' %}" enctype="multipart/form-data">
            {% csrf_token %}
            <div class="custom-file">
-              <input type="file" name="epreuve" class="custom-file-input" id="customFile" lang="fr">
+              <input type="file" name="epreuve" class="custom-file-input" id="customFile" lang="fr" required>
               <label class="custom-file-label" for="customFile">Selectionner le fichier</label>
             </div>
 
             <div class="row">
                 <div class="form-group">
                     <label for="formGroupExampleInput">Username</label>
-                  <input type="text" class="form-control" name="username" placeholder="nom d'utilisateur">
+                  <input type="text" class="form-control" name="username" placeholder="nom d'utilisateur" required>
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Mot de passe</label>
-                  <input type="password" class="form-control" name="password" placeholder="Mot de passe">
+                  <input type="password" class="form-control" name="password" placeholder="Mot de passe" required>
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Titre</label>
-                  <input type="text" name="titre" class="form-control" placeholder="titre">
+                  <input type="text" name="titre" class="form-control" placeholder="titre" required>
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Année</label>
-                  <input type="number" name="annee" class="form-control" placeholder="année du concours">
+                  <input type="number" name="annee" class="form-control" placeholder="année du concours" required>
                 </div>
             </div>
            <div class="modal-footer">
@@ -198,12 +198,12 @@
     <footer class="footer text-center">
         <div class="container">
             <ul class="list-inline mb-5">
-                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="#"><i class="icon-social-facebook"></i></a></li>
-                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="#"><i class="icon-social-twitter"></i></a></li>
-                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="#"><i class="icon-social-github"></i></a></li>
+                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="https://www.facebook.com/Ecole-Polytechnique-de-Thies-190071167704613/"><i class="icon-social-facebook"></i></a></li>
+                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="https://twitter.com/ept_officiel"><i class="icon-social-twitter"></i></a></li>
+                <li class="list-inline-item">&nbsp;<a class="text-white social-link rounded-circle" href="https://www.linkedin.com/in/ecole-polytechnique-thi%C3%A8s-l-officiel-thi%C3%A8s-b32426147/"><i class="icon-social-linkedin"></i></a></li>
             </ul>
             <p class="text-muted mb-0 small">Copyright &nbsp;© POLYHINT 2020</p>
-        </div><a class="js-scroll-trigger scroll-to-top rounded" href="#page-top"><i class="fa fa-angle-up"></i></a></footer>
+        </div><a class="js-scroll-trigger scroll-to-top border rounded" href="#page-top"><i class="fa fa-angle-up"></i></a></footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
