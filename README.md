@@ -1,5 +1,5 @@
 # Polyhint
-C'est une plateforme principalement dédiée au stokcage de nos différents documents notamment les khints en vu de promouvoir le partage. 
+C'est une plateforme principalement dédiée au stokcage de nos différents documents notamment les khints. 
 
 # Setup
 
@@ -11,7 +11,7 @@ $ cd Polyhint
 
 Create a virtual environment to install dependencies in and activate it:
 
-Then install the dependencies:
+Then install the dependencies (python version 7/8):
 ```sh
 (env)$ pip install -r requirements.txt
 ```
