@@ -5,6 +5,6 @@ C'est une plateforme principalement dédiée au stokcage de nos différents docu
 
 The first thing to do is to clone the repository:
 
-$ git clone https://github.com/gocardless/sample-django-app.git
+$ git clone https://github.com/Mountain-blaster/Polyhint.git
 $ cd Polyhint
 
